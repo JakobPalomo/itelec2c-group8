@@ -1,0 +1,60 @@
+const palengkeData = [
+  {
+    id: 1,
+    image: "palengke.jpg",
+    rating: 4.5,
+    type: "Wet Market",
+    name: "San Andres Markettttoo",
+    location: "San Andres, Manila",
+  },
+  {
+    id: 2,
+    image: "palengke.jpg",
+    rating: 4.2,
+    type: "Meat and Seafood",
+    name: "Quezon City Palengke",
+    location: "Quezon City, Metro Manila",
+  },
+  {
+    id: 3,
+    image: "palengke.jpg",
+    rating: 4.0,
+    type: "Call me maybe",
+    name: "Downtown Palengke",
+    location: "Downtown, Cebu City",
+  },
+  {
+    id: 4,
+    image: "palengke.jpg",
+    rating: 4.0,
+    type: "Hey I just met you",
+    name: "Downtown Palengke",
+    location: "Downtown, Cebu City",
+  },
+  {
+    id: 5,
+    image: "palengke.jpg",
+    rating: 4.0,
+    type: "Meat and Seafood",
+    name: "Downtown Palengke",
+    location: "Downtown, Cebu City",
+  },
+  {
+    id: 6,
+    image: "palengke.jpg",
+    rating: 4.0,
+    type: "Variety",
+    name: "Downtown Palengke",
+    location: "Downtown, Cebu City",
+  },
+  {
+    id: 7,
+    image: "palengke.jpg",
+    rating: 4.0,
+    type: "Meat and Seafood",
+    name: "Downtown Palengke",
+    location: "Downtown, Cebu City",
+  },
+];
+
+export default palengkeData;
