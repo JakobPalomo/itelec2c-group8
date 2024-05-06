@@ -1,14 +1,14 @@
-import Navbar from './Navbar.js';
-import Search from './Search.js';
-import PalengkeList from './PalengkeList.js';
-import './App.css';
+import Navbar from "./components/Navbar.js";
+import Search from "./components/homepage/Search.js";
+import PalengkeList from "./components/homepage/PalengkeList.js";
+import "./App.css";
 
 function App() {
   return (
     <div className="App">
-<Navbar/>
-<Search/>
-<PalengkeList/>
+      <Navbar />
+      <Search />
+      <PalengkeList />
     </div>
   );
 }

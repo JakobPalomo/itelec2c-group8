@@ -1,7 +1,7 @@
 import React from "react";
 import PalengkeItem from "./PalengkeItem";
-import palengkeData from "./palengkeData";
-import "./PalengkeList.css";
+import palengkeData from "../../data/palengkeData";
+import "../../styles/PalengkeList.css";
 
 function PalengkeList() {
   return (

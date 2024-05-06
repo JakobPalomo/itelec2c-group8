@@ -1,6 +1,6 @@
 import React from "react";
-import "./PalengkeList.css";
-import Rating from "./Rating.js";
+import "../../styles/PalengkeList.css";
+import Rating from "../Rating.js";
 
 function PalengkeItem(props) {
   return (
