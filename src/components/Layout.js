@@ -1,12 +1,12 @@
 import { Outlet, useLocation, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar.js";
-function Layout({ children }) {
+function Layout({ isLoggedIn }) {
   return (
     <div>
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} />
+      <div style={{ height: "98px" }}></div>
       <Outlet />
-      {/* {children} */}
     </div>
   );
 }

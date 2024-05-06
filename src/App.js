@@ -23,13 +23,16 @@ import Settings from "./components/account/Settings";
 import MySaves from "./components/account/MySaves";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  {
+    /* change true/false here since wla pa login */
+  }
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route element={<Layout />}>
+          <Route element={<Layout isLoggedIn={isLoggedIn} />}>
             {/* Home Route */}
             <Route path="/" element={isLoggedIn ? <Home /> : <Login />}></Route>
             {/* Public Route */}
