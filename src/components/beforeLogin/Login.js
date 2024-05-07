@@ -13,29 +13,18 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../../styles/Login.css";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const defaultTheme = createTheme();
+
 function Login() {
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handlePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -76,23 +65,16 @@ function Login() {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
             <Box
               component="form"
               noValidate
               onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
+              sx={{ mt: 15 }}
             >
               <span className="welcome" style={{ marginTop: "12px" }}>
                 Hello, Welcome!
               </span>
-              <br></br>
-              <span className="subtext">Email/Username</span>
+              <br />
               <TextField
                 margin="normal"
                 required
@@ -102,30 +84,79 @@ function Login() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                variant="outlined"
+                InputLabelProps={{ style: { color: "#696969" } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#d4d4d4", // Normal border color
+                      borderRadius: "24px", // Border radius
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#d4d4d4", // Border color on hover
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#d4d4d4", // Border color on focus
+                      borderWidth: 2,
+                    },
+                  },
+                }}
               />
-              <span className="subtext">Password</span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
+                type={showPassword ? "text" : "password"} // Show password if showPassword is true
                 id="password"
                 autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                variant="outlined"
+                InputLabelProps={{ style: { color: "#696969" } }}
+                InputProps={{
+                  style: { backgroundColor: "#ffffff", borderRadius: "24px" },
+                  endAdornment: (
+                    <Button onClick={handlePasswordVisibility}>
+                      {showPassword ? (
+                        <VisibilityIcon sx={{ color: "#E74F4F" }} />
+                      ) : (
+                        <VisibilityOffIcon sx={{ color: "#E74F4F" }} />
+                      )}
+                    </Button>
+                  ),
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#d4d4d4", // Normal border color
+                      borderRadius: "24px", // Border radius
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#d4d4d4", // Border color on hover
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#d4d4d4", // Border color on focus
+                      borderWidth: 2,
+                    },
+                  },
+                }}
               />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: "#FF6262", // Button background color
+                  "&:hover": {
+                    backgroundColor: "#E74F4F", // Button hover background color
+                  },
+                }}
               >
                 Sign In
               </Button>
+
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
@@ -138,7 +169,6 @@ function Login() {
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
         </Grid>
