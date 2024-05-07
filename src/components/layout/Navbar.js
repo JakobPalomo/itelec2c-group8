@@ -10,15 +10,15 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import DelayedTooltip from "./ui/DelayedTooltip";
+import DelayedTooltip from "../ui/DelayedTooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-import "../styles/globalStyles.css";
-import "../styles/Navbar.css";
-import logo from "../assets/palengkerist-logo-white.png";
-import logoText from "../assets/palengkerist-text-white.png";
-import profilePic from "../assets/sample-profile.jpg";
-import navbarDesign from "../assets/navbar-design.svg";
+import "../../styles/globalStyles.css";
+import "../../styles/Navbar.css";
+import logo from "../../assets/palengkerist-logo-white.png";
+import logoText from "../../assets/palengkerist-text-white.png";
+import profilePic from "../../assets/sample-profile.jpg";
+import navbarDesign from "../../assets/navbar-design.svg";
 
 const pages = [];
 const accountNavs = [
@@ -151,9 +151,7 @@ function Navbar({ isLoggedIn }) {
                       "&.Mui-selected": {
                         backgroundColor: "#FFE6E0",
                       },
-                      "& .MuiTouchRipple-rippleVisible": {
-                        color: "#FFE6E0 !important",
-                      },
+
                       padding: "10px 25px",
                       width: "120px",
                     }}

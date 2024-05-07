@@ -12,11 +12,11 @@
 
 .center {
   background-color: rgba(58, 58, 58, 0.452);
-
-  width: 460px;
+  width: 700px;
   height: 200px;
   backdrop-filter: blur(20px); /* Apply a blur effect to the background */
   border-radius: 12px;
+  border: 1px solid rgb(133, 133, 133);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,24 +27,80 @@
   color: whitesmoke;
   font-weight: bold;
   text-align: center;
+  width: 100%;
 }
-.search-bar {
-  font-family: "Poppins", sans-serif;
+.title {
+  display: flex;
+  margin-left: 20px;
+  margin-right: 20px;
+  justify-content: center;
+}
+.searchRow {
   margin-top: 24px;
-  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+.searchBar {
+  font-family: "Poppins", sans-serif;
+  font-size: 13px !important;
+  border-radius: 10px;
   border: none; /* Remove border */
   outline: none; /* Remove outline */
-  padding: 12px;
-  height: 30px;
-  width: 160px;
+  padding: 11px;
+  padding-right: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  height: 17px;
+  min-width: 350px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.search-button {
-  font-family: "Poppins", sans-serif;
-  font-size: 12px;
-  color: whitesmoke;
-  font-weight: bold;
-  background-color: #ff6262;
-  padding: 18px;
-  border-radius: 12px;
-  margin-left: 8px;
+/* MUI Button */
+.searchButton {
+  font-family: "Poppins", sans-serif !important;
+  font-size: 13px !important;
+  color: whitesmoke !important;
+  font-weight: bold !important;
+  background-color: #ff6262 !important;
+  border-radius: 10px !important;
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+  margin-bottom: 10px !important;
+  box-shadow: none !important;
+  height: 39px;
+}
+/*MUI Icon*/
+.muiFilterIconButton {
+  color: #ff6262 !important;
+  position: absolute !important;
+  justify-content: flex-end;
+  align-items: center;
+  transform: translate(-150%, 15%);
+}
+
+/* Responsive styles */
+@media screen and (max-width: 700px) {
+  .center {
+    border-radius: 0px;
+  }
+  .searchRow {
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 500px) {
+  .searchBar {
+    min-width: 300px;
+  }
+}
+@media screen and (max-width: 400px) {
+  .title {
+    font-size: 19px;
+  }
+  .searchBar {
+    min-width: 100px;
+  }
 }

@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 //PAGES/COMPONENTS
-import Layout from "./components/Layout";
+import Layout from "./components/layout/Layout";
 import Login from "./components/beforeLogin/Login";
 import ForgotPassword from "./components/beforeLogin/ForgotPassword";
 import ChangePassword from "./components/beforeLogin/ChangePassword";

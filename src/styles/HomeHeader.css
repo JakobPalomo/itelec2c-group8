@@ -1,0 +1,42 @@
+.header {
+  width: 100%;
+}
+.headerTitle {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+}
+.relativeCont {
+  width: 100%;
+}
+.button {
+  transform: translate(-25%, -150%);
+  position: absolute !important;
+  right: 0;
+}
+.muiAddIcon {
+  margin-left: 10px;
+}
+@media screen and (max-width: 692px) {
+  .header {
+    flex-direction: column;
+    justify-content: center !important;
+  }
+  .relativeCont {
+    transform: translate(0%, 0%);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .button {
+    position: relative !important;
+    transform: translate(0%, 0%);
+  }
+}
+@media screen and (max-width: 394px) {
+  .headerTitle {
+    font-size: 19px !important;
+  }
+}

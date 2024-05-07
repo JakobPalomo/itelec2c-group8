@@ -10,3 +10,43 @@ Link {
 .hoverBold:hover {
   font-weight: 700 !important;
 }
+
+Button {
+  text-transform: "none" !important;
+}
+.pinkButton {
+  background-color: #ff6262 !important;
+}
+.pinkButton:hover,
+.pinkButton:active {
+  background-color: #e74f4f !important;
+  text-transform: "none" !important;
+}
+
+.button {
+  font-family: "Poppins", sans-serif !important;
+  font-size: 13px !important;
+  color: whitesmoke !important;
+  font-weight: bold !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  height: 39px;
+}
+
+Button .MuiTouchRipple-root {
+  color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.relative {
+  display: relative;
+}
+
+.navTopMargin {
+  height: 98px;
+}
+
+@media screen and (max-width: 600px) {
+  .navTopMargin {
+    height: 90px !important;
+  }
+}
