@@ -2,13 +2,15 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
+  Outlet,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./App.css";
 
 //PAGES/COMPONENTS
-import Layout from "./components/Layout";
+import Layout from "./components/layout/Layout";
+import Navbar from "./components/layout/Navbar.js";
+import Footer from "./components/layout/Footer.js";
 import Login from "./components/beforeLogin/Login";
 import ForgotPassword from "./components/beforeLogin/ForgotPassword";
 import ChangePassword from "./components/beforeLogin/ChangePassword";
@@ -23,15 +25,47 @@ import Settings from "./components/account/Settings";
 import MySaves from "./components/account/MySaves";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Change true/false here since wla pa login
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [mainMargin, setMainMargin] = useState(0);
+
+  useEffect(() => {
+    // Function to update the main content margin
+    function updateMainMargin() {
+      const headerHeight = document.querySelector(".navTopMargin").offsetHeight;
+      const footerHeight = document.querySelector(".footer").offsetHeight;
+      const mainContentMargin = `calc(100vh - ${headerHeight}px - ${footerHeight}px)`;
+      console.log(`header & footer: ${headerHeight}; ${footerHeight}`);
+      setMainMargin(mainContentMargin);
+    }
+    updateMainMargin();
+    window.addEventListener("resize", updateMainMargin);
+    return () => {
+      window.removeEventListener("resize", updateMainMargin);
+    };
+  }, []);
 
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route element={<Layout />}>
+          <Route
+            element={
+              <Layout>
+                <Navbar isLoggedIn={isLoggedIn} />
+                <div style={{ height: "98px" }} className="navTopMargin"></div>
+                <Outlet />
+                <Footer className="footer" />
+              </Layout>
+            }
+          >
             {/* Home Route */}
-            <Route path="/" element={isLoggedIn ? <Home /> : <Login />}></Route>
+            <Route
+              path="/"
+              element={
+                isLoggedIn ? <Home mainMargin={mainMargin} /> : <Login />
+              }
+            />
             {/* Public Route */}
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

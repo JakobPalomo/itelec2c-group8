@@ -1,0 +1,50 @@
+.muiAppBar {
+  background-color: #ff6262 !important;
+  position: fixed !important;
+  z-index: 1000 !important;
+  /* border-bottom: 5px solid #fdefc7 !important; */
+  filter: drop-shadow(0 -5px 8px black);
+  box-shadow: none !important;
+}
+
+.muiToolbar {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.navLogo {
+  height: 30px;
+  margin-top: 5px;
+  margin-right: 20px;
+}
+
+.navLogoText {
+  margin-bottom: 2px;
+  height: 21px;
+}
+
+.navBottomDesign {
+  border-top: 5px solid #fdefc7 !important;
+  height: 29px;
+  display: flex;
+  justify-content: center;
+}
+
+.muiButton {
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.poppins {
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 400 !important;
+}
+
+.navDesign {
+  margin-top: -1px;
+  height: 39.61px;
+  position: absolute;
+}

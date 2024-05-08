@@ -1,0 +1,34 @@
+* {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.css-gadse4-MuiPaper-root-MuiGrid-root {
+  /* areabackground */
+  background-color: #fff6df !important;
+}
+
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+  /* input fields */
+  background-color: #ffffff !important;
+  border-radius: 24px;
+  border: 2px solid transparent; /* Add an outline */
+}
+
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input:focus {
+  /* Styles for focused state */
+  border-color: #d4d4d4; /* Change outline color when focused */
+}
+
+.welcome {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.subtext {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.css-1jrn2fe-MuiGrid-root {
+  height: 90vh !important;
+}
