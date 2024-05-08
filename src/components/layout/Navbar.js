@@ -15,10 +15,10 @@ import MenuItem from "@mui/material/MenuItem";
 
 import "../../styles/globalStyles.css";
 import "../../styles/Navbar.css";
-const logoPath = "./assets/palengkerist-logo-white.png";
-const logoTextPath = "./assets/palengkerist-text-white.png";
-const profilePicPath = "./assets/sample-profile.jpg";
-const navbarDesignPath = "./assets/navbar-design.svg";
+const logoPath = "/assets/palengkerist-logo-white.png";
+const logoTextPath = "/assets/palengkerist-text-white.png";
+const profilePicPath = "/assets/sample-profile.jpg";
+const navbarDesignPath = "/assets/navbar-design.svg";
 
 const pages = [];
 const accountNavs = [

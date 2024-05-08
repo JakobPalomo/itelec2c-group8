@@ -9,7 +9,8 @@ import "./App.css";
 
 //PAGES/COMPONENTS
 import Layout from "./components/layout/Layout";
-import Navbar from "./components/layout/Navbar.js";
+import Navbar from "./components/layout/Navbar";
+import Main from "./components/layout/Main";
 import Footer from "./components/layout/Footer.js";
 import Login from "./components/beforeLogin/Login";
 import ForgotPassword from "./components/beforeLogin/ForgotPassword";
@@ -54,18 +55,15 @@ function App() {
               <Layout>
                 <Navbar isLoggedIn={isLoggedIn} />
                 <div style={{ height: "98px" }} className="navTopMargin"></div>
-                <Outlet />
+                <Main mainMargin={mainMargin}>
+                  <Outlet />
+                </Main>
                 <Footer className="footer" />
               </Layout>
             }
           >
             {/* Home Route */}
-            <Route
-              path="/"
-              element={
-                isLoggedIn ? <Home mainMargin={mainMargin} /> : <Login />
-              }
-            />
+            <Route path="/" element={isLoggedIn ? <Home /> : <Login />} />
             {/* Public Route */}
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
