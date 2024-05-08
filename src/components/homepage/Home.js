@@ -1,12 +1,12 @@
 import Search from "./Search.js";
 import PalengkeList from "./PalengkeList.js";
 
-function Home() {
+function Home({ mainMargin }) {
   return (
-    <div>
+    <>
       <Search />
       <PalengkeList />
-    </div>
+    </>
   );
 }
 

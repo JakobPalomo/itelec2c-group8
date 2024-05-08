@@ -14,6 +14,7 @@ function PalengkeList() {
           {palengkeData.map((palengke) => (
             <Link
               to={`/palengke/${palengke.palengke_id}`}
+              key={palengke.palengke_id}
               style={{ textDecoration: "none", color: "black" }}
             >
               <PalengkeItem palengke={palengke} />

@@ -1,7 +1,16 @@
+:root {
+  --main-margin: 100vh;
+}
+
 .App {
   background-color: #fff6df;
   font-family: "Poppins", sans-serif !important;
   font-size: 13px;
+  min-height: 100vh;
+}
+
+.App .pageMinHeight {
+  min-height: var(--main-margin);
 }
 
 .App-logo {

@@ -4,6 +4,7 @@ import business_status from "../../data/business_status.js";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
+import CircleIcon from "@mui/icons-material/Circle";
 import RippleButton from "../RippleButton.js";
 
 function PalengkeItem({ palengke }) {
@@ -15,7 +16,7 @@ function PalengkeItem({ palengke }) {
   const getMedia = () => {
     //find the path of palengke.media[0]
     if (palengke.media.length !== 0) {
-      setMedia("./palengke.jpg");
+      setMedia("./assets/palengke.jpg");
     }
   };
 
@@ -70,14 +71,17 @@ function PalengkeItem({ palengke }) {
           {/* Status icon */}
           <div className="statusIconCont">
             <div className="statusIcon">
-              <i className="fa-solid fa-circle statusCircle"></i>
+              <CircleIcon
+                className="statusCircle"
+                style={{ color: statusColor }}
+              />
               <strong>{status}</strong>
             </div>
             <div className="statusIconInside">
-              <i
-                className="fa-solid fa-circle statusCircle"
+              <CircleIcon
+                className="statusCircle"
                 style={{ color: statusColor }}
-              ></i>
+              />
               <strong>{status}</strong>
             </div>
           </div>

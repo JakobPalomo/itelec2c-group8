@@ -2,7 +2,7 @@
   /* margin-top: 50px; */
   width: 100%;
   height: 680px;
-  background-image: url("/public/tasty-homemade-traditional-pizza-italian-recipe\ 1.png");
+  background-image: url("/public/assets/search-bg.png");
   background-size: cover; /* Scale the background image to cover the entire element */
   background-position: center; /* Center the background image */
   display: flex;

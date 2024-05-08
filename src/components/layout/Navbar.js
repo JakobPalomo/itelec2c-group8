@@ -15,10 +15,10 @@ import MenuItem from "@mui/material/MenuItem";
 
 import "../../styles/globalStyles.css";
 import "../../styles/Navbar.css";
-import logo from "../../assets/palengkerist-logo-white.png";
-import logoText from "../../assets/palengkerist-text-white.png";
-import profilePic from "../../assets/sample-profile.jpg";
-import navbarDesign from "../../assets/navbar-design.svg";
+const logoPath = "/assets/palengkerist-logo-white.png";
+const logoTextPath = "/assets/palengkerist-text-white.png";
+const profilePicPath = "/assets/sample-profile.jpg";
+const navbarDesignPath = "/assets/navbar-design.svg";
 
 const pages = [];
 const accountNavs = [
@@ -83,8 +83,8 @@ function Navbar({ isLoggedIn }) {
         <Box sx={{ flexGrow: 1, minWidth: "220px" }}>
           <DelayedTooltip title="Home" delay={1000}>
             <Link to="/">
-              <img src={logo} alt="Logo" className="navLogo" />
-              <img src={logoText} alt="Logo" className="navLogoText" />
+              <img src={logoPath} alt="Logo" className="navLogo" />
+              <img src={logoTextPath} alt="Logo" className="navLogoText" />
             </Link>
           </DelayedTooltip>
         </Box>
@@ -110,7 +110,7 @@ function Navbar({ isLoggedIn }) {
                   <Avatar
                     {...stringAvatar("Ira Rayzel Ji")}
                     className="poppins"
-                    src={profilePic}
+                    src={profilePicPath}
                   />
                   {/* comment src out/empty string for letter to work */}
                 </DelayedTooltip>
@@ -185,7 +185,7 @@ function Navbar({ isLoggedIn }) {
         )}
       </Toolbar>
       <div className="navBottomDesign">
-        <img src={navbarDesign} alt="" className="navDesign" />
+        <img src={navbarDesignPath} alt="" className="navDesign" />
       </div>
     </AppBar>
   );
