@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PalengkeItem from "./PalengkeItem";
 import palengkeData from "../../data/palengkeData";
+import HomeHeader from "./HomeHeader.js";
 import HomeHeader from "./HomeHeader.js";
 import "../../styles/PalengkeList.css";
 

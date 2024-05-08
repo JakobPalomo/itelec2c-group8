@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/PalengkeList.css";
 import business_status from "../../data/business_status.js";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
@@ -86,6 +87,24 @@ function PalengkeItem({ palengke }) {
             </div>
           </div>
         </div>
+        <div className="palengkeDetails">
+          <div className="ratingAndType">
+            <div
+              className="ratingCont"
+              style={{ backgroundColor: ratingColor }}
+            >
+              <StarRoundedIcon className="muiStarIcon" />
+              {palengke.rating.toFixed(1).toString()}
+            </div>
+            <div className="type">{palengke.type}</div>
+          </div>
+          <h3 className="palengkeName">{palengke.name}</h3>
+          <div className="location">
+            <FmdGoodRoundedIcon className="muiLocationIcon" />
+            <div>{palengke.address}</div>
+          </div>
+        </div>
+      </RippleButton>
         <div className="palengkeDetails">
           <div className="ratingAndType">
             <div
