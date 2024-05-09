@@ -19,7 +19,7 @@ function Palengke({ ...sharedProps }) {
         <div className="content">
           <div className="namerate">
             <p className="welcome">Palengke Name</p>
-            <div className="ratingCont">
+            <div className="ratingCont" style={{ margin: "20px" }}>
               <StarRoundedIcon className="muiStarIcon" />5
             </div>
             <Report style={{ marginLeft: "500px" }} />
