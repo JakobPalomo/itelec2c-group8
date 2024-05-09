@@ -18,7 +18,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const defaultTheme = createTheme();
 
-function Login() {
+function Login({ ...sharedProps }) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handlePasswordVisibility = () => {

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/PalengkeList.css";
-import business_status from "../../data/business_status.js";
+import business_statuses from "../../data/business_statuses.js";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CircleIcon from "@mui/icons-material/Circle";
-import RippleButton from "../RippleButton.js";
+import RippleButton from "../ui/RippleButton.js";
 
 function PalengkeItem({ palengke }) {
   const [media, setMedia] = useState("");
@@ -23,7 +23,7 @@ function PalengkeItem({ palengke }) {
   const getStatus = () => {
     //find the status name of palengke.business_status
     if (palengke.business_status !== null) {
-      const statusObject = business_status.find(
+      const statusObject = business_statuses.find(
         (status) => status.business_status_id === palengke.business_status
       );
       if (statusObject) {
@@ -57,7 +57,7 @@ function PalengkeItem({ palengke }) {
   }, []);
   return (
     <div key={palengke.palengke_id} className="palengkeCard">
-      <RippleButton color="rgba(0, 0, 0, 0.2) !important">
+      <RippleButton color="rgba(0, 0, 0, 0.2) !important" display="block">
         <div className="imageContainer">
           {media !== "" && media !== null ? (
             <img src={media} alt={palengke.name} className="palengkeImage" />

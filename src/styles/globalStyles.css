@@ -7,6 +7,10 @@ Link {
   font-weight: 500 !important;
 }
 
+.pinkColor {
+  color: #ff5757 !important;
+}
+
 .hoverBold:hover {
   font-weight: 700 !important;
 }
@@ -22,23 +26,65 @@ Button {
   background-color: #e74f4f !important;
   text-transform: "none" !important;
 }
+.yellowButton {
+  background-color: #ffae3c !important;
+}
+.yellowButton:hover,
+.yellowButton:active {
+  background-color: #f89d1d !important;
+  text-transform: "none" !important;
+}
+.outlinedGreyButton {
+  color: #888888 !important;
+  border: 2px solid #a5a5a5 !important;
+}
+.outlinedGreyButton:hover,
+.outlinedGreyButton:active {
+  color: #616161 !important;
+  border: 2px solid #888888 !important;
+  text-transform: "none" !important;
+}
+.outlinedPinkButton {
+  color: #ff6262 !important;
+  border: 2px solid #ff6262 !important;
+}
+.outlinedPinkButton:hover,
+.outlinedPinkButton:active {
+  color: #e74f4f !important;
+  border: 2px solid #e74f4f !important;
+  text-transform: "none" !important;
+}
 
 .button {
   font-family: "Poppins", sans-serif !important;
   font-size: 13px !important;
-  color: whitesmoke !important;
+  color: white !important;
   font-weight: bold !important;
   border-radius: 10px !important;
   box-shadow: none !important;
   height: 39px;
 }
 
+.outlinedBbutton {
+  font-family: "Poppins", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: bold !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  height: 39px;
+  background-color: white !important;
+}
+
 Button .MuiTouchRipple-root {
   color: rgba(0, 0, 0, 0.2) !important;
 }
 
+.cursorPointer {
+  cursor: pointer;
+}
+
 .relative {
-  display: relative;
+  position: relative;
 }
 
 .navTopMargin {

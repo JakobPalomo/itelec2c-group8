@@ -1,4 +1,4 @@
-function Account() {
+function Account({ ...sharedProps }) {
   return <div>Account Page</div>;
 }
 

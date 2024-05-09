@@ -1,0 +1,224 @@
+.textbox {
+  border-radius: 50px !important;
+  font-size: 15px !important;
+}
+
+.addPalengkeModalBody {
+  padding: 20px 100px 20px 100px;
+}
+
+.formLabel {
+  color: rgb(0, 0, 0);
+  font-family: "Poppins", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  width: fit-Content !important;
+  margin-left: 10px !important;
+  margin-bottom: 5px !important;
+}
+
+.asteriskSpan {
+  color: #ff3f3f;
+  margin-left: 5px;
+}
+
+.inputTextMargin {
+  margin-bottom: 15px;
+}
+
+.relativeDiv {
+  position: relative !important;
+}
+
+.locationIconButton {
+  position: absolute !important;
+  top: 0;
+  right: 0;
+  height: 42px;
+  vertical-align: middle;
+  margin-right: 5px !important;
+}
+
+.muiLocationIconPink {
+  color: #ff5757 !important;
+  font-size: 17px !important;
+}
+
+.uploadMediaCont {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.mediaLabel {
+  margin-right: 20px !important;
+  margin: 0 !important;
+  margin-left: 8px !important;
+}
+
+.mediaCont {
+  background-color: white;
+  width: 100%;
+  min-height: 100px;
+  max-height: 300px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.mediaContBorder {
+  border: 0.5px solid #c4c4c4 !important;
+}
+
+.noImageMediaContainer {
+  color: #979797;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mediaContInside {
+  width: 99% !important;
+  height: 95% important;
+  overflow-x: auto !important;
+  padding: 15px !important;
+  grid-template-columns: unset !important;
+  gap: unset !important;
+
+  display: flex !important;
+  justify-content: center !important;
+  background-color: "#c4c4c4" !important;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  flex-wrap: wrap;
+  flex-direction: row !important;
+}
+
+.filePreview {
+  height: 100px;
+  width: 150px;
+  flex: 0 0 auto;
+  margin: 10px;
+  justify-content: space-between;
+}
+
+.filePreview img,
+.filePreview video {
+  outline: 0.5px solid #c4c4c4;
+}
+
+.imageGalleryItem:hover {
+  outline: 1px solid #ffba5a;
+}
+
+.mediaButton:active .imageGalleryItem {
+  outline: 5px solid #ffba5a;
+}
+
+.mediaTitle {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 5px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.mediaTitle:hover {
+  color: #e78700;
+}
+
+.imageGalleryItem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.mediaButton {
+  display: flex !important;
+}
+
+.editMediaItem {
+  max-width: 100%;
+  max-height: 600px;
+  object-fit: cover;
+}
+
+.editMediaModalBody {
+  display: flex;
+  justify-content: center;
+}
+
+.editMediaButtonCont {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.mediaButtonMargin {
+  margin: 10px 10px 0px 10px !important;
+}
+
+.deleteMediaButton {
+  width: 150px;
+}
+
+.muiDeleteIcon {
+  margin-right: 10px;
+  font-size: 20px !important;
+}
+
+.confirmModalCont {
+  text-align: center;
+}
+
+.muiWarningIcon {
+  color: #e78700 !important;
+  font-size: 50px !important;
+}
+
+.confirmModalButtonCont {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.addMediaButtonCont {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.addPalengkeModalButtons {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.addPalengkeModalButtons Button {
+  width: 150px;
+}
+
+@media screen and (max-width: 1000px) {
+  .addPalengkeModalBody {
+    padding: 20px 50px 20px 50px;
+  }
+}
+@media screen and (max-width: 652px) {
+  .addPalengkeModalBody {
+    padding: 20px 10px 20px 10px;
+  }
+}

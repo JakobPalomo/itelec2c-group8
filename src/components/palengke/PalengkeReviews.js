@@ -1,4 +1,4 @@
-function PalengkeReviews() {
+function PalengkeReviews({ ...sharedProps }) {
   return <div>Palengke Reviews Page</div>;
 }
 

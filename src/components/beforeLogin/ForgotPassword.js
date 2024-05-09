@@ -1,4 +1,4 @@
-function ForgotPassword() {
+function ForgotPassword({ ...sharedProps }) {
   return <div>Forgot Password Page</div>;
 }
 

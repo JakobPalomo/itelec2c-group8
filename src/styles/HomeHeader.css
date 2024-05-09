@@ -11,7 +11,7 @@
 .relativeCont {
   width: 100%;
 }
-.button {
+.addPalengkeButton {
   transform: translate(-25%, -150%);
   position: absolute !important;
   right: 0;
@@ -30,7 +30,7 @@
     justify-content: center;
     margin-bottom: 10px;
   }
-  .button {
+  .addPalengkeButton {
     position: relative !important;
     transform: translate(0%, 0%);
   }

@@ -1,4 +1,4 @@
-function MyReviews() {
+function MyReviews({ ...sharedProps }) {
   return <div>My Reviews Page</div>;
 }
 

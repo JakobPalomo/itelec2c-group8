@@ -14,13 +14,13 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../../styles/Login.css";
 
-function Copyright(props) {
+function Copyright({ ...sharedProps }) {
   return (
     <Typography
       variant="body2"
       color="text.secondary"
       align="center"
-      {...props}
+      // {...props}
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
