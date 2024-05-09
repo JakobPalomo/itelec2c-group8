@@ -1,0 +1,52 @@
+.cover {
+  margin-top: 30px;
+  width: 100%;
+  height: 550px;
+  background-image: url("/public/assets/search-bg.png");
+  background-size: cover; /* Scale the background image to cover the entire element */
+  background-position: center; /* Center the background image */
+}
+
+.profcontent {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.pfp {
+  display: flex;
+}
+
+.avatar {
+  margin-left: 100px;
+  margin-top: -100px;
+  border: 2px #ff6262 solid;
+}
+
+.profbutton {
+  background: #f66c36 !important;
+  height: fit-content;
+  margin-left: -50px !important;
+  margin-top: 85px !important;
+  margin-right: 50px !important;
+  color: white !important;
+}
+
+.pfpinfo h2 {
+  color: #f66c36;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  margin-left: -5px;
+}
+
+.editbutton {
+  background-color: #ff6262 !important;
+  color: white !important; /* Optional: Change the text color if needed */
+  padding: 10px 30px !important; /* Adjust padding as needed */
+  border: none; /* Remove the border */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  height: fit-content;
+  border-radius: 50px !important;
+  margin-right: 100px !important;
+}
