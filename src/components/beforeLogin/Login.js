@@ -32,7 +32,7 @@ function Login({ ...sharedProps }) {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
+      <Grid container component="main" sx={{ height: "90vh" }}>
         <CssBaseline />
         <Grid
           item
@@ -105,7 +105,7 @@ function Login({ ...sharedProps }) {
                     backgroundColor: "#FF6262", // Button background color
                     borderRadius: "10px",
                     boxShadow: "none",
-                    width: "500px", // Adjust width
+                    width: "100%", // Adjust width
                     height: "50px", // Adjust height
                     "&:hover": {
                       backgroundColor: "#E74F4F", // Button hover background color
