@@ -136,23 +136,36 @@ function Login({ ...sharedProps }) {
                   },
                 }}
               />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
+              <Box
                 sx={{
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: "#FF6262", // Button background color
-                  borderRadius: "10px", // Border radius
-                  "&:hover": {
-                    backgroundColor: "#E74F4F", // Button hover background color
-                  },
+                  display: "flex",
+                  justifyContent: "center",
                 }}
               >
-                Sign In
-              </Button>
-
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    backgroundColor: "#FF6262", // Button background color
+                    borderRadius: "10px",
+                    boxShadow: "none",
+                    width: "600px", // Adjust width
+                    height: "50px", // Adjust height
+                    "&:hover": {
+                      backgroundColor: "#E74F4F", // Button hover background color
+                      boxShadow: "none",
+                    },
+                    typography: {
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                    },
+                  }}
+                >
+                  Sign In
+                </Button>
+              </Box>
               <Grid container>
                 <Grid item xs>
                   <Link
