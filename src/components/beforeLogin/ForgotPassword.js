@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -20,7 +20,7 @@ import { MuiOtpInput } from "mui-one-time-password-input";
 const defaultTheme = createTheme();
 
 const OTP = () => {
-  const [otp, setOtp] = React.useState("");
+  const [otp, setOtp] = useState("");
 
   const handleChange = (newValue) => {
     setOtp(newValue);
@@ -29,24 +29,33 @@ const OTP = () => {
   return <MuiOtpInput value={otp} onChange={handleChange} length={6} />;
 };
 
-let timeLeft = 600;
-
-function updateCountdown() {
-  const minutes = Math.floor(timeLeft / 60);
-  let seconds = timeLeft % 60;
-
-  if (seconds < 10) {
-    seconds = "0" + seconds;
-  }
-
-  document.getElementById("timer").textContent = `${minutes}:${seconds}`;
-  timeLeft--;
-}
-
-const timerInterval = setInterval(updateCountdown, 1000);
-
 function ForgotPassword() {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 0) {
+          clearInterval(timerInterval);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(timerInterval);
+  }, []);
+
+  // Function to format time in mm:ss format
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes < 10 ? "0" + minutes : minutes}:${
+      seconds < 10 ? "0" + seconds : seconds
+    }`;
+  };
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -101,8 +110,8 @@ function ForgotPassword() {
             </p>
             <OTP />
             <p className="subtext">Didn’t receive the OTP code?</p>
-            <p id="countdown" class="subtext">
-              Time Remaining: <span id="timer">10:00</span>
+            <p className="subtext">
+              Time Remaining: <span>{formatTime(timeLeft)}</span>
             </p>
             <center>
               <Button
