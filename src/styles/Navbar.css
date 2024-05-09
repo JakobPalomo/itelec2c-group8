@@ -1,7 +1,7 @@
 .muiAppBar {
   background-color: #ff6262 !important;
   position: fixed !important;
-  z-index: 1000 !important;
+  z-index: 2 !important;
   /* border-bottom: 5px solid #fdefc7 !important; */
   filter: drop-shadow(0 -5px 8px black);
   box-shadow: none !important;

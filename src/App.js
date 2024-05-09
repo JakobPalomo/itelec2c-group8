@@ -30,13 +30,32 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [mainMargin, setMainMargin] = useState(0);
 
+  // app objects
+  const [palengkeList, setPalengkeList] = useState([]);
+  const [reviewList, setReviewList] = useState([]);
+  const [upvoteList, setUpvoteList] = useState([]);
+  const [mediaList, setMediaList] = useState([]);
+  const [userList, setUserList] = useState([]);
+
+  const sharedProps = {
+    palengkeList: palengkeList,
+    setPalengkeList: setPalengkeList,
+    reviewList: reviewList,
+    setReviewList: setReviewList,
+    upvoteList: upvoteList,
+    setUpvoteList: setUpvoteList,
+    mediaList: mediaList,
+    setMediaList: setMediaList,
+    userList: userList,
+    setUserList: setUserList,
+  };
+
   useEffect(() => {
     // Function to update the main content margin
     function updateMainMargin() {
       const headerHeight = document.querySelector(".navTopMargin").offsetHeight;
       const footerHeight = document.querySelector(".footer").offsetHeight;
       const mainContentMargin = `calc(100vh - ${headerHeight}px - ${footerHeight}px)`;
-      console.log(`header & footer: ${headerHeight}; ${footerHeight}`);
       setMainMargin(mainContentMargin);
     }
     updateMainMargin();
@@ -63,27 +82,54 @@ function App() {
             }
           >
             {/* Home Route */}
-            <Route path="/" element={isLoggedIn ? <Home /> : <Login />} />
+            <Route
+              path="/"
+              element={
+                isLoggedIn ? (
+                  <Home {...sharedProps} />
+                ) : (
+                  <Login {...sharedProps} />
+                )
+              }
+            />
             {/* Public Route */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/palengke/:palengkeId" element={<Palengke />} />
+            <Route path="/login" element={<Login {...sharedProps} />} />
+            <Route
+              path="/forgot-password"
+              element={<ForgotPassword {...sharedProps} />}
+            />
+            <Route
+              path="/change-password"
+              element={<ChangePassword {...sharedProps} />}
+            />
+            <Route path="/register" element={<Register {...sharedProps} />} />
+            <Route path="/home" element={<Home {...sharedProps} />} />
+            <Route
+              path="/palengke/:palengkeId"
+              element={<Palengke {...sharedProps} />}
+            />
             <Route
               path="/palengke/reviews/:palengkeId"
-              element={<PalengkeReviews />}
+              element={<PalengkeReviews {...sharedProps} />}
             />
             {/* Private Route (with account) */}
-            <Route path="/account" element={<Account />} />
+            <Route path="/account" element={<Account {...sharedProps} />} />
             <Route
               path="/account/contributions"
-              element={<MyContributions />}
+              element={<MyContributions {...sharedProps} />}
             />
-            <Route path="/account/reviews" element={<MyReviews />} />
-            <Route path="/account/settings" element={<Settings />} />
-            <Route path="/account/saves" element={<MySaves />} />
+            <Route
+              path="/account/reviews"
+              element={<MyReviews {...sharedProps} />}
+            />
+            <Route
+              path="/account/settings"
+              element={<Settings {...sharedProps} />}
+            />
+            <Route
+              path="/account/saves"
+              element={<MySaves {...sharedProps} />}
+            />
           </Route>
         </Routes>
       </Router>

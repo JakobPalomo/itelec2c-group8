@@ -2,15 +2,16 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import "../../styles/HomeHeader.css";
 
-function HomeHeader() {
+function HomeHeader({ setAddPalengkeClicked }) {
   return (
     <div className="header">
       <h1 className="headerTitle">Palengke For You</h1>
       <div className="relativeCont">
         <Button
           variant="contained"
-          className="button pinkButton"
+          className="button addPalengkeButton pinkButton"
           style={{ textTransform: "none" }}
+          onClick={() => setAddPalengkeClicked(true)}
         >
           Add Palengke
           <AddIcon className="muiAddIcon" />

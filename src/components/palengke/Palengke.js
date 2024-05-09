@@ -1,5 +1,5 @@
 const logoPath = "./assets/palengkerist-logo-white.png";
-function Palengke() {
+function Palengke({ ...sharedProps }) {
   return <div>Palengke Page</div>;
 }
 

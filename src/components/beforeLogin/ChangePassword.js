@@ -1,4 +1,4 @@
-function ChangePassword() {
+function ChangePassword({ ...sharedProps }) {
   return <div>Change Password Page</div>;
 }
 
