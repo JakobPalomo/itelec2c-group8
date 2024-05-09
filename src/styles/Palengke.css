@@ -107,6 +107,20 @@
   display: block;
 }
 
+.Reviews {
+  margin-top: 4px;
+  background-color: #ffffff;
+  width: 100%;
+  padding: 24px;
+}
+.indiv {
+  width: 95%;
+}
+.name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
 @media screen and (max-width: 720px) {
   .details {
     flex-direction: column;

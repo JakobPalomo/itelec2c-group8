@@ -6,6 +6,8 @@ import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import Report from "./Report.js";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import HalfRating from "./HalfRating.js";
+import Review from "./Review.js";
 // Import the image file
 import palengkeImage from "./palengke.jpg";
 
@@ -43,7 +45,7 @@ function Palengke({ ...sharedProps }) {
         {" "}
         <div class="dropdown">
           <button class="dropbtn">
-            Filter by
+            Sort Reviews by
             <ArrowDropDownIcon />
           </button>
           <div class="dropdown-content">
@@ -61,6 +63,27 @@ function Palengke({ ...sharedProps }) {
           Add Review
           <AddIcon className="muiAddIcon" />
         </Button>
+      </div>
+      <div
+        className="Reviews"
+        style={{ marginBottom: "28px", flexDirection: "row", display: "flex" }}
+      >
+        <div>
+          <p>Palengke Reviews</p>
+          <p className="welcome">4.7</p>
+          <div>
+            <HalfRating />
+          </div>
+          <p>(524 Reviews)</p>
+          <p>Jan 20, 2024</p>
+        </div>
+      </div>
+
+      <div>
+        <Review />
+        <Review />
+        <Review />
+        <Review />
       </div>
     </div>
   );
