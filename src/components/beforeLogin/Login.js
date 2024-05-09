@@ -10,11 +10,15 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../../styles/Login.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import InputText from "../modals/InputText.js";
+import { useState, useEffect } from "react";
 
 const defaultTheme = createTheme();
 
 function Login({ ...sharedProps }) {
   const [showPassword, setShowPassword] = React.useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -70,72 +74,25 @@ function Login({ ...sharedProps }) {
                 Hello, Welcome!
               </span>
               <br />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                variant="outlined"
-                InputLabelProps={{ style: { color: "#696969" } }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#d4d4d4", // Normal border color
-                      borderRadius: "24px", // Border radius
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#d4d4d4", // Border color on hover
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#FFBA5A", // Border color on focus
-                      borderWidth: 2,
-                    },
-                  },
-                }}
+              <InputText
+                type="text"
+                label="Username"
+                required={true}
+                setValue={setUsername}
+                value={username}
+                maxLength={100}
+                placeholder="Enter your username"
               />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
+              <InputText
+                type="Password"
                 label="Password"
-                type={showPassword ? "text" : "password"} // Show password if showPassword is true
-                id="password"
-                autoComplete="current-password"
-                variant="outlined"
-                InputLabelProps={{ style: { color: "#696969" } }}
-                InputProps={{
-                  style: { backgroundColor: "#ffffff", borderRadius: "24px" },
-                  endAdornment: (
-                    <Button onClick={handlePasswordVisibility}>
-                      {showPassword ? (
-                        <VisibilityIcon sx={{ color: "#E74F4F" }} />
-                      ) : (
-                        <VisibilityOffIcon sx={{ color: "#E74F4F" }} />
-                      )}
-                    </Button>
-                  ),
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#d4d4d4", // Normal border color
-                      borderRadius: "24px", // Border radius
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#d4d4d4", // Border color on hover
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#FFBA5A", // Border color on focus
-                      borderWidth: 2,
-                    },
-                  },
-                }}
+                required={true}
+                setValue={setPassword}
+                value={password}
+                maxLength={100}
+                placeholder="Enter your password"
               />
+
               <Box
                 sx={{
                   display: "flex",
@@ -151,7 +108,7 @@ function Login({ ...sharedProps }) {
                     backgroundColor: "#FF6262", // Button background color
                     borderRadius: "10px",
                     boxShadow: "none",
-                    width: "600px", // Adjust width
+                    width: "500px", // Adjust width
                     height: "50px", // Adjust height
                     "&:hover": {
                       backgroundColor: "#E74F4F", // Button hover background color
@@ -181,7 +138,7 @@ function Login({ ...sharedProps }) {
                     Don't have an account?{" "}
                   </span>
                   <Link
-                    href="#"
+                    href="/register"
                     variant="body2"
                     style={{ color: "#4f4f4f", textDecoration: "underline" }}
                   >
