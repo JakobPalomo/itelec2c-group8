@@ -1,15 +1,10 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import AddIcon from "@mui/icons-material/Add";
 import "../../styles/Login.css";
 import InputText from "../modals/InputText.js";
 import { useState, useEffect } from "react";
