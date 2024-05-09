@@ -91,7 +91,7 @@ function Login({ ...sharedProps }) {
                       borderColor: "#d4d4d4", // Border color on hover
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: "#d4d4d4", // Border color on focus
+                      borderColor: "#FFBA5A", // Border color on focus
                       borderWidth: 2,
                     },
                   },
@@ -130,7 +130,7 @@ function Login({ ...sharedProps }) {
                       borderColor: "#d4d4d4", // Border color on hover
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: "#d4d4d4", // Border color on focus
+                      borderColor: "#FFBA5A", // Border color on focus
                       borderWidth: 2,
                     },
                   },
@@ -144,6 +144,7 @@ function Login({ ...sharedProps }) {
                   mt: 3,
                   mb: 2,
                   backgroundColor: "#FF6262", // Button background color
+                  borderRadius: "10px", // Border radius
                   "&:hover": {
                     backgroundColor: "#E74F4F", // Button hover background color
                   },

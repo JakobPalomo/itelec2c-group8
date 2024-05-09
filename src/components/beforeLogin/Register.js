@@ -3,39 +3,24 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import "../../styles/Login.css";
 
-function Copyright({ ...sharedProps }) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      // {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
+
 function Register() {
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handlePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -47,7 +32,7 @@ function Register() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
+      <Grid container component="main" sx={{ height: "90%" }}>
         <CssBaseline />
         <Grid
           item
@@ -76,101 +61,275 @@ function Register() {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Register Now!
-            </Typography>
+            <span className="welcome" style={{ marginTop: "12px" }}>
+              Sign up to Palengkerist!
+            </span>
+            <br />
+            <input
+              accept="image/*"
+              style={{ display: "none" }}
+              id="profile-picture-upload"
+              multiple
+              type="file"
+            />
+            <label htmlFor="profile-picture-upload">
+              <Avatar
+                sx={{
+                  m: 1,
+                  bgcolor: "#FF6262", // Change bgcolor to #FF6262
+                  width: 100,
+                  height: 100,
+                }}
+              >
+                <CameraAltIcon sx={{ fontSize: 60 }} />
+              </Avatar>
+            </label>
             <Box
               component="form"
               noValidate
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
-              <span className="welcome" style={{ marginTop: "12px" }}>
-                Hello, Welcome!
-              </span>
-              <br></br>
-              <span className="subtext">Email/Username</span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
-                label="Email/Username"
+                label="Username"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                variant="outlined"
+                InputLabelProps={{ style: { color: "#696969" } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#d4d4d4",
+                      borderRadius: "24px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#d4d4d4",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FFBA5A",
+                      borderWidth: 2,
+                    },
+                  },
+                }}
               />
-              <span className="subtext">Password</span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 autoComplete="current-password"
+                autoFocus
+                variant="outlined"
+                InputLabelProps={{ style: { color: "#696969" } }}
+                InputProps={{
+                  endAdornment: (
+                    <Button onClick={handlePasswordVisibility}>
+                      {showPassword ? (
+                        <VisibilityIcon sx={{ color: "#E74F4F" }} />
+                      ) : (
+                        <VisibilityOffIcon sx={{ color: "#E74F4F" }} />
+                      )}
+                    </Button>
+                  ),
+                  style: { backgroundColor: "#ffffff", borderRadius: "24px" },
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#d4d4d4",
+                      borderRadius: "24px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#d4d4d4",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FFBA5A",
+                      borderWidth: 2,
+                    },
+                  },
+                }}
               />
-              <span className="subtext">Email</span>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirm Password"
+                type={showPassword ? "text" : "password"}
+                id="confirmPassword"
+                autoComplete="current-password"
+                autoFocus
+                variant="outlined"
+                InputLabelProps={{ style: { color: "#696969" } }}
+                InputProps={{
+                  endAdornment: (
+                    <Button onClick={handlePasswordVisibility}>
+                      {showPassword ? (
+                        <VisibilityIcon sx={{ color: "#E74F4F" }} />
+                      ) : (
+                        <VisibilityOffIcon sx={{ color: "#E74F4F" }} />
+                      )}
+                    </Button>
+                  ),
+                  style: { backgroundColor: "#ffffff", borderRadius: "24px" },
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#d4d4d4",
+                      borderRadius: "24px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#d4d4d4",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FFBA5A",
+                      borderWidth: 2,
+                    },
+                  },
+                }}
+              />
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                variant="outlined"
+                InputLabelProps={{ style: { color: "#696969" } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#d4d4d4",
+                      borderRadius: "24px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#d4d4d4",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FFBA5A",
+                      borderWidth: 2,
+                    },
+                  },
+                }}
               />
-              <span className="subtext">Region</span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="region"
                 label="Region"
-                name="email"
-                autoComplete="email"
+                name="region"
+                autoComplete="region"
                 autoFocus
+                variant="outlined"
+                InputLabelProps={{ style: { color: "#696969" } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#d4d4d4",
+                      borderRadius: "24px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#d4d4d4",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FFBA5A",
+                      borderWidth: 2,
+                    },
+                  },
+                }}
               />
-              <span className="subtext">City/Province</span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="city/prov"
                 label="City/Province"
-                name="email"
-                autoComplete="email"
+                name="city/prov"
+                autoComplete="city/prov"
                 autoFocus
+                variant="outlined"
+                InputLabelProps={{ style: { color: "#696969" } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#d4d4d4",
+                      borderRadius: "24px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#d4d4d4",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FFBA5A",
+                      borderWidth: 2,
+                    },
+                  },
+                }}
               />
-              <span className="subtext">District</span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="district"
                 label="District"
-                name="email"
-                autoComplete="email"
+                name="district"
+                autoComplete="district"
                 autoFocus
+                variant="outlined"
+                InputLabelProps={{ style: { color: "#696969" } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#d4d4d4",
+                      borderRadius: "24px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#d4d4d4",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FFBA5A",
+                      borderWidth: 2,
+                    },
+                  },
+                }}
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mt: 3,
+                  textAlign: "center",
+                }}
               >
-                Register Account
-              </Button>
-              <Copyright sx={{ mt: 5 }} />
+                <Button
+                  variant="contained"
+                  className="button pinkButton mediaButtonMargin"
+                  style={{ textTransform: "none" }}
+                  onClick={() => {}}
+                >
+                  Submit
+                </Button>
+                <Button
+                  variant="outlined"
+                  className="outlinedBbutton outlinedPinkButton mediaButtonMargin"
+                  style={{ textTransform: "none" }}
+                >
+                  Cancel
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Grid>
