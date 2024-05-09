@@ -1,16 +1,11 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../../styles/Login.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -159,13 +154,24 @@ function Login({ ...sharedProps }) {
 
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link
+                    href="#"
+                    variant="body2"
+                    style={{ color: "#4f4f4f", textDecoration: "none" }}
+                  >
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <span style={{ color: "#4f4f4f" }}>
+                    Don't have an account?{" "}
+                  </span>
+                  <Link
+                    href="#"
+                    variant="body2"
+                    style={{ color: "#4f4f4f", textDecoration: "underline" }}
+                  >
+                    Sign Up
                   </Link>
                 </Grid>
               </Grid>
