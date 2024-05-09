@@ -1,0 +1,131 @@
+.holder {
+  margin: 6%;
+}
+.details {
+  display: flex;
+  flex-direction: row;
+  padding: 12px;
+}
+.Marketimg {
+  border-radius: 12px;
+  width: 500px;
+  object-fit: contain;
+}
+.welcome {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.ratingCont {
+  /* background-color: green; */
+  font-size: 24px;
+  padding-left: 6px;
+  padding-right: 8px;
+  margin-right: 10px;
+  margin-top: 20px;
+  margin-left: 24px;
+  border-radius: 6px;
+  /* width: fit-content; */
+  font-weight: bold;
+  color: rgb(252, 252, 252);
+  background-color: rgb(67, 112, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+}
+.namerate {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  height: fit-content;
+}
+
+.location {
+  font-size: 18px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-weight: 600;
+  color: #fd7335 !important;
+  margin-top: 2px;
+  margin-bottom: 3px;
+}
+.content {
+  margin-left: 36px;
+}
+
+.desc {
+  margin-top: 12px;
+  width: 90%;
+  font-size: 16px;
+  text-align: justify;
+}
+
+.subtext {
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: bold;
+}
+/* Style the dropdown button */
+.dropbtn {
+  background-color: #ffffff;
+  color: rgb(14, 14, 14);
+  padding: 8px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  border: black solid 1px;
+}
+
+/* Style the dropdown content */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Style the links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.Reviews {
+  margin-top: 4px;
+  background-color: #ffffff;
+  width: 100%;
+  padding: 24px;
+}
+.indiv {
+  width: 95%;
+}
+.name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 720px) {
+  .details {
+    flex-direction: column;
+  }
+  .Marketimg {
+    width: 100%;
+  }
+}
