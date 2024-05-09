@@ -10,7 +10,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../../styles/Login.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-
+import Typography from "@mui/material/Typography";
 const defaultTheme = createTheme();
 
 function Login({ ...sharedProps }) {
@@ -145,12 +145,15 @@ function Login({ ...sharedProps }) {
                   mb: 2,
                   backgroundColor: "#FF6262", // Button background color
                   borderRadius: "10px", // Border radius
+                  height: "50px",
                   "&:hover": {
                     backgroundColor: "#E74F4F", // Button hover background color
                   },
                 }}
               >
-                Sign In
+                <Typography variant="body1" fontWeight="bold">
+                  Sign In
+                </Typography>
               </Button>
 
               <Grid container>
