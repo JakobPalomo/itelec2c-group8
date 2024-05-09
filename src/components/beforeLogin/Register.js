@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import AddIcon from "@mui/icons-material/Add";
 import "../../styles/Login.css";
 
 const defaultTheme = createTheme();
@@ -72,7 +73,10 @@ function Register() {
               multiple
               type="file"
             />
-            <label htmlFor="profile-picture-upload">
+            <label
+              htmlFor="profile-picture-upload"
+              style={{ position: "relative" }}
+            >
               <Avatar
                 sx={{
                   m: 1,
@@ -83,6 +87,23 @@ function Register() {
               >
                 <CameraAltIcon sx={{ fontSize: 60 }} />
               </Avatar>
+              <Button
+                variant="contained"
+                color="primary"
+                component="label"
+                style={{
+                  position: "absolute",
+                  bottom: "-20px", // Adjust vertical position as needed
+                  left: "calc(50% - 1px)", // Adjust horizontal position as needed
+                  width: "60px", // Adjust width of the button
+                  height: "60px", // Adjust height of the button
+                  borderRadius: "50%",
+                  backgroundColor: "#F66C36",
+                }}
+              >
+                <input type="file" hidden />
+                <AddIcon />
+              </Button>
             </label>
             <Box
               component="form"
