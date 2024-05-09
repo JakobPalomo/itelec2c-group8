@@ -7,7 +7,7 @@ import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CircleIcon from "@mui/icons-material/Circle";
 import RippleButton from "../ui/RippleButton.js";
 
-function PalengkeItem({ palengke }) {
+function PalengkeItem({ palengke, type, min, marg }) {
   const [media, setMedia] = useState("");
   const [status, setStatus] = useState("");
   const [statusColor, setStatusColor] = useState("");
@@ -56,7 +56,11 @@ function PalengkeItem({ palengke }) {
     getRatingColor();
   }, []);
   return (
-    <div key={palengke.palengke_id} className="palengkeCard">
+    <div
+      key={palengke.palengke_id}
+      className="palengkeCard"
+      style={{ width: type, minWidth: min, margin: marg }}
+    >
       <RippleButton color="rgba(0, 0, 0, 0.2) !important" display="block">
         <div className="imageContainer">
           {media !== "" && media !== null ? (
