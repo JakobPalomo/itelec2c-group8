@@ -37,6 +37,10 @@ export default function Account({ ...sharedProps }) {
           <Link className="links" to="/account/reviews">
             See All <ArrowForwardIosIcon sx={{ fontSize: "13px" }} />
           </Link>
+          </div>
+          <div className="title">
+          <button className="editbutton" to="/modals/edit-profile">
+          </button>
         </div>
       </div>
     </>

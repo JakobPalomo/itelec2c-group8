@@ -24,6 +24,7 @@ import MyContributions from "./components/account/MyContributions";
 import MyReviews from "./components/account/MyReviews";
 import Settings from "./components/account/Settings";
 import MySaves from "./components/account/MySaves";
+import EditProfile from "./components/modals/EditProfile"
 
 function App() {
   // Change true/false here since wla pa login
@@ -129,6 +130,10 @@ function App() {
             <Route
               path="/account/saves"
               element={<MySaves {...sharedProps} />}
+            />
+            <Route
+              path="/account/edit-profile"
+              element={<EditProfile {...sharedProps} />}
             />
           </Route>
         </Routes>
