@@ -39,6 +39,30 @@
   height: fit-content;
 }
 
+.more {
+  margin-top: 24px;
+  color: #fd7335;
+  font-weight: bold;
+  font-size: 18px;
+  text-decoration: none;
+  text-wrap: nowrap;
+}
+
+.fifty {
+  text-align: start;
+  width: 50%;
+}
+
+h1 {
+  text-wrap: nowrap;
+}
+
+.head {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
 .location {
   font-size: 18px;
   display: flex;
@@ -104,12 +128,26 @@
 .dropdown:hover .dropdown-content {
   display: block;
 }
+.css-1qdzy9k-MuiBarElement-root {
+  fill: #fac817 !important;
+}
+.rev {
+  margin-left: 25%;
+}
 
 .Reviews {
   margin-top: 4px;
   background-color: #ffffff;
   width: 100%;
   padding: 24px;
+}
+.Overview {
+  margin-top: 4px;
+  background-color: #ffffff;
+  width: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: row;
 }
 .indiv {
   width: 95%;
@@ -125,5 +163,8 @@
   }
   .Marketimg {
     width: 100%;
+  }
+  .rev {
+    margin-left: 5%;
   }
 }

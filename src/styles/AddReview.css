@@ -1,0 +1,19 @@
+.AddReview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 24px;
+}
+.css-sws92j-JoyTextarea-textarea {
+  width: 80%;
+}
+textarea {
+  width: 85%;
+  height: 80%;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 12px;
+}
