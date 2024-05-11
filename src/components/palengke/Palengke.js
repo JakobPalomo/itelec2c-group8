@@ -8,6 +8,8 @@ import Report from "./Report.js";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import HalfRating from "./HalfRating.js";
 import Review from "./Review.js";
+import MorePalengke from "./MorePalengke.js";
+import HorizontalBars from "./BarChart.js";
 // Import the image file
 import palengkeImage from "./palengke.jpg";
 
@@ -65,7 +67,7 @@ function Palengke({ ...sharedProps }) {
         </Button>
       </div>
       <div
-        className="Reviews"
+        className="Overview"
         style={{ marginBottom: "28px", flexDirection: "row", display: "flex" }}
       >
         <div>
@@ -77,6 +79,9 @@ function Palengke({ ...sharedProps }) {
           <p>(524 Reviews)</p>
           <p>Jan 20, 2024</p>
         </div>
+        <div className="rev">
+          <HorizontalBars />
+        </div>
       </div>
 
       <div>
@@ -84,6 +89,14 @@ function Palengke({ ...sharedProps }) {
         <Review />
         <Review />
         <Review />
+        <center>
+          <p className="more">
+            <a href="#" className="more">
+              Show more reviews ...
+            </a>
+          </p>
+          <MorePalengke />
+        </center>
       </div>
     </div>
   );
