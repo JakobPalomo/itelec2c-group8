@@ -22,6 +22,15 @@ function Palengke({ ...sharedProps }) {
 
   return (
     <div className="holder">
+      {addReviewClicked === true && (
+        <Modal
+          title="Add A Review"
+          open={addReviewClicked}
+          setOpen={setAddReview}
+        >
+          <AddReview setAddPalengkeClicked={setAddReview} />
+        </Modal>
+      )}
       <div className="details">
         <img alt="market" src={palengkeImage} className="Marketimg"></img>
         <div className="content">
@@ -71,15 +80,6 @@ function Palengke({ ...sharedProps }) {
           Add Review
           <AddIcon className="muiAddIcon" />
         </Button>
-        {addReviewClicked === true && (
-          <Modal
-            title="Add A Review"
-            open={addReviewClicked}
-            setOpen={setAddReview}
-          >
-            <AddReview setAddPalengkeClicked={setAddReview} />
-          </Modal>
-        )}
       </div>
       <div
         className="Overview"
