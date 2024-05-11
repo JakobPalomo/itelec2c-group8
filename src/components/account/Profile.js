@@ -26,7 +26,9 @@ export default function Profile() {
             </h2>
           </div>
         </div>
-        <Button className="editbutton">Edit Profile</Button>
+        <Button className="editbutton" style={{ fontWeight: "bold" }}>
+          Edit Profile
+        </Button>
       </div>
     </div>
   );
