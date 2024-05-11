@@ -8,10 +8,18 @@ import Report from "./Report.js";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import HalfRating from "./HalfRating.js";
 import Review from "./Review.js";
+import MorePalengke from "./MorePalengke.js";
+import HorizontalBars from "./BarChart.js";
+import { useState } from "react";
+import Modal from "../modals/MyModal";
+import AddPalengke from "../modals/AddPalengke.js";
+import AddReview from "../modals/AddReview.js";
 // Import the image file
 import palengkeImage from "./palengke.jpg";
 
 function Palengke({ ...sharedProps }) {
+  const [addReviewClicked, setAddReview] = useState(false);
+
   return (
     <div className="holder">
       <div className="details">
@@ -36,7 +44,7 @@ function Palengke({ ...sharedProps }) {
               enim ad minim veniam, quis nostrud exercitation ullamco laboris
               nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
               reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur.{" "}
+              nulla pariatur.
             </p>
           </div>
         </div>
@@ -58,14 +66,23 @@ function Palengke({ ...sharedProps }) {
           variant="contained"
           className="button addPalengkeButton pinkButton"
           style={{ textTransform: "none", marginTop: "60px" }}
-          onClick={{}}
+          onClick={() => setAddReview(true)}
         >
           Add Review
           <AddIcon className="muiAddIcon" />
         </Button>
+        {addReviewClicked === true && (
+          <Modal
+            title="Add A Review"
+            open={addReviewClicked}
+            setOpen={setAddReview}
+          >
+            <AddReview setAddPalengkeClicked={setAddReview} />
+          </Modal>
+        )}
       </div>
       <div
-        className="Reviews"
+        className="Overview"
         style={{ marginBottom: "28px", flexDirection: "row", display: "flex" }}
       >
         <div>
@@ -77,6 +94,9 @@ function Palengke({ ...sharedProps }) {
           <p>(524 Reviews)</p>
           <p>Jan 20, 2024</p>
         </div>
+        <div className="rev">
+          <HorizontalBars />
+        </div>
       </div>
 
       <div>
@@ -84,6 +104,14 @@ function Palengke({ ...sharedProps }) {
         <Review />
         <Review />
         <Review />
+        <center>
+          <p className="more">
+            <a href="#" className="more">
+              Show more reviews ...
+            </a>
+          </p>
+          <MorePalengke />
+        </center>
       </div>
     </div>
   );
