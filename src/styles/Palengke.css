@@ -41,7 +41,16 @@
 
 .more {
   margin-top: 24px;
-  color: #fd7335;
+  color: #ff6262;
+  font-weight: bold;
+  font-size: 18px;
+  text-decoration: none;
+  text-wrap: nowrap;
+}
+
+.more:hover {
+  margin-top: 24px;
+  color: #e74f4f;
   font-weight: bold;
   font-size: 18px;
   text-decoration: none;

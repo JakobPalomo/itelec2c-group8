@@ -6,6 +6,8 @@ import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CircleIcon from "@mui/icons-material/Circle";
 import RippleButton from "../ui/RippleButton.js";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function PalengkeItem({ palengke, type, min, marg }) {
   const [media, setMedia] = useState("");
@@ -105,6 +107,10 @@ function PalengkeItem({ palengke, type, min, marg }) {
           <div className="location">
             <FmdGoodRoundedIcon className="muiLocationIcon" />
             <div>{palengke.address}</div>
+          </div>
+          <div className="editDeleteIcons">
+            <ModeEditIcon className="editIcon" />
+            <DeleteIcon className="deleteIcon" />
           </div>
         </div>
       </RippleButton>

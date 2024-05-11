@@ -1,5 +1,6 @@
+import "../../styles/Profile.css";
 function MyContributions({ ...sharedProps }) {
-  return <div>My Contributions Page</div>;
+  return <div className="myContributions">My Contributions Page</div>;
 }
 
 export default MyContributions;

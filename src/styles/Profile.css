@@ -55,3 +55,17 @@
 .editbutton:hover {
   background-color: #e74f4f !important;
 }
+
+.myReviews {
+  text-align: center;
+  font-size: 40px;
+  padding-top: 60px;
+  font-weight: bold;
+}
+
+.myContributions {
+  text-align: center;
+  font-size: 40px;
+  padding-top: 60px;
+  font-weight: bold;
+}

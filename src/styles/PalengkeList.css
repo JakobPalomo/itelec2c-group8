@@ -394,3 +394,36 @@ p {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.editDeleteIcons {
+  margin-left: 50%;
+  padding-left: 6px;
+  padding: 5px;
+}
+
+.editIcon {
+  color: #13481d !important;
+  margin-right: 10px;
+  /* width: fit-content; */
+  font-weight: bold;
+  background-color: #c0ebb7;
+  padding: 5px;
+  border-radius: 12px;
+}
+
+.editIcon:hover {
+  background-color: #bde6b5 !important;
+}
+
+.deleteIcon {
+  color: #ad0000 !important;
+  /* width: fit-content; */
+  font-weight: bold;
+  background-color: #faa0a0;
+  padding: 5px;
+  border-radius: 12px;
+}
+
+.deleteIcon:hover {
+  background-color: #ef9a9a;
+}
