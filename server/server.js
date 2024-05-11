@@ -42,6 +42,15 @@ function generateRandomString(length) {
   return result;
 }
 
+// Middleware to set CORS headers
+app.use((req, res, next) => {
+  // Allow requests from any origin
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  // Allow any headers in requests
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  next();
+});
+
 // GET PALENGKE
 app.get("/palengke/:id", async (req, res) => {
   const documentId = "QjvkxDlZy0tP1t78OFub";
@@ -83,14 +92,53 @@ app.get("/list/:collection", async (req, res) => {
   }
 });
 
-// ADD PALENGKE
+// ADD PALENGKE WITH MEDIA (10 files only)
 app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
   try {
+    const mediaFilenames = JSON.parse(req.body.mediaFilenames);
+    const mediaTypes = JSON.parse(req.body.mediaTypes);
+    console.log("media filenames: ");
+    console.log(mediaFilenames);
+    console.log("media types: ");
+    console.log(mediaTypes);
+    const files = req.files;
+    const documentIds = [];
+
+    const promises = files.map(async (file, index) => {
+      const type =
+        mediaTypes[index] && mediaTypes[index].startsWith("image/")
+          ? 0
+          : mediaTypes[index].startsWith("video/")
+          ? 1
+          : 2;
+      const filename = mediaFilenames[index] || "";
+      const tempPath = file.path || "";
+      const path = tempPath.replace(/^.*?public/, "").replaceAll("\\", "/");
+      const link = "";
+
+      const docRef = collection(db, "media");
+      try {
+        const addedDocRef = await addDoc(docRef, {
+          type,
+          filename,
+          path,
+          link,
+        });
+        documentIds.push(addedDocRef.id);
+      } catch (error) {
+        console.error("Error adding document:", error);
+        throw error; // Throw the error to exit Promise.all() if any error occurs
+      }
+    });
+
+    await Promise.all(promises);
+
+    console.log(documentIds.toString());
+    const media = documentIds;
     let { name, address, business_status, description } = req.body;
     business_status = parseInt(business_status);
     const location = JSON.parse(req.body.location);
     const other_names = JSON.parse(req.body.other_names);
-    const media = JSON.parse(req.body.media);
     // const files = req.files;
     const rating = -1;
     const reviews_count = 0;
@@ -109,58 +157,8 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
       reviews_count,
       reviews,
     });
-
-    // Send a success response
-    res.status(200).send("Document added successfully");
-  } catch (error) {
-    // Handle errors
-    console.error("Error setting document:", error);
-    res.status(500).send("Error setting document");
-  }
-});
-
-// ADD MEDIA (10 files only)
-app.post("/media/add", upload.array("media", 10), async (req, res) => {
-  try {
-    const mediaFilenames = JSON.parse(req.body.mediaFilenames);
-    const mediaTypes = JSON.parse(req.body.mediaTypes);
-    console.log("media filenames: ");
-    console.log(mediaFilenames);
-    console.log("media types: ");
-    console.log(mediaTypes);
-    const files = req.files;
-    const documentIds = [];
-
-    for (const [index, file] of files.entries()) {
-      const type =
-        mediaTypes[index] && mediaTypes[index].startsWith("image/")
-          ? 0
-          : mediaTypes[index].startsWith("video/")
-          ? 1
-          : 2;
-      const filename = mediaFilenames[index] || "";
-      const tempPath = file.path || "";
-      const path = tempPath.replace(/^.*?public/, "").replaceAll("\\", "/");
-      const link = "";
-
-      const docRef = collection(db, "media");
-      await addDoc(docRef, {
-        type,
-        filename,
-        path,
-        link,
-      })
-        .then((docRef) => {
-          documentIds.push(docRef.id);
-        })
-        .catch((error) => {
-          console.error("Error adding document:", error);
-          res.status(500).send("Error adding document");
-        });
-      console.log(documentIds.toString());
-    }
-
-    res.status(200).json({ documentIds });
+    console.error("Successfully added document");
+    res.status(200).json("Successfully added palengke");
   } catch (error) {
     console.error("Error adding document:", error);
     res.status(500).send("Error adding document");

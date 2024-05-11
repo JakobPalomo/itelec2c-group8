@@ -62,7 +62,7 @@ h1 {
   width: 100%;
 }
 
-.location {
+.locationBig {
   font-size: 18px;
   display: flex;
   flex-direction: row;
