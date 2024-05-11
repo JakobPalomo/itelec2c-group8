@@ -3,7 +3,7 @@ import { Avatar, IconButton, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import PlaceIcon from "@mui/icons-material/Place";
 
-export default function Profile() {
+export default function Profile({ setEditProfileClicked }) {
   return (
     <div className="profile">
       <div className="cover" />
@@ -23,7 +23,12 @@ export default function Profile() {
             </h2>
           </div>
         </div>
-        <Button className="editbutton">Edit Profile</Button>
+        <Button
+          className="editbutton"
+          onClick={() => setEditProfileClicked(true)}
+        >
+          Edit Profile
+        </Button>
       </div>
     </div>
   );
