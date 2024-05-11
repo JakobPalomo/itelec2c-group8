@@ -9,7 +9,7 @@ import RippleButton from "../ui/RippleButton.js";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-function PalengkeItem({ palengke, type, min, marg }) {
+function PalengkeItem({ palengke, type, min, marg, showIcons }) {
   const [media, setMedia] = useState("");
   const [status, setStatus] = useState("");
   const [statusColor, setStatusColor] = useState("");
@@ -57,6 +57,7 @@ function PalengkeItem({ palengke, type, min, marg }) {
     getStatus();
     getRatingColor();
   }, []);
+
   return (
     <div
       key={palengke.palengke_id}
@@ -108,10 +109,12 @@ function PalengkeItem({ palengke, type, min, marg }) {
             <FmdGoodRoundedIcon className="muiLocationIcon" />
             <div>{palengke.address}</div>
           </div>
-          <div className="editDeleteIcons">
-            <ModeEditIcon className="editIcon" />
-            <DeleteIcon className="deleteIcon" />
-          </div>
+          {showIcons && (
+            <div className="editDeleteIcons">
+              <ModeEditIcon className="editIcon" />
+              <DeleteIcon className="deleteIcon" />
+            </div>
+          )}
         </div>
       </RippleButton>
     </div>
