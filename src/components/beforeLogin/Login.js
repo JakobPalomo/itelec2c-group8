@@ -124,7 +124,7 @@ function Login({ ...sharedProps }) {
                     typography: {
                       fontSize: "17px",
                       fontWeight: "bold",
-                      textTransform: "capitalize",
+                      textTransform: "none",
                     },
                   }}
                 >

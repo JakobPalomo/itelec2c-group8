@@ -41,6 +41,7 @@
 }
 
 .editbutton {
+  text-transform: none !important;
   background-color: #ff6262 !important;
   color: white !important;
   padding: 10px 30px !important;
