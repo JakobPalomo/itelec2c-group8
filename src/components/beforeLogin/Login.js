@@ -89,26 +89,36 @@ function Login({ ...sharedProps }) {
                 maxLength={100}
                 placeholder="Enter your password"
               />
-
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
+              <Grid container justifyContent="flex-end">
+                <Grid item xs={12} sm="auto">
+                  <Link
+                    href="#"
+                    variant="body2"
+                    style={{
+                      color: "#4f4f4f",
+                      textDecoration: "none",
+                      display: { xs: "none", sm: "inline" },
+                    }}
+                  >
+                    Forgot password?
+                  </Link>
+                </Grid>
+              </Grid>
+              <Grid container justifyContent="center">
+                <Grid item xs={12} sx={{ textAlign: "center" }}></Grid>
                 <Button
                   type="submit"
                   variant="contained"
                   sx={{
                     mt: 3,
                     mb: 2,
-                    backgroundColor: "#FF6262", // Button background color
+                    backgroundColor: "#FF6262",
                     borderRadius: "10px",
                     boxShadow: "none",
-                    width: "100%", // Adjust width
-                    height: "50px", // Adjust height
+                    width: "100%",
+                    height: "50px",
                     "&:hover": {
-                      backgroundColor: "#E74F4F", // Button hover background color
+                      backgroundColor: "#E74F4F",
                       boxShadow: "none",
                     },
                     typography: {
@@ -119,25 +129,16 @@ function Login({ ...sharedProps }) {
                 >
                   Sign In
                 </Button>
-              </Box>
-              <Grid container>
-                <Grid item xs>
-                  <Link
-                    href="#"
-                    variant="body2"
-                    style={{ color: "#4f4f4f", textDecoration: "none" }}
-                  >
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
+              </Grid>
+              <Grid container justifyContent="center">
+                <Grid item xs={12} sx={{ textAlign: "center" }}>
                   <span style={{ color: "#4f4f4f" }}>
                     Don't have an account?{" "}
                   </span>
                   <Link
                     href="/register"
                     variant="body2"
-                    style={{ color: "#4f4f4f", textDecoration: "underline" }}
+                    style={{ color: "#FF6262", textDecoration: "underline" }}
                   >
                     Sign Up
                   </Link>
