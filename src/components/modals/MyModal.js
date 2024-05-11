@@ -8,7 +8,14 @@ import IconButton from "@mui/material/IconButton";
 import DelayedTooltip from "../ui/DelayedTooltip";
 import CloseIcon from "@mui/icons-material/Close";
 
-function MyModal({ children, title = "", open, setOpen, className = "" }) {
+function MyModal({
+  children,
+  title = "",
+  open,
+  setOpen,
+  className = "",
+  modalHeight = "unset",
+}) {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -24,7 +31,10 @@ function MyModal({ children, title = "", open, setOpen, className = "" }) {
       }}
     >
       <Fade in={open}>
-        <Box className={`modalContainer ${className}`}>
+        <Box
+          className={`modalContainer ${className}`}
+          sx={{ height: `${modalHeight} !important` }}
+        >
           <div className="fixedModalHeader">
             <div className="modalHeader">
               <Typography

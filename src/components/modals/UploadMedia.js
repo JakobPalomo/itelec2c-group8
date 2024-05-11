@@ -10,6 +10,8 @@ function UploadMedia({
   setSelectedFiles,
   selectedFiles,
   setIndexToEdit,
+  hasError = false,
+  errMessage = "",
 }) {
   const fileUploadRef = useRef(null);
 
@@ -101,14 +103,17 @@ function UploadMedia({
         </ConfirmModal>
       )}
       <div className="uploadMediaCont">
-        <Typography
-          id="transition-modal-title"
-          variant="h6"
-          component="h2"
-          className="formLabel mediaLabel"
-        >
-          Media
-        </Typography>
+        <div className="mediaLabelDiv">
+          <Typography
+            id="transition-modal-title"
+            variant="h6"
+            component="h2"
+            className="formLabel mediaLabel"
+          >
+            Media
+          </Typography>
+          {hasError === true && <span className="errorSpan">{errMessage}</span>}
+        </div>
         <UploadButton
           className="uploadButton"
           fileUploadRef={fileUploadRef}

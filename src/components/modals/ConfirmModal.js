@@ -13,6 +13,9 @@ function ConfirmModal({
   context = "",
   yesText = "Yes",
   noText = "No",
+  noIcon = false,
+  parentSize = false,
+  prevModalHeight = "unset",
   children,
 }) {
   return (
@@ -20,13 +23,21 @@ function ConfirmModal({
       title={title}
       open={open}
       setOpen={setOpen}
-      className="confirmModalContainer"
+      className={parentSize === false ? "confirmModalContainer" : ""}
+      modalHeight={prevModalHeight}
     >
       <div className="confirmModalCont">
-        <WarningIcon className="muiWarningIcon" />
+        {noIcon === false && <WarningIcon className="muiWarningIcon" />}
+        {parentSize === true && <div style={{ height: "25px" }}></div>}
         {children}
       </div>
-      <div className="confirmModalButtonCont">
+      <div
+        className={
+          parentSize === false
+            ? "confirmModalButtonCont"
+            : "confirmModalButtonCont confirmModalButtonContMargin"
+        }
+      >
         <Button
           variant="contained"
           className="button pinkButton mediaButtonMargin deleteMediaButton"
@@ -38,6 +49,9 @@ function ConfirmModal({
             } else if (context === "addMedia") {
               setOpen(false);
               confirmYes(true);
+            } else if (context === "addPalengke") {
+              confirmYes();
+              setOpenPrevModal(false);
             }
           }}
         >
@@ -48,11 +62,11 @@ function ConfirmModal({
           className="outlinedBbutton outlinedPinkButton mediaButtonMargin deleteMediaButton"
           style={{ textTransform: "none" }}
           onClick={() => {
+            setOpen(false);
             if (context === "deleteMedia") {
-              setOpen(false);
             } else if (context === "addMedia") {
-              setOpen(false);
               confirmYes(false);
+            } else if (context === "addPalengke") {
             }
           }}
         >
