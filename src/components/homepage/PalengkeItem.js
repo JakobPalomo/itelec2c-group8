@@ -1,22 +1,42 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/PalengkeList.css";
+import media_types from "../../data/media_types.js";
 import business_statuses from "../../data/business_statuses.js";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CircleIcon from "@mui/icons-material/Circle";
 import RippleButton from "../ui/RippleButton.js";
-
-function PalengkeItem({ palengke, type, min, marg }) {
+// import image from "../../../server/uploads/1715446520703-Screenshot (4549).png";
+function PalengkeItem({ palengke, mediaList, type, min, marg }) {
   const [media, setMedia] = useState("");
+  const [mediaType, setMediaType] = useState("");
   const [status, setStatus] = useState("");
   const [statusColor, setStatusColor] = useState("");
   const [ratingColor, setRatingColor] = useState("");
 
   const getMedia = () => {
-    //find the path of palengke.media[0]
-    if (palengke.media.length !== 0) {
-      setMedia("./assets/palengke.jpg");
+    if (palengke.media && palengke.media.length > 0) {
+      const foundMedia = mediaList.find(
+        (media) => media.id === palengke.media[0]
+      );
+      if (foundMedia) {
+        getMediaType(foundMedia);
+        setMedia(foundMedia);
+        console.error(foundMedia);
+      } else {
+        console.error("Media not found");
+      }
+    }
+  };
+
+  const getMediaType = (foundMedia) => {
+    //find the media type of palengke.media[0]
+    const typeObject = media_types.find(
+      (type) => type.media_type_id === foundMedia.type
+    );
+    if (typeObject) {
+      setMediaType(typeObject.name);
     }
   };
 
@@ -36,7 +56,9 @@ function PalengkeItem({ palengke, type, min, marg }) {
   const getRatingColor = () => {
     if (palengke.rating !== null) {
       const roundedNum = Math.round(palengke.rating);
-      if (roundedNum <= 1) {
+      if (roundedNum == -1) {
+        setRatingColor("#969595");
+      } else if (roundedNum <= 1) {
         setRatingColor("#FF6262");
       } else if (roundedNum <= 2) {
         setRatingColor("#FF8855");
@@ -64,11 +86,27 @@ function PalengkeItem({ palengke, type, min, marg }) {
       <RippleButton color="rgba(0, 0, 0, 0.2) !important" display="block">
         <div className="imageContainer">
           {media !== "" && media !== null ? (
-            <img src={media} alt={palengke.name} className="palengkeImage" />
+            mediaType === "image" ? (
+              <img
+                src={media.path}
+                alt={palengke.name}
+                className="palengkeImage"
+              />
+            ) : mediaType === "video" ? (
+              <video className="palengkeImage">
+                <source src={media.path} className="palengkeImage" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <div className="noImageContainer">
+                <NoPhotographyIcon className="muiNoImageIcon" />
+                No Media Available
+              </div>
+            )
           ) : (
             <div className="noImageContainer">
               <NoPhotographyIcon className="muiNoImageIcon" />
-              No Image Available
+              No Media Available
             </div>
           )}
 
@@ -96,8 +134,14 @@ function PalengkeItem({ palengke, type, min, marg }) {
               className="ratingCont"
               style={{ backgroundColor: ratingColor }}
             >
-              <StarRoundedIcon className="muiStarIcon" />
-              {palengke.rating.toFixed(1).toString()}
+              {palengke.rating !== -1 ? (
+                <>
+                  <StarRoundedIcon className="muiStarIcon" />
+                  {palengke.rating.toFixed(1).toString()}
+                </>
+              ) : (
+                <span className="noRatingCont">No rating yet</span>
+              )}
             </div>
             <div className="type">{palengke.type}</div>
           </div>

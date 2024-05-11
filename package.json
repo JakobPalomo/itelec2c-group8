@@ -1,6 +1,7 @@
 {
   "name": "itelec2c-group8",
   "version": "0.1.0",
+  "proxy": "http://localhost:5000",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -14,6 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "dotenv": "^16.4.5",
     "env-cmd": "^10.1.0",
+    "firebase": "^10.11.1",
     "mui-one-time-password-input": "^2.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -22,10 +24,16 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "env-cmd -f ./.env react-scripts start",
-    "build": "env-cmd -f ./.env react-scripts build",
-    "test": "env-cmd -f ./.env react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "concurrently \"npm run server\" \"npm run react\"",
+    "react": "env-cmd -f ./.env react-app-rewired start",
+    "server": "cd server && npm run dev",
+    "build": "concurrently \"npm run server:build\" \"npm run react:build\"",
+    "react:build": "env-cmd -f ./.env react-app-rewired build",
+    "server:build": "cd server && npm run build",
+    "test": "concurrently \"npm run server:test\" \"npm run react:test\"",
+    "react:test": "env-cmd -f ./.env react-app-rewired test",
+    "server:test": "cd server && npm test",
+    "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
     "extends": [
@@ -44,5 +52,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.2.1"
   }
 }
