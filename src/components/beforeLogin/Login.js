@@ -110,7 +110,7 @@ function Login({ ...sharedProps }) {
                   type="submit"
                   variant="contained"
                   sx={{
-                    mt: 3,
+                    mt: 2,
                     mb: 2,
                     backgroundColor: "#FF6262",
                     borderRadius: "10px",
@@ -122,12 +122,13 @@ function Login({ ...sharedProps }) {
                       boxShadow: "none",
                     },
                     typography: {
-                      fontSize: "16px",
+                      fontSize: "17px",
                       fontWeight: "bold",
+                      textTransform: "capitalize",
                     },
                   }}
                 >
-                  Sign In
+                  Sign in
                 </Button>
               </Grid>
               <Grid container justifyContent="center">
