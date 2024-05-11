@@ -69,7 +69,7 @@ function App() {
 
   useEffect(() => {
     console.log(db);
-    const collections = ["palengke", "review", "upvote", "media", "user"];
+    const collections = ["palengke", "review", "upvote", "user"];
     const stateSetterFunctions = {
       palengke: setPalengkeList,
       review: setReviewList,
@@ -94,6 +94,18 @@ function App() {
               });
             });
             stateSetter(updatedData);
+
+            if (collectionName == "palengke" || collectionName == "review") {
+              // Fetch the media collection
+              fetch(`/list/media`)
+                .then((res) => res.json())
+                .then((data) => {
+                  setMediaList(data);
+                })
+                .catch((error) => {
+                  console.error("Error fetching media:", error);
+                });
+            }
           } else {
             console.error(
               `No state setter found for collection: ${collectionName}`
@@ -102,6 +114,14 @@ function App() {
         }
       );
 
+      fetch(`/list/media`)
+        .then((res) => res.json())
+        .then((data) => {
+          setMediaList(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching media:", error);
+        });
       unsubscribeCallbacks.push(unsubscribe);
     });
 

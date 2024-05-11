@@ -125,46 +125,19 @@ function AddPalengke({
 
   // Confirm Yes and store object
   const handleAddPalengke = async () => {
-    const returnedData = await handleFileUpload(selectedFiles);
-    if (returnedData == "null" && returnedData == null) {
-      return;
-    }
-    console.log(returnedData);
     const formData = new FormData();
     try {
-      // Append fields to FormData
+      // Append each file to FormData
       formData.append("name", name);
       formData.append("address", address);
       formData.append("location", JSON.stringify(location));
       formData.append("business_status", business_status);
       formData.append("description", description);
       formData.append("other_names", JSON.stringify(other_names));
-      formData.append("media", JSON.stringify(returnedData));
-      console.log(formData);
 
-      // Upload the FormData to the server
-      const response = await fetch("/palengke/add", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        // Handle success
-      } else {
-        console.error("Failed to add palengke");
-      }
-    } catch (error) {
-      console.error("Error adding palengke:", error);
-    }
-  };
-
-  const handleFileUpload = async (media) => {
-    const formData = new FormData();
-    try {
-      // Append each file to FormData
       let mediaFilenames = [];
       let mediaTypes = [];
-      media.forEach((file, index) => {
+      selectedFiles.forEach((file, index) => {
         formData.append("media", file);
         mediaFilenames.push(file.name);
         mediaTypes.push(file.type);
@@ -174,24 +147,18 @@ function AddPalengke({
       console.log(formData);
 
       // Upload the FormData to the server
-      const response = await fetch("/media/add", {
+      const response = fetch("/palengke/add", {
         method: "POST",
         body: formData,
-      });
-
-      if (response.ok) {
-        console.log("responseok");
-        const data = await response.json();
-        setMedia(data.documentIds);
-        return data.documentIds;
-      } else {
-        console.log("responsenotok");
-        console.error("Failed to add media");
-        return null;
-      }
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("responseok");
+          console.log(data.documentIds);
+          setMedia(data.documentIds);
+        });
     } catch (error) {
       console.error("Error adding media:", error);
-      return null;
     }
   };
 
