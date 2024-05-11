@@ -1,6 +1,5 @@
 import "../../styles/Profile.css";
-import { Avatar, IconButton, Button } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Avatar, Button } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 
 export default function Profile({ setEditProfileClicked }) {
