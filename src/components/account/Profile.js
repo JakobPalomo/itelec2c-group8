@@ -15,9 +15,6 @@ export default function Profile() {
             src="/assets/pfp.jpg"
             sx={{ width: 250, height: 250 }}
           />
-          <IconButton className="profbutton">
-            <AddIcon />
-          </IconButton>
           <div className="pfpinfo">
             <h1>ALIAH ESTEBAN MAASIM</h1>
             <h2>

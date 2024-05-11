@@ -23,12 +23,7 @@ export default function Account({ ...sharedProps }) {
               key={palengke.palengke_id}
               style={{ textDecoration: "none", color: "black" }}
             >
-              <PalengkeItem
-                palengke={palengke}
-                type={"45%"}
-                min={"900px"}
-                marg={"0"}
-              />
+              <PalengkeItem palengke={palengke} type={"50%"} marg={"0"} />
             </Link>
           ))}
         </center>
