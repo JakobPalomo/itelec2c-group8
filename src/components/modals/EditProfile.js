@@ -4,6 +4,7 @@ import { TextField, Grid, Avatar, Button } from "@mui/material";
 import "../../styles/EditProfile.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import Typography from "@mui/material/Typography";
 
 function EditProfile({ setEditProfileClicked }) {
   const [name, setName] = useState("");
@@ -57,7 +58,7 @@ function EditProfile({ setEditProfileClicked }) {
           <InputText
             type="text"
             label="Edit Username:"
-            required={true}
+            required={false}
             setValue={setName}
             value={name}
             maxLength={100}
@@ -67,23 +68,23 @@ function EditProfile({ setEditProfileClicked }) {
           <InputText
             type="text"
             label="Edit Location:"
-            required={true}
+            required={false}
             setValue={setAddress}
             value={address}
             maxLength={255}
             placeholder="Select a location in the map"
           />
+          <Typography variant="subtitle2">Password</Typography>
           <TextField
             margin="normal"
             required
             fullWidth
             name="password"
-            label="New Password:"
             type={showPassword ? "text" : "password"} // Show password if showPassword is true
             id="password"
             autoComplete="current-password"
+            placeholder="Enter your current password"
             variant="outlined"
-            InputLabelProps={{ style: { color: "#696969" } }}
             InputProps={{
               style: { backgroundColor: "#ffffff", borderRadius: "24px" },
               endAdornment: (
@@ -112,17 +113,17 @@ function EditProfile({ setEditProfileClicked }) {
               },
             }}
           />
+          <Typography variant="subtitle2">Confirm Password</Typography>
           <TextField
             margin="normal"
             required
             fullWidth
             name="password"
-            label="Confirm New Password:"
             type={showPassword ? "text" : "password"} // Show password if showPassword is true
             id="password"
-            autoComplete="current-password"
+            autoComplete="new-password"
+            placeholder="Enter your new password"
             variant="outlined"
-            InputLabelProps={{ style: { color: "#696969" } }}
             InputProps={{
               style: { backgroundColor: "#ffffff", borderRadius: "24px" },
               endAdornment: (
