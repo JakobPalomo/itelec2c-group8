@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import business_statuses from "../../data/business_statuses.js";
 import InputText from "./InputText.js";
 import DelayedTooltip from "../ui/DelayedTooltip";
@@ -9,6 +10,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
+const { REACT_APP_GMAPS_API_KEY } = process.env;
 
 function AddPalengke({
   setOpenMap,
@@ -210,6 +212,11 @@ function AddPalengke({
     business_status,
     selectedFiles,
   ]);
+
+  useEffect(() => {
+    console.log("gmaps api key");
+    console.log(REACT_APP_GMAPS_API_KEY);
+  }, []);
 
   return (
     <div>
