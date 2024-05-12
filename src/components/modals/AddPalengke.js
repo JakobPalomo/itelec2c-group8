@@ -6,6 +6,7 @@ import DelayedTooltip from "../ui/DelayedTooltip";
 import UploadMedia from "./UploadMedia";
 import ConfirmModal from "./ConfirmModal";
 import HeaderAndDetail from "./HeaderAndDetail";
+import LocationSearch from "../gmaps/LocationSearch";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -300,7 +301,7 @@ function AddPalengke({
             hasError={getHasError("palengkeName")}
             errMessage={getErrMessage("palengkeName")}
           />
-          <InputText
+          {/* <InputText
             type="text"
             label="Address"
             required={true}
@@ -320,7 +321,14 @@ function AddPalengke({
                 <FmdGoodRoundedIcon className="muiLocationIconPink" />
               </IconButton>
             </DelayedTooltip>
-          </InputText>
+          </InputText> */}
+          <LocationSearch
+            address={address}
+            setAddress={setAddress}
+            getHasError={getHasError}
+            getErrMessage={getErrMessage}
+            setOpenMap={setOpenMap}
+          />
           <InputText
             type="text"
             label="Business Status"

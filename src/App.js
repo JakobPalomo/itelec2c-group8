@@ -26,6 +26,39 @@ import Settings from "./components/account/Settings";
 import MySaves from "./components/account/MySaves";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase.js";
+const { REACT_APP_GMAPS_API_KEY } = process.env;
+
+// // Define initMap as a global function
+// function initMap() {
+//   window.onload(async function () {
+//     const position = { lat: -25.344, lng: 131.031 };
+
+//     const { Map } = await google.maps.importLibrary("maps");
+//     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+//     const map = new Map(document.getElementById("map"), {
+//       center: position,
+//       // center: { lat: -34.397, lng: 150.644 },
+//       zoom: 8,
+//     });
+
+//     const marker = new AdvancedMarkerElement({
+//       map: map,
+//       position: position,
+//       title: "Uluru",
+//     });
+//   });
+// }
+
+// // Load Google Maps JavaScript API asynchronously
+// function loadGoogleMapsScript() {
+//   const script = document.createElement("script");
+//   script.src = `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_GMAPS_API_KEY}&libraries=places`;
+//   script.async = true;
+//   script.defer = true;
+//   script.type = "text/javascript";
+//   document.body.appendChild(script);
+// }
 
 function App() {
   // Change true/false here since wla pa login
@@ -68,7 +101,13 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log(db);
+    // GMAPS JS API SCRIPT
+    // loadGoogleMapsScript();
+    // initMap();
+    console.log("host");
+    console.log(process.env.HOST);
+
+    // REAL-TIME OBJECT UPDATE
     const collections = ["palengke", "review", "upvote", "user"];
     const stateSetterFunctions = {
       palengke: setPalengkeList,

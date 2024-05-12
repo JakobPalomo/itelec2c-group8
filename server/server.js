@@ -5,6 +5,8 @@ const express = require("express");
 const multer = require("multer");
 
 const app = express();
+const dotenv = require("dotenv").config({ path: "./.env" });
+const { GMAPS_API_KEY } = process.env;
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -162,6 +164,39 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
   } catch (error) {
     console.error("Error adding document:", error);
     res.status(500).send("Error adding document");
+  }
+});
+
+// SEARCH ADDRESSES (add/edit palengke)
+app.get("/search-places", async (req, res) => {
+  const { input, types } = req.query;
+  const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&types=${types}&components=country:PH&key=${GMAPS_API_KEY}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log("data");
+    console.log(data);
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching addresses:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/placedetails", async (req, res) => {
+  const { place_id } = req.query;
+
+  try {
+    // Fetch place details from Google Maps Places API
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${GMAPS_API_KEY}`
+    );
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching place details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
