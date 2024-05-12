@@ -3,9 +3,11 @@ import "../../styles/globalStyles.css";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
+import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -25,12 +27,16 @@ function InputText({
   selectData = [],
   placeholder = "",
   multipleValues = false,
+  freeSoloInput = false,
   hasError = false,
   errMessage = "",
+  options = [],
+  setOptions,
   children,
 }) {
   let paddingRight = "20px";
 
+  // Default Value
   useEffect(() => {
     if (defaultValue !== undefined || defaultValue !== null) {
       setValue(defaultValue);
@@ -40,6 +46,7 @@ function InputText({
     paddingRight = "40px";
   }
 
+  // Other Name Chip
   const [inputValue, setInputValue] = useState("");
   const optionRef = useRef(null);
 
@@ -64,6 +71,14 @@ function InputText({
     setValue(updatedArray);
   };
 
+  // Location/Address Search
+  // const [options, setOptions] = useState([
+  //   { label: "The Shawshank Redemption", year: 1994 },
+  //   { label: "The Godfather", year: 1972 },
+  // ]);
+  const filter = createFilterOptions();
+  const inputRef = useRef(null);
+
   return (
     <div className="inputTextMargin">
       <Typography
@@ -77,7 +92,7 @@ function InputText({
         {hasError === true && <span className="errorSpan">{errMessage}</span>}
       </Typography>
       <div className="relativeDiv">
-        {multipleValues === false ? (
+        {multipleValues === false && freeSoloInput === false ? (
           <>
             <TextField
               id="outlined-basic"
@@ -153,6 +168,157 @@ function InputText({
                   </MenuItem>
                 ))}
             </TextField>
+            {children}
+          </>
+        ) : freeSoloInput === true ? (
+          <>
+            <Autocomplete
+              value={value}
+              onChange={(event, newValue) => {
+                if (newValue == null) {
+                  setValue("");
+                } else {
+                  if (typeof newValue.label === "string") {
+                    setValue(newValue.label);
+                  } else if (newValue && newValue.inputValue) {
+                    // Create a new value from the user input
+                    setValue(newValue.inputValue);
+                  } else {
+                    setValue("");
+                  }
+                }
+              }}
+              filterOptions={(options, params) => {
+                const filtered = filter(options, params);
+                // const isExisting = options.some(
+                //   (option) => inputValue === option.label
+                // );
+                // if (inputValue !== "" && !isExisting) {
+                //   filtered.push({
+                //     inputValue,
+                //     title: `Add "${inputValue}"`,
+                //   });
+                // }
+                return filtered;
+              }}
+              selectOnFocus
+              clearOnBlur
+              handleHomeEndKeys
+              id="free-solo-with-text-demo"
+              options={options}
+              autoHighlight
+              getOptionLabel={(option) => {
+                // Value selected with enter, right from the input
+                if (typeof option === "string") {
+                  return option;
+                }
+                // Add "xxx" option created dynamically
+                if (option.inputValue) {
+                  return option.inputValue;
+                }
+                // Regular option
+                return option.label;
+              }}
+              renderOption={(props, option) => (
+                <Box
+                  component="li"
+                  sx={{
+                    "& > img": { mr: 2, flexShrink: 0 },
+                    "& > svg": { mr: 2, flexShrink: 0 },
+                    "&:hover": {
+                      backgroundColor: "#fff3f0 !important",
+                    },
+                    fontSize: "14px !important",
+                  }}
+                  {...props}
+                >
+                  {/* <img loading="lazy" width="20" src="" alt="" /> */}
+                  <FmdGoodRoundedIcon className="muiLocationIconGrey" />
+                  {option.label}
+                </Box>
+              )}
+              sx={{
+                margin: "0",
+                padding: "0",
+                "& .MuiInputBase-root": {
+                  margin: "0px",
+                  padding: "4px",
+                },
+              }}
+              slotProps={{
+                popper: {
+                  sx: {
+                    "& .MuiPaper-root": {
+                      borderBottomLeftRadius: "20px",
+                      borderBottomRightRadius: "20px",
+                      borderTopLeftRadius: "8px",
+                      borderTopRightRadius: "8px",
+                      "& .MuiAutocomplete-listbox": {
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        "& .MuiAutocomplete-option": {},
+                        '& .MuiAutocomplete-option[aria-selected="true"]': {
+                          backgroundColor: "#fceae6 !important",
+                        },
+                        '& .MuiAutocomplete-option[aria-selected="true"].Mui-focused':
+                          {
+                            backgroundColor: "#fceae6 !important",
+                          },
+                        "& .MuiAutocomplete-option.Mui-focused": {
+                          backgroundColor: "#fff3f0 !important", //light pink
+                        },
+                      },
+                    },
+                  },
+                },
+              }}
+              freeSolo
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  id="outlined-basic"
+                  type={type}
+                  variant="outlined"
+                  placeholder={placeholder}
+                  // InputProps={{
+                  //   ...params.InputProps,
+                  //   endAdornment: (
+                  //     <div>
+                  //       {children}
+                  //       {params.InputProps.endAdornment}
+                  //     </div>
+                  //   ),
+                  // }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#FFBA5A", //#FF6262 pink
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#FFBA5A",
+                      },
+                      borderRadius: "20px",
+                      paddingLeft: "10px",
+                      paddingRight: "70px !important",
+                    },
+                    "& .MuiOutlinedInput-input": {
+                      fontSize: "14px !important",
+                      p: "10px",
+                      paddingLeft: "20px",
+                      paddingRight: paddingRight,
+                    },
+                    "& .MuiAutocomplete-endAdornment": {
+                      right: "40px !important",
+                    },
+
+                    display: "flex",
+                    backgroundColor: "white",
+                    borderRadius: "20px",
+                  }}
+                  onChange={(e) => setValue(e.target.value)}
+                />
+              )}
+            />
             {children}
           </>
         ) : (
