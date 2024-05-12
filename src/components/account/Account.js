@@ -38,6 +38,7 @@ export default function Account({
                 type={"45%"}
                 min={"900px"}
                 marg={"0"}
+                showIcons={false}
                 mediaList={sharedProps.mediaList}
               />
             </Link>
