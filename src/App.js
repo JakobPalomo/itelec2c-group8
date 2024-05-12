@@ -24,6 +24,8 @@ import MyContributions from "./components/account/MyContributions";
 import MyReviews from "./components/account/MyReviews";
 import Settings from "./components/account/Settings";
 import MySaves from "./components/account/MySaves";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "./firebase.js";
 
 function App() {
   // Change true/false here since wla pa login
@@ -62,6 +64,69 @@ function App() {
     window.addEventListener("resize", updateMainMargin);
     return () => {
       window.removeEventListener("resize", updateMainMargin);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log(db);
+    const collections = ["palengke", "review", "upvote", "user"];
+    const stateSetterFunctions = {
+      palengke: setPalengkeList,
+      review: setReviewList,
+      upvote: setUpvoteList,
+      media: setMediaList,
+      user: setUserList,
+    };
+
+    const unsubscribeCallbacks = [];
+
+    collections.forEach((collectionName) => {
+      const unsubscribe = onSnapshot(
+        collection(db, collectionName),
+        (querySnapshot) => {
+          const stateSetter = stateSetterFunctions[collectionName];
+          if (stateSetter) {
+            const updatedData = [];
+            querySnapshot.forEach((doc) => {
+              updatedData.push({
+                id: doc.id,
+                ...doc.data(),
+              });
+            });
+            stateSetter(updatedData);
+
+            if (collectionName == "palengke" || collectionName == "review") {
+              // Fetch the media collection
+              fetch(`/list/media`)
+                .then((res) => res.json())
+                .then((data) => {
+                  setMediaList(data);
+                })
+                .catch((error) => {
+                  console.error("Error fetching media:", error);
+                });
+            }
+          } else {
+            console.error(
+              `No state setter found for collection: ${collectionName}`
+            );
+          }
+        }
+      );
+
+      fetch(`/list/media`)
+        .then((res) => res.json())
+        .then((data) => {
+          setMediaList(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching media:", error);
+        });
+      unsubscribeCallbacks.push(unsubscribe);
+    });
+
+    return () => {
+      unsubscribeCallbacks.forEach((unsubscribe) => unsubscribe());
     };
   }, []);
 
