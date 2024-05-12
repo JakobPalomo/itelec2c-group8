@@ -2,7 +2,7 @@ import palengkeData from "../../data/palengkeData";
 import { Link } from "react-router-dom";
 import PalengkeItem from "../homepage/PalengkeItem.js";
 
-function MorePalengke() {
+function MorePalengke({ ...sharedProps }) {
   return (
     <>
       <br></br>
@@ -25,7 +25,10 @@ function MorePalengke() {
             key={palengke.palengke_id}
             style={{ textDecoration: "none", color: "black" }}
           >
-            <PalengkeItem palengke={palengke} />
+            <PalengkeItem
+              palengke={palengke}
+              mediaList={sharedProps.mediaList}
+            />
           </Link>
         ))}
       </div>

@@ -20,6 +20,25 @@ function Home({ ...sharedProps }) {
   //accessing sharedProps
   console.log({ ...sharedProps });
   console.log(sharedProps.palengkeList);
+  const palengkeList = sharedProps.palengkeList;
+  const setPalengkeList = sharedProps.setPalengkeList;
+
+  const [prevModalHeight, setPrevModalHeight] = useState("unset");
+  useEffect(() => {
+    function updateHeight() {
+      const modalElement = document.querySelector(".addPalengkeModal");
+      if (modalElement) {
+        const height = modalElement.offsetHeight + "px";
+        setPrevModalHeight(height);
+      }
+    }
+    updateHeight();
+
+    window.addEventListener("resize", updateHeight);
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+    };
+  }, []);
 
   useEffect(() => {
     console.log(selectedFiles);
@@ -32,6 +51,7 @@ function Home({ ...sharedProps }) {
           title="Add New Palengke"
           open={addPalengkeClicked}
           setOpen={setAddPalengkeClicked}
+          className="addPalengkeModal"
         >
           <AddPalengke
             setOpenMap={setOpenMap}
@@ -40,6 +60,11 @@ function Home({ ...sharedProps }) {
             setSelectedFiles={setSelectedFiles}
             selectedFiles={selectedFiles}
             setAddPalengkeClicked={setAddPalengkeClicked}
+            prevModalHeight={prevModalHeight}
+            palengkelist={sharedProps.palengkeList}
+            setPalengkeList={sharedProps.setPalengkeList}
+            mediaList={sharedProps.me}
+            setMediaList={sharedProps.setMediaList}
           />
         </Modal>
       )}
@@ -61,13 +86,20 @@ function Home({ ...sharedProps }) {
       <PalengkeList>
         <HomeHeader setAddPalengkeClicked={setAddPalengkeClicked} />
         <div className="palengkeItemsContainer">
-          {palengkeData.map((palengke) => (
+          {/* sharedProps.palengkeList */}
+          {sharedProps.palengkeList.map((palengke) => (
             <Link
               to={`/palengke/${palengke.palengke_id}`}
               key={palengke.palengke_id}
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: "black",
+              }}
             >
-              <PalengkeItem palengke={palengke} />
+              <PalengkeItem
+                palengke={palengke}
+                mediaList={sharedProps.mediaList}
+              />
             </Link>
           ))}
         </div>

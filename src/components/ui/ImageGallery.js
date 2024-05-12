@@ -11,6 +11,7 @@ export default function ImageGallery({
   setOpenModal,
   setIndexToEdit,
   handleFileInputAdd,
+  readOnly = false,
 }) {
   const fileUploadRef = useRef(null);
 
@@ -63,19 +64,21 @@ export default function ImageGallery({
           </span>
         </ImageListItem>
       ))}
-      <div className="addMediaButtonCont">
-        <UploadButton
-          className="uploadButton"
-          fileUploadRef={fileUploadRef}
-          accept="image/*, video/*"
-          onChange={handleFileInputAdd}
-          multiple={true}
-          title="Add Media"
-          icon={<AddIcon />}
-          variant="outlined"
-          newClassName="outlinedButton outlinedGreyButton"
-        />
-      </div>
+      {readOnly === false && (
+        <div className="addMediaButtonCont">
+          <UploadButton
+            className="uploadButton"
+            fileUploadRef={fileUploadRef}
+            accept="image/*, video/*"
+            onChange={handleFileInputAdd}
+            multiple={true}
+            title="Add Media"
+            icon={<AddIcon />}
+            variant="outlined"
+            newClassName="outlinedButton outlinedGreyButton"
+          />
+        </div>
+      )}
     </ImageList>
   );
 }

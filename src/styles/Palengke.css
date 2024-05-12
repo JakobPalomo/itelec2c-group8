@@ -16,14 +16,12 @@
   font-weight: bold;
 }
 
-.ratingCont {
-  /* background-color: green; */
+.ratingContBig {
   font-size: 24px;
   padding-left: 6px;
   padding-right: 8px;
   margin-right: 10px;
   border-radius: 6px;
-  /* width: fit-content; */
   font-weight: bold;
   color: rgb(252, 252, 252);
   background-color: rgb(67, 112, 0);
@@ -32,6 +30,7 @@
   align-items: center;
   height: fit-content;
 }
+
 .namerate {
   display: flex;
   flex-direction: row;
@@ -63,7 +62,7 @@ h1 {
   width: 100%;
 }
 
-.location {
+.locationBig {
   font-size: 18px;
   display: flex;
   flex-direction: row;
