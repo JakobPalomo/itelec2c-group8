@@ -41,6 +41,7 @@ export default function Account({ ...sharedProps }) {
                 type={"45%"}
                 min={"900px"}
                 marg={"0"}
+                showIcons={true}
                 mediaList={sharedProps.mediaList}
               />
             </Link>
