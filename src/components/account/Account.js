@@ -52,8 +52,26 @@ export default function Account({
           </Link>
         </div>
         <div className="profilereview">
-          <Review />
-          <Review />
+          <center>
+            {palengkeData.slice(0, 1).map((palengke) => (
+              <Link
+                to={`/palengke/${palengke.palengke_id}`}
+                key={palengke.palengke_id}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <PalengkeItem
+                  palengke={palengke}
+                  type={"45%"}
+                  min={"900px"}
+                  marg={"0"}
+                  prev={true}
+                  showIcons={false}
+                  mediaList={sharedProps.mediaList}
+                />
+              </Link>
+            ))}
+          </center>
+          {/* <Review /> */}
         </div>
       </div>
     </>
