@@ -6,22 +6,19 @@ import palengkeData from "../../data/palengkeData";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState } from "react";
 import Modal from "../modals/MyModal.js";
-import EditProfile from "../modals/EditProfile.js";
+import EditProfile from "./EditProfile.js";
 
-export default function Account({ ...sharedProps }) {
-  const [editProfileClicked, setEditProfile] = useState(false);
+export default function Account({
+  isEditProfileOpen,
+  setIsEditProfileOpen,
+  ...sharedProps
+}) {
   return (
     <>
-      {editProfileClicked === true && (
-        <Modal
-          title="Edit Profile"
-          open={editProfileClicked}
-          setOpen={setEditProfile}
-        >
-          <EditProfile setEditProfileClicked={setEditProfile} />
-        </Modal>
-      )}
-      <Profile setEditProfileClicked={setEditProfile} />
+      <Profile
+        isEditProfileOpen={isEditProfileOpen}
+        setIsEditProfileOpen={setIsEditProfileOpen}
+      />
       <div className="recent">
         <div className="title">
           <h1>My Recent Contribution</h1>
