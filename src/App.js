@@ -24,6 +24,7 @@ import MyContributions from "./components/account/MyContributions";
 import MyReviews from "./components/account/MyReviews";
 import Settings from "./components/account/Settings";
 import MySaves from "./components/account/MySaves";
+import EditProfile from "./components/account/EditProfile";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase.js";
 const { REACT_APP_GMAPS_API_KEY } = process.env;
@@ -71,6 +72,8 @@ function App() {
   const [upvoteList, setUpvoteList] = useState([]);
   const [mediaList, setMediaList] = useState([]);
   const [userList, setUserList] = useState([]);
+
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   const sharedProps = {
     palengkeList: palengkeList,
@@ -217,7 +220,26 @@ function App() {
               element={<PalengkeReviews {...sharedProps} />}
             />
             {/* Private Route (with account) */}
-            <Route path="/account" element={<Account {...sharedProps} />} />
+            <Route
+              path="/account"
+              element={
+                <Account
+                  isEditProfileOpen={isEditProfileOpen}
+                  setIsEditProfileOpen={setIsEditProfileOpen}
+                  {...sharedProps}
+                />
+              }
+            />
+            <Route
+              path="/account/edit-profile"
+              element={
+                <EditProfile
+                  isEditProfileOpen={isEditProfileOpen}
+                  setIsEditProfileOpen={setIsEditProfileOpen}
+                  {...sharedProps}
+                />
+              }
+            />
             <Route
               path="/account/contributions"
               element={<MyContributions {...sharedProps} />}
