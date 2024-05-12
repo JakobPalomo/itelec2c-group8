@@ -28,6 +28,8 @@
   background-color: white;
   margin: 20px;
   margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .palengkeImage {
@@ -38,6 +40,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #979797;
+  font-weight: 600;
 }
 
 .imageContainer {
@@ -93,202 +97,6 @@ p {
 
 .statusCircle {
   margin-right: 5px;
-}
-
-.statusIcon::after {
-  content: ""; /* Add content for the pseudo-element */
-  position: absolute; /* Position the pseudo-element */
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(43, 43, 43, 0.4); /* Background color */
-  border-radius: 10px; /* Border radius */
-  mix-blend-mode: multiply; /* Apply multiply blending mode */
-}
-
-.statusIconCont {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-.statusIconInside {
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: white;
-  border-radius: 12px;
-  padding: 6px;
-  padding-left: 11px;
-  padding-right: 11px;
-  filter: drop-shadow(0 0px 4px rgba(97, 97, 97, 0.8));
-}
-
-.ratingAndType {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-
-.ratingAndType .type {
-  overflow-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ratingCont {
-  /* background-color: green; */
-  font-size: 17px;
-  padding-left: 6px;
-  padding-right: 8px;
-  margin-right: 10px;
-  border-radius: 6px;
-  /* width: fit-content; */
-  font-weight: bold;
-  color: white;
-  display: flex;
-}
-
-.muiStarIcon {
-  font-size: 23px !important;
-  margin-top: 1px;
-  margin-right: 3px;
-}
-
-.location {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-weight: 600;
-  color: #fd7335 !important;
-  margin-top: 2px;
-  margin-bottom: 3px;
-}
-
-.location div {
-  overflow-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.muiLocationIcon {
-  color: #fd7335 !important;
-  font-size: 17px !important;
-  margin-right: 2px;
-}
-
-.palengkeName {
-  overflow-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.palengkeListContainer {
-  margin-top: 20px;
-  margin-right: 50px;
-  margin-left: 50px;
-  padding-bottom: 20px;
-}
-
-.palengkeList {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.palengkeItemsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.palengkeCard {
-  position: relative;
-  width: 20%;
-  min-width: 300px;
-  max-height: 320px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background-color: white;
-  margin: 20px;
-  margin-bottom: 30px;
-}
-
-.palengkeImage {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 8px 8px 0 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #979797;
-  font-weight: 600;
-}
-
-.imageContainer {
-  height: 180px;
-  background-color: #d4d4d4;
-  border-radius: 8px 8px 0 0;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.noImageContainer {
-  color: #979797;
-  font-weight: 600;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.muiNoImageIcon {
-  font-size: 35px !important;
-  margin-bottom: 5px !important;
-}
-
-.palengkeDetails {
-  position: relative;
-  padding: 12px;
-  justify-content: left;
-}
-
-h3 {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-p {
-  margin: 5px 0;
-}
-.statusIcon {
-  position: relative; /* Change position to relative */
-  display: inline-block; /* Ensure inline-block for pseudo-elements */
-  border: 1px solid rgb(133, 133, 133); /* Border */
-  border-radius: 12px;
-  padding: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  color: white;
-  backdrop-filter: blur(5px);
-}
-
-.statusCircle {
   margin-top: -4px;
   margin-right: 5px !important;
   font-size: 13px !important;
@@ -322,7 +130,6 @@ p {
   padding-left: 11px;
   padding-right: 11px;
   filter: drop-shadow(0 0px 4px rgba(97, 97, 97, 0.8));
-  text-wrap: nowrap;
 }
 
 .ratingAndType {
@@ -340,19 +147,6 @@ p {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.ratingCont {
-  /* background-color: green; */
-  font-size: 17px;
-  padding-left: 6px;
-  padding-right: 8px;
-  margin-right: 10px;
-  border-radius: 6px;
-  /* width: fit-content; */
-  font-weight: bold;
-  color: white;
-  display: flex;
 }
 
 .muiStarIcon {
@@ -393,4 +187,24 @@ p {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.ratingCont {
+  /* background-color: green; */
+  font-size: 17px;
+  padding-left: 6px;
+  padding-right: 8px;
+  margin-right: 10px;
+  border-radius: 6px;
+  /* width: fit-content; */
+  font-weight: bold;
+  color: white;
+  display: flex;
+}
+
+.noRatingCont {
+  height: 26px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
 }

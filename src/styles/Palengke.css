@@ -16,14 +16,12 @@
   font-weight: bold;
 }
 
-.ratingCont {
-  /* background-color: green; */
+.ratingContBig {
   font-size: 24px;
   padding-left: 6px;
   padding-right: 8px;
   margin-right: 10px;
   border-radius: 6px;
-  /* width: fit-content; */
   font-weight: bold;
   color: rgb(252, 252, 252);
   background-color: rgb(67, 112, 0);
@@ -32,6 +30,7 @@
   align-items: center;
   height: fit-content;
 }
+
 .namerate {
   display: flex;
   flex-direction: row;
@@ -39,7 +38,31 @@
   height: fit-content;
 }
 
-.location {
+.more {
+  margin-top: 24px;
+  color: #fd7335;
+  font-weight: bold;
+  font-size: 18px;
+  text-decoration: none;
+  text-wrap: nowrap;
+}
+
+.fifty {
+  text-align: start;
+  width: 50%;
+}
+
+h1 {
+  text-wrap: nowrap;
+}
+
+.head {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.locationBig {
   font-size: 18px;
   display: flex;
   flex-direction: row;
@@ -104,12 +127,26 @@
 .dropdown:hover .dropdown-content {
   display: block;
 }
+.css-1qdzy9k-MuiBarElement-root {
+  fill: #fac817 !important;
+}
+.rev {
+  margin-left: 25%;
+}
 
 .Reviews {
   margin-top: 4px;
   background-color: #ffffff;
   width: 100%;
   padding: 24px;
+}
+.Overview {
+  margin-top: 4px;
+  background-color: #ffffff;
+  width: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: row;
 }
 .indiv {
   width: 95%;
@@ -125,5 +162,8 @@
   }
   .Marketimg {
     width: 100%;
+  }
+  .rev {
+    margin-left: 5%;
   }
 }

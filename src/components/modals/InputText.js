@@ -25,6 +25,8 @@ function InputText({
   selectData = [],
   placeholder = "",
   multipleValues = false,
+  hasError = false,
+  errMessage = "",
   children,
 }) {
   let paddingRight = "20px";
@@ -72,6 +74,7 @@ function InputText({
       >
         {label}
         {required === true && <span className="asteriskSpan">*</span>}
+        {hasError === true && <span className="errorSpan">{errMessage}</span>}
       </Typography>
       <div className="relativeDiv">
         {multipleValues === false ? (

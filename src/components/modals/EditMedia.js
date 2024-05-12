@@ -10,6 +10,7 @@ function EditMedia({
   media,
   setSelectedFiles,
   indexToEdit,
+  readOnly = false,
 }) {
   let file;
   if (
@@ -79,31 +80,33 @@ function EditMedia({
           </video>
         )}
       </div>
-      <div className="editMediaButtonCont">
-        <UploadButton
-          className="uploadButton mediaButtonMargin"
-          fileUploadRef={fileUploadRef}
-          accept="image/*, video/*"
-          onChange={handleFileInputChange}
-          title="Edit"
-          icon={<EditIcon />}
-          marginTop="10px"
-          marginLeft="10px"
-          marginRight="10px"
-          width="150px"
-        />
-        <Button
-          variant="contained"
-          className="button pinkButton mediaButtonMargin deleteMediaButton"
-          style={{ textTransform: "none" }}
-          onClick={() => {
-            setOpenConfirmModal(true);
-          }}
-        >
-          <DeleteIcon className="muiDeleteIcon" />
-          Delete
-        </Button>
-      </div>
+      {readOnly === false && (
+        <div className="editMediaButtonCont">
+          <UploadButton
+            className="uploadButton mediaButtonMargin"
+            fileUploadRef={fileUploadRef}
+            accept="image/*, video/*"
+            onChange={handleFileInputChange}
+            title="Edit"
+            icon={<EditIcon />}
+            marginTop="10px"
+            marginLeft="10px"
+            marginRight="10px"
+            width="150px"
+          />
+          <Button
+            variant="contained"
+            className="button pinkButton mediaButtonMargin deleteMediaButton"
+            style={{ textTransform: "none" }}
+            onClick={() => {
+              setOpenConfirmModal(true);
+            }}
+          >
+            <DeleteIcon className="muiDeleteIcon" />
+            Delete
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
