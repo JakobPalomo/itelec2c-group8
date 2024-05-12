@@ -15,6 +15,7 @@ function MyContributions({ ...sharedProps }) {
         >
           <PalengkeItem
             palengke={palengke}
+            showIcons={true}
             type={"45%"}
             min={"900px"}
             marg={"0"}
