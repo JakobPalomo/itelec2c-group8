@@ -9,8 +9,17 @@ import CircleIcon from "@mui/icons-material/Circle";
 import RippleButton from "../ui/RippleButton.js";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import HalfRating from "../palengke/HalfRating.js";
 // import image from "../../../server/uploads/1715446520703-Screenshot (4549).png";
-function PalengkeItem({ palengke, mediaList, type, min, marg, showIcons }) {
+function PalengkeItem({
+  palengke,
+  mediaList,
+  type,
+  min,
+  marg,
+  showIcons,
+  prev,
+}) {
   const [media, setMedia] = useState("");
   const [mediaType, setMediaType] = useState("");
   const [status, setStatus] = useState("");
@@ -131,35 +140,53 @@ function PalengkeItem({ palengke, mediaList, type, min, marg, showIcons }) {
             </div>
           </div>
         </div>
-        <div className="palengkeDetails">
-          <div className="ratingAndType">
-            <div
-              className="ratingCont"
-              style={{ backgroundColor: ratingColor }}
-            >
-              {palengke.rating !== -1 ? (
-                <>
-                  <StarRoundedIcon className="muiStarIcon" />
-                  {palengke.rating.toFixed(1).toString()}
-                </>
-              ) : (
-                <span className="noRatingCont">No rating yet</span>
-              )}
+        {prev && (
+          <>
+            <div style={{ padding: "12px" }}>
+              <p>Jan 20, 2024</p>
+              <div>
+                <HalfRating />
+              </div>
+              <p className="name">Aliah Esteban</p>
+              <p>
+                Working at Sam.AI has been an incredible journey so far. The
+                technology we're building is truly cutting-edge, and being...
+              </p>
             </div>
-            <div className="type">{palengke.type}</div>
-          </div>
-          <h3 className="palengkeName">{palengke.name}</h3>
-          <div className="location">
-            <FmdGoodRoundedIcon className="muiLocationIcon" />
-            <div>{palengke.address}</div>
-          </div>
-          {showIcons && (
-            <div className="editDeleteIcons">
-              <ModeEditIcon className="editIcon" />
-              <DeleteIcon className="deleteIcon" />
+          </>
+        )}
+
+        {!prev && (
+          <div className="palengkeDetails">
+            <div className="ratingAndType">
+              <div
+                className="ratingCont"
+                style={{ backgroundColor: ratingColor }}
+              >
+                {palengke.rating !== -1 ? (
+                  <>
+                    <StarRoundedIcon className="muiStarIcon" />
+                    {palengke.rating.toFixed(1).toString()}
+                  </>
+                ) : (
+                  <span className="noRatingCont">No rating yet</span>
+                )}
+              </div>
+              <div className="type">{palengke.type}</div>
             </div>
-          )}
-        </div>
+            <h3 className="palengkeName">{palengke.name}</h3>
+            <div className="location">
+              <FmdGoodRoundedIcon className="muiLocationIcon" />
+              <div>{palengke.address}</div>
+            </div>
+            {showIcons && (
+              <div className="editDeleteIcons">
+                <ModeEditIcon className="editIcon" />
+                <DeleteIcon className="deleteIcon" />
+              </div>
+            )}
+          </div>
+        )}
       </RippleButton>
     </div>
   );
