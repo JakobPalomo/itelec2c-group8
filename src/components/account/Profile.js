@@ -1,19 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "../../styles/Profile.css";
 import { Avatar, IconButton, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
-import EditProfile from "../modals/EditProfile"; // Import the EditProfile modal
+import EditProfile from "./EditProfile";
 
-export default function Profile({ setEditProfileClicked }) {
-  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false); // State for controlling the visibility of EditProfile modal
-  const handleEditProfileOpen = () => {
-    setIsEditProfileOpen(true); // Open the EditProfile modal when the edit button is clicked
-  };
-  const handleEditProfileClose = () => {
-    setIsEditProfileOpen(false); // Close the EditProfile modal
-  };
-
+export default function Profile({ isEditProfileOpen, setIsEditProfileOpen }) {
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -46,6 +39,11 @@ export default function Profile({ setEditProfileClicked }) {
     };
   }
 
+  useEffect(() => {
+    console.log("isEditProfileOpen");
+    console.log(isEditProfileOpen);
+  }, [isEditProfileOpen]);
+
   return (
     <div className="profile">
       <div className="cover" />
@@ -58,9 +56,11 @@ export default function Profile({ setEditProfileClicked }) {
               alt="Aliah"
               src="" ///assets/pfp.jpg
             />
-            <IconButton className="profbutton">
-              <EditIcon />
-            </IconButton>
+            {isEditProfileOpen === true && (
+              <IconButton className="profbutton">
+                <EditIcon />
+              </IconButton>
+            )}
           </div>
           <div className="pfpinfo">
             <h1>ALIAH ESTEBAN MAASIM</h1>
@@ -70,19 +70,22 @@ export default function Profile({ setEditProfileClicked }) {
             </div>
           </div>
         </div>
-        <div
-          className="editButtonCont"
-          onClick={() => setIsEditProfileOpen(true)}
-        >
-          <Button className="editbutton">Edit Profile</Button>
-        </div>
+        {isEditProfileOpen === false && (
+          <div
+            className="editButtonCont"
+            onClick={() => setIsEditProfileOpen(true)}
+          >
+            <Link
+              to={`/account/edit-profile`}
+              style={{
+                textDecoration: "none",
+              }}
+            >
+              <Button className="editbutton">Edit Profile</Button>
+            </Link>
+          </div>
+        )}
       </div>
-      {/* Render the EditProfile modal conditionally based on isEditProfileOpen state */}
-      <EditProfile
-        open={isEditProfileOpen}
-        setOpen={setIsEditProfileOpen}
-        onClose={handleEditProfileClose}
-      />
     </div>
   );
 }

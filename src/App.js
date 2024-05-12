@@ -24,7 +24,7 @@ import MyContributions from "./components/account/MyContributions";
 import MyReviews from "./components/account/MyReviews";
 import Settings from "./components/account/Settings";
 import MySaves from "./components/account/MySaves";
-import EditProfile from "./components/modals/EditProfile";
+import EditProfile from "./components/account/EditProfile";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase.js";
 
@@ -39,6 +39,8 @@ function App() {
   const [upvoteList, setUpvoteList] = useState([]);
   const [mediaList, setMediaList] = useState([]);
   const [userList, setUserList] = useState([]);
+
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   const sharedProps = {
     palengkeList: palengkeList,
@@ -179,7 +181,26 @@ function App() {
               element={<PalengkeReviews {...sharedProps} />}
             />
             {/* Private Route (with account) */}
-            <Route path="/account" element={<Account {...sharedProps} />} />
+            <Route
+              path="/account"
+              element={
+                <Account
+                  isEditProfileOpen={isEditProfileOpen}
+                  setIsEditProfileOpen={setIsEditProfileOpen}
+                  {...sharedProps}
+                />
+              }
+            />
+            <Route
+              path="/account/edit-profile"
+              element={
+                <EditProfile
+                  isEditProfileOpen={isEditProfileOpen}
+                  setIsEditProfileOpen={setIsEditProfileOpen}
+                  {...sharedProps}
+                />
+              }
+            />
             <Route
               path="/account/contributions"
               element={<MyContributions {...sharedProps} />}
@@ -195,10 +216,6 @@ function App() {
             <Route
               path="/account/saves"
               element={<MySaves {...sharedProps} />}
-            />
-            <Route
-              path="/account/edit-profile"
-              element={<EditProfile {...sharedProps} />}
             />
           </Route>
         </Routes>

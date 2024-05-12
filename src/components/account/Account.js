@@ -6,12 +6,19 @@ import palengkeData from "../../data/palengkeData";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState } from "react";
 import Modal from "../modals/MyModal.js";
-import EditProfile from "../modals/EditProfile.js";
+import EditProfile from "./EditProfile.js";
 
-export default function Account({ ...sharedProps }) {
+export default function Account({
+  isEditProfileOpen,
+  setIsEditProfileOpen,
+  ...sharedProps
+}) {
   return (
     <>
-      <Profile />
+      <Profile
+        isEditProfileOpen={isEditProfileOpen}
+        setIsEditProfileOpen={setIsEditProfileOpen}
+      />
       <div className="recent">
         <div className="title">
           <h1>My Recent Contribution</h1>
@@ -41,9 +48,6 @@ export default function Account({ ...sharedProps }) {
           <Link className="links" to="/account/reviews">
             See All <ArrowForwardIosIcon sx={{ fontSize: "13px" }} />
           </Link>
-        </div>
-        <div className="title">
-          <button className="editbutton" to="/modals/edit-profile"></button>
         </div>
       </div>
     </>
