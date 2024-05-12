@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import PalengkeItem from "../homepage/PalengkeItem";
 import palengkeData from "../../data/palengkeData";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import Review from "../palengke/Review.js";
 import { useState } from "react";
 import Modal from "../modals/MyModal.js";
 import EditProfile from "./EditProfile.js";
@@ -49,6 +50,10 @@ export default function Account({
           <Link className="links" to="/account/reviews">
             See All <ArrowForwardIosIcon sx={{ fontSize: "13px" }} />
           </Link>
+        </div>
+        <div className="profilereview">
+          <Review />
+          <Review />
         </div>
       </div>
     </>
