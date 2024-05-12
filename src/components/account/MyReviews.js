@@ -1,5 +1,6 @@
+import "../../styles/Profile.css";
 function MyReviews({ ...sharedProps }) {
-  return <div>My Reviews Page</div>;
+  return <div className="myReviews">My Reviews Page</div>;
 }
 
 export default MyReviews;

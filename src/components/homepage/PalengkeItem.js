@@ -7,8 +7,10 @@ import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CircleIcon from "@mui/icons-material/Circle";
 import RippleButton from "../ui/RippleButton.js";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
 // import image from "../../../server/uploads/1715446520703-Screenshot (4549).png";
-function PalengkeItem({ palengke, mediaList, type, min, marg }) {
+function PalengkeItem({ palengke, mediaList, type, min, marg, showIcons }) {
   const [media, setMedia] = useState("");
   const [mediaType, setMediaType] = useState("");
   const [status, setStatus] = useState("");
@@ -77,6 +79,7 @@ function PalengkeItem({ palengke, mediaList, type, min, marg }) {
     getStatus();
     getRatingColor();
   }, []);
+
   return (
     <div
       key={palengke.palengke_id}
@@ -150,6 +153,12 @@ function PalengkeItem({ palengke, mediaList, type, min, marg }) {
             <FmdGoodRoundedIcon className="muiLocationIcon" />
             <div>{palengke.address}</div>
           </div>
+          {showIcons && (
+            <div className="editDeleteIcons">
+              <ModeEditIcon className="editIcon" />
+              <DeleteIcon className="deleteIcon" />
+            </div>
+          )}
         </div>
       </RippleButton>
     </div>

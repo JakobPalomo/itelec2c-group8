@@ -12,8 +12,12 @@
 }
 
 .links {
-  color: #fd7335;
+  color: #ff6262;
   text-decoration: none;
   font-size: 15px;
   font-weight: bold;
+}
+
+.links:hover {
+  color: #e74f4f;
 }

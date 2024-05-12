@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
+
 import business_statuses from "../../data/business_statuses.js";
 import InputText from "./InputText.js";
 import DelayedTooltip from "../ui/DelayedTooltip";
 import UploadMedia from "./UploadMedia";
 import ConfirmModal from "./ConfirmModal";
 import HeaderAndDetail from "./HeaderAndDetail";
+import LocationSearch from "../gmaps/LocationSearch";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
+const { REACT_APP_GMAPS_API_KEY } = process.env;
 
 function AddPalengke({
   setOpenMap,
@@ -211,6 +214,11 @@ function AddPalengke({
     selectedFiles,
   ]);
 
+  useEffect(() => {
+    console.log("gmaps api key");
+    console.log(REACT_APP_GMAPS_API_KEY);
+  }, []);
+
   return (
     <div>
       {openConfirmModal === true && (
@@ -293,7 +301,7 @@ function AddPalengke({
             hasError={getHasError("palengkeName")}
             errMessage={getErrMessage("palengkeName")}
           />
-          <InputText
+          {/* <InputText
             type="text"
             label="Address"
             required={true}
@@ -313,7 +321,14 @@ function AddPalengke({
                 <FmdGoodRoundedIcon className="muiLocationIconPink" />
               </IconButton>
             </DelayedTooltip>
-          </InputText>
+          </InputText> */}
+          <LocationSearch
+            address={address}
+            setAddress={setAddress}
+            getHasError={getHasError}
+            getErrMessage={getErrMessage}
+            setOpenMap={setOpenMap}
+          />
           <InputText
             type="text"
             label="Business Status"
