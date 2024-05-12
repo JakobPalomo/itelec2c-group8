@@ -72,7 +72,7 @@ export default function Profile({ setEditProfileClicked }) {
         </div>
         <div
           className="editButtonCont"
-          onClick={() => setEditProfileClicked(true)}
+          onClick={() => setIsEditProfileOpen(true)}
         >
           <Button className="editbutton">Edit Profile</Button>
         </div>

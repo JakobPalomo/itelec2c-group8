@@ -9,19 +9,9 @@ import Modal from "../modals/MyModal.js";
 import EditProfile from "../modals/EditProfile.js";
 
 export default function Account({ ...sharedProps }) {
-  const [editProfileClicked, setEditProfile] = useState(false);
   return (
     <>
-      {editProfileClicked === true && (
-        <Modal
-          title="Edit Profile"
-          open={editProfileClicked}
-          setOpen={setEditProfile}
-        >
-          <EditProfile setEditProfileClicked={setEditProfile} />
-        </Modal>
-      )}
-      <Profile setEditProfileClicked={setEditProfile} />
+      <Profile />
       <div className="recent">
         <div className="title">
           <h1>My Recent Contribution</h1>
@@ -51,10 +41,9 @@ export default function Account({ ...sharedProps }) {
           <Link className="links" to="/account/reviews">
             See All <ArrowForwardIosIcon sx={{ fontSize: "13px" }} />
           </Link>
-          </div>
-          <div className="title">
-          <button className="editbutton" to="/modals/edit-profile">
-          </button>
+        </div>
+        <div className="title">
+          <button className="editbutton" to="/modals/edit-profile"></button>
         </div>
       </div>
     </>

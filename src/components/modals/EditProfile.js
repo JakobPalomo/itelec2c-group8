@@ -11,7 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { TextField, Button, Avatar, Grid } from "@mui/material";
 import DeleteAccount from "./DeleteAccount";
 
-function EditProfile({ open, onClose }) {
+function EditProfile({ open, onClose, setOpen }) {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
   const onDeleteAccount = () => {
