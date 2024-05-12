@@ -41,15 +41,17 @@ export default function Profile({ setEditProfileClicked }) {
       <div className="cover" />
       <div className="profcontent">
         <div className="pfp">
-          <Avatar
-            className="avatar"
-            alt="Aliah"
-            src="/assets/pfp.jpg"
-            sx={{ width: 250, height: 250 }}
-          />
-          <IconButton className="profbutton">
-            <AddIcon />
-          </IconButton>
+          <div className="relative profilepic">
+            <Avatar
+              {...stringAvatar("Ira Rayzel Ji")}
+              className="avatar"
+              alt="Aliah"
+              src="" ///assets/pfp.jpg
+            />
+            <IconButton className="profbutton">
+              <EditIcon />
+            </IconButton>
+          </div>
           <div className="pfpinfo">
             <h1>ALIAH ESTEBAN MAASIM</h1>
             <div>
