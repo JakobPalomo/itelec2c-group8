@@ -8,7 +8,8 @@ import Typography from "@mui/material/Typography";
 import { Button, Grid } from "@mui/material";
 import WarningIcon from '@mui/icons-material/Warning'; 
 
-function DeleteAccount({ children, title = "", open, onClose, onConfirmDelete, onCancelDelete }) {
+
+function DeleteAccount({ open, onClose, onConfirmDelete, onCancelDelete }) {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -31,14 +32,15 @@ function DeleteAccount({ children, title = "", open, onClose, onConfirmDelete, o
                 component="h2"
                 className="modalTitle"
               >
-                {title}
+                Delete Account
               </Typography>
             </div>
           </div>
           <div className="modalBody">
-          <div className="muiWarningIconButton">
-            <WarningIcon style={{ fontSize: '120px' }} /></div>
-            <Typography style={{ textAlign: 'center', paddingBottom: '40px', paddingTop: '10px',}}> Are you sure you want to delete your account?</Typography>
+            <div className="muiWarningIconButton">
+              <WarningIcon style={{ fontSize: '120px' }} />
+            </div>
+            <Typography style={{ textAlign: 'center', paddingBottom: '40px', paddingTop: '10px' }}>Are you sure you want to delete your account?</Typography>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Button
@@ -52,9 +54,10 @@ function DeleteAccount({ children, title = "", open, onClose, onConfirmDelete, o
               </Grid>
               <Grid item xs={6}>
                 <Button 
-                fullWidth variant="outlined" 
-                onClick={onCancelDelete}
-                style={{
+                  fullWidth 
+                  variant="outlined" 
+                  onClick={onCancelDelete}
+                  style={{
                     backgroundColor: "#FFFFFF",
                     color: "#FF6262",
                     borderColor: "#FF6262"

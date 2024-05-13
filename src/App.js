@@ -41,6 +41,7 @@ function App() {
   const [userList, setUserList] = useState([]);
 
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const sharedProps = {
     palengkeList: palengkeList,

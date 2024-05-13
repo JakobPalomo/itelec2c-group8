@@ -32,7 +32,7 @@ function InputText({
   let paddingRight = "20px";
 
   useEffect(() => {
-    if (defaultValue !== undefined || defaultValue !== null) {
+    if (defaultValue !== undefined && defaultValue !== null) {
       setValue(defaultValue);
     }
   }, []);
