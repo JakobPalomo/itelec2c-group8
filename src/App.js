@@ -63,7 +63,7 @@ const { REACT_APP_GMAPS_API_KEY } = process.env;
 
 function App() {
   // Change true/false here since wla pa login
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mainMargin, setMainMargin] = useState(0);
 
   // app objects
@@ -179,7 +179,7 @@ function App() {
           <Route
             element={
               <Layout>
-                <Navbar isLoggedIn={isLoggedIn} />
+                <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
                 <div style={{ height: "98px" }} className="navTopMargin"></div>
                 <Main mainMargin={mainMargin}>
                   <Outlet />
@@ -195,12 +195,15 @@ function App() {
                 isLoggedIn ? (
                   <Home {...sharedProps} />
                 ) : (
-                  <Login {...sharedProps} />
+                  <Login setIsLoggedIn={setIsLoggedIn} {...sharedProps} />
                 )
               }
             />
             {/* Public Route */}
-            <Route path="/login" element={<Login {...sharedProps} />} />
+            <Route
+              path="/login"
+              element={<Login setIsLoggedIn={setIsLoggedIn} {...sharedProps} />}
+            />
             <Route
               path="/forgot-password"
               element={<ForgotPassword {...sharedProps} />}

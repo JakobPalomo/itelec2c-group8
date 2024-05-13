@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -55,7 +55,8 @@ function stringAvatar(name) {
   };
 }
 
-function Navbar({ isLoggedIn }) {
+function Navbar({ isLoggedIn, setIsLoggedIn }) {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -72,6 +73,13 @@ function Navbar({ isLoggedIn }) {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    if (setIsLoggedIn !== undefined) {
+      setIsLoggedIn(false);
+      navigate("/login");
+    }
   };
 
   const [openTooltip, setOpenTooltip] = useState(false);
@@ -167,7 +175,11 @@ function Navbar({ isLoggedIn }) {
                         </Typography>
                       </Link>
                     ) : (
-                      <Typography textAlign="center" className="pinkLinkp">
+                      <Typography
+                        textAlign="center"
+                        className="pinkLinkp"
+                        onClick={handleLogout}
+                      >
                         {nav.page}
                       </Typography>
                     )}
