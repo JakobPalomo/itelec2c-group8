@@ -38,6 +38,7 @@ function EditProfile({ setEditProfileClicked }) {
 
   return (
     <div className="editprofile">
+      {/* Photo Section */}
       <div className="editphoto">
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12}>
@@ -62,8 +63,11 @@ function EditProfile({ setEditProfileClicked }) {
           </Grid>
         </Grid>
       </div>
+
+      {/* Edit Fields Section */}
       <div className="editfields">
         <div>
+          {/* InputText components for editing username and location */}
           <InputText
             type="text"
             label="Edit Username:"
@@ -83,6 +87,8 @@ function EditProfile({ setEditProfileClicked }) {
             maxLength={255}
             placeholder="Select a location in the map"
           />
+
+          {/* InputText components for editing password and confirm password */}
           <Typography variant="subtitle2">Password</Typography>
           <InputText
             margin="normal"
@@ -162,6 +168,8 @@ function EditProfile({ setEditProfileClicked }) {
             }}
           />
         </div>
+
+        {/* Delete Account Button */}
         <Button
           variant="contained"
           sx={{ backgroundColor: "#2C2329", padding: "10px 100px" }}
@@ -169,6 +177,8 @@ function EditProfile({ setEditProfileClicked }) {
         >
           Delete Account
         </Button>
+
+        {/* Save Changes and Cancel Buttons */}
         <div className="editbuttons">
           <Button
             variant="contained"
@@ -189,6 +199,8 @@ function EditProfile({ setEditProfileClicked }) {
           </Button>
         </div>
       </div>
+
+      {/* Delete Account Modal */}
       <DeleteAccount
         open={isDeleteModalOpen}
         onClose={handleDeleteModalClose}
