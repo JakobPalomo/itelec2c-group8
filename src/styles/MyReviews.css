@@ -1,7 +1,14 @@
 .myreviewcontent {
   display: flex;
   justify-content: center;
-  width: 50%;
+  align-items: center;
+  flex-direction: column;
+  width: 60%;
   margin-top: 30px;
-  margin-left: 500px;
+}
+.bod {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
 }
