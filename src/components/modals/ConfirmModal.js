@@ -52,6 +52,8 @@ function ConfirmModal({
             } else if (context === "addPalengke") {
               confirmYes();
               setOpenPrevModal(false);
+            } else if (context === "register") {
+              confirmYes();
             }
           }}
         >
@@ -59,7 +61,7 @@ function ConfirmModal({
         </Button>
         <Button
           variant="outlined"
-          className="outlinedBbutton outlinedPinkButton mediaButtonMargin deleteMediaButton"
+          className="outlinedButton outlinedPinkButton mediaButtonMargin deleteMediaButton"
           style={{ textTransform: "none" }}
           onClick={() => {
             setOpen(false);

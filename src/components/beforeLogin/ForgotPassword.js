@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import InputText from "../modals/InputText";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -19,34 +20,100 @@ import { MuiOtpInput } from "mui-one-time-password-input";
 
 const defaultTheme = createTheme();
 
-const OTP = () => {
-  const [otp, setOtp] = useState("");
-
-  const handleChange = (newValue) => {
-    setOtp(newValue);
+function ForgotPassword({ ...sharedProps }) {
+  const navigate = useNavigate();
+  const initialEmailErrorData = {
+    hasError: false,
+    errMessage: "",
+  };
+  const initialOTPErrorData = {
+    hasError: false,
+    errMessage: "",
   };
 
-  return <MuiOtpInput value={otp} onChange={handleChange} length={6} />;
-};
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(initialEmailErrorData);
+  const [generatedOTP, setGeneratedOTP] = useState();
+  const [isOTPGenerated, setIsOTPGenerated] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [OTPError, setOTPError] = useState(initialOTPErrorData);
+  const [recendClicked, setResendClicked] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timerRunning, setTimerRunning] = useState(false);
 
-function ForgotPassword() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+  // Handling errors
+  const handleSetError = (message, errors, setErrors) => {
+    let updatedFields = errors;
+    updatedFields = {
+      hasError: true,
+      errMessage: message,
+    };
+    setErrors(updatedFields);
+  };
+  const getHasError = (errors) => {
+    return errors.hasError;
+  };
+  const getErrMessage = (errors) => {
+    return errors.errMessage;
+  };
 
   useEffect(() => {
-    const timerInterval = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 0) {
-          clearInterval(timerInterval);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    // Clear interval on component unmount
-    return () => clearInterval(timerInterval);
+    setTimerRunning(true);
   }, []);
+
+  useEffect(() => {
+    let timerInterval;
+    // Start the timer when timerRunning becomes true
+    if (timerRunning === true) {
+      const timerInterval = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 0) {
+            clearInterval(timerInterval);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+
+      // Clear interval on component unmount
+      return () => {
+        clearInterval(timerInterval);
+        setTimerRunning(false);
+      };
+    }
+  }, [timerRunning]);
+
+  const handleEmailVerify = (errors, setErrors) => {
+    const tempErrors = errors;
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email === "") {
+      tempErrors.hasError = true;
+      tempErrors.errMessage = "This field is required";
+    } else if (emailPattern.test(email) === false) {
+      tempErrors.hasError = true;
+      tempErrors.errMessage = "Not a valid email address";
+    }
+
+    setErrors(tempErrors);
+
+    if (tempErrors.hasError === false) {
+      generateOTP();
+      setIsOTPGenerated(true);
+    }
+  };
+
+  const generateOTP = () => {
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    setGeneratedOTP(otp);
+    console.log(otp);
+  };
+
+  // Function to start the timer
+  const startTimer = () => {
+    setTimeLeft(300);
+    setTimerRunning(true);
+  };
 
   // Function to format time in mm:ss format
   const formatTime = (time) => {
@@ -57,23 +124,51 @@ function ForgotPassword() {
     }`;
   };
 
-  const handlePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const handleOtpChange = (value) => {
+    setOtp(value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const validateChar = (value, index) => {
+    return matchIsNumeric(value);
+  };
+  const matchIsString = (value) => {
+    return typeof value === "string";
+  };
+  const matchIsNumeric = (text) => {
+    const isNumber = typeof text === "number";
+    const isString = matchIsString(text);
+    return (isNumber || (isString && text !== "")) && !isNaN(Number(text));
+  };
+
+  const handleResend = () => {
+    // generate otp before start timer
+    startTimer();
+  };
+
+  const handleOTPVerify = (errors, setErrors) => {
+    const tempErrors = errors;
+
+    if (parseInt(otp) !== generatedOTP) {
+      tempErrors.hasError = true;
+      tempErrors.errMessage = "Incorrect OTP";
+    }
+
+    setErrors(tempErrors);
+
+    if (tempErrors.hasError === false) {
+      setIsOTPGenerated(false);
+      navigate("/change-password", { state: { data: email } });
+    }
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
-        <CssBaseline />
+      <Grid
+        container
+        component="main"
+        sx={{ height: "100vh" }}
+        className="loginMain"
+      >
         <Grid
           item
           xs={false}
@@ -91,60 +186,169 @@ function ForgotPassword() {
             backgroundPosition: "center",
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            {/* Write here */}
-            <span className="welcome" style={{ marginTop: "12px" }}>
-              OTP Verification
-            </span>
-            <p className="subtext">
-              Enter the OTP code sent to mam**03**@gmail.com
-            </p>
-            <OTP />
-            <p className="subtext">Didn’t receive the OTP code?</p>
-            <p className="subtext">
-              Time Remaining: <span>{formatTime(timeLeft)}</span>
-            </p>
-            <center>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: "#FF6262", // Button background color
-                  "&:hover": {
-                    backgroundColor: "#E74F4F", // Button hover background color
-                  },
-                  marginRight: "12px",
-                }}
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          md={5}
+          component={Paper}
+          elevation={6}
+          square
+          sx={{ boxShadow: "none", bgcolor: "#FFF6DF" }}
+        >
+          {isOTPGenerated === false ? (
+            <Box
+              sx={{
+                my: 8,
+                mx: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+              className="otpEmailBox"
+            >
+              {/* Write here */}
+              <span
+                className="welcomeLogin centerText"
+                style={{ marginTop: "12px" }}
               >
-                Verify
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: "#FFC8C8", // Button background color
-                  "&:hover": {
-                    backgroundColor: "#FF8787", // Button hover background color
-                  },
-                }}
+                OTP Verification
+              </span>
+              <InputText
+                type="text"
+                label="Email Address"
+                required={true}
+                setValue={setEmail}
+                value={email}
+                maxLength={100}
+                placeholder="Your email address"
+                hasError={getHasError(emailError)}
+                errMessage={getErrMessage(emailError)}
+                noLabel={true}
+              />
+              <center>
+                <Box className="verifyButtonMargin emailOTPButtonsMargin">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    className="button pinkButton bigButton otpEmailButtonWidth"
+                    style={{ textTransform: "none" }}
+                    onClick={() =>
+                      handleEmailVerify(initialEmailErrorData, setEmailError)
+                    }
+                  >
+                    Send OTP
+                  </Button>
+                  <Link href="/login">
+                    <Button
+                      type="button"
+                      variant="outlined"
+                      className="outlinedButton outlinedPinkButton bigButton otpEmailButtonWidth"
+                      style={{
+                        textTransform: "none",
+                        backgroundColor: "rgba(0,0,0,0.5) !important",
+                        color: "",
+                      }}
+                      onClick={() => {}}
+                    >
+                      Cancel
+                    </Button>
+                  </Link>
+                </Box>
+              </center>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                my: 8,
+                mx: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+              className="otpBox"
+            >
+              {/* Write here */}
+              <span
+                className="welcomeLogin marginOTPTitle centerText"
+                style={{ marginTop: "12px" }}
               >
-                Cancel
-              </Button>
-            </center>
-          </Box>
+                OTP Verification
+              </span>
+              <p className="subtextLogin">
+                Enter the OTP code sent to{" "}
+                <span className="emailSpan">mam**03**@gmail.com</span>
+              </p>
+              <div className="otpFieldMargin">
+                <MuiOtpInput
+                  value={otp}
+                  onChange={handleOtpChange}
+                  length={6}
+                  autoFocus
+                  validateChar={validateChar}
+                  gap={2}
+                />
+                <Typography
+                  id="transition-modal-title"
+                  variant="h6"
+                  component="h2"
+                  className="errorSpanNoLabel"
+                >
+                  {getHasError(OTPError) === true && (
+                    <span>{getErrMessage(OTPError)}</span>
+                  )}
+                </Typography>
+              </div>
+              <p className="subtextLogin">Didn’t receive the OTP code?</p>
+              {timeLeft != 0 ? (
+                <p className="subtextLogin">
+                  Resend Code in{" "}
+                  <span className="emailSpan">{formatTime(timeLeft)}</span>
+                </p>
+              ) : (
+                <p className="subtextLogin">
+                  <span
+                    className="resendSpan"
+                    onClick={() => {
+                      handleResend();
+                    }}
+                  >
+                    Resend Code
+                  </span>
+                </p>
+              )}
+              <center>
+                <Box className="verifyButtonMargin">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    className="button pinkButton bigButton otpButtonWidth"
+                    style={{ textTransform: "none" }}
+                    onClick={() => {
+                      handleOTPVerify(initialOTPErrorData, setOTPError);
+                    }}
+                  >
+                    Verify
+                  </Button>
+                  <Link href="/login">
+                    <Button
+                      type="button"
+                      variant="outlined"
+                      className="outlinedButton outlinedPinkButton bigButton otpButtonWidth"
+                      style={{
+                        textTransform: "none",
+                        backgroundColor: "rgba(0,0,0,0.5) !important",
+                        color: "",
+                      }}
+                      onClick={() => {}}
+                    >
+                      Cancel
+                    </Button>
+                  </Link>
+                </Box>
+              </center>
+            </Box>
+          )}
         </Grid>
       </Grid>
     </ThemeProvider>

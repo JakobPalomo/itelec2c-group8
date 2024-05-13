@@ -385,7 +385,7 @@ function AddPalengke({
           </Button>
           <Button
             variant="outlined"
-            className="outlinedBbutton outlinedPinkButton mediaButtonMargin"
+            className="outlinedButton outlinedPinkButton mediaButtonMargin"
             style={{ textTransform: "none" }}
             onClick={() => {
               handleCancelAndClearInput();

@@ -19,17 +19,212 @@
   border-color: #d4d4d4; /* Change outline color when focused */
 }
 
-.welcome {
-  font-size: 28px;
+.welcomeLogin {
+  display: block;
+  /* font-size: 28px; */
+  font-size: 48px;
   font-weight: bold;
+  margin-bottom: 25px;
+  line-height: 50px;
 }
 
-.subtext {
-  font-size: 12px;
-  font-weight: bold;
+.centerText {
+  text-align: center;
+}
+
+.subtextLogin {
+  font-size: 15px;
   text-decoration: none;
+  text-align: center;
 }
 
-.css-1jrn2fe-MuiGrid-root {
-  height: 90vh !important;
+.otpBox {
+  margin-top: 12rem !important;
+}
+
+.changePassBox {
+  margin-top: 14rem !important;
+}
+
+.otpEmailBox {
+  margin-top: 18rem !important;
+}
+
+.marginOTPTitle {
+  margin-bottom: 0;
+}
+
+.emailSpan {
+  font-weight: 600;
+}
+
+.resendSpan {
+  font-weight: 600;
+  color: #ff6262;
+  cursor: pointer;
+  border-bottom: 1.5px solid #ff6262;
+}
+
+.otpFieldMargin {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  margin-left: 7rem;
+  margin-right: 7rem;
+}
+
+.otpFieldMargin .MuiInputBase-input {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.otpFieldMargin .MuiTextField-root {
+  /* background-color: red;
+  border-radius: 8px; */
+}
+
+.otpFieldMargin .MuiInputBase-root {
+  background-color: white;
+  border-radius: 8px;
+}
+
+.otpFieldMargin .MuiInputBase-root:hover {
+  border-color: #ff6262;
+  outline: none !important;
+}
+
+.otpFieldMargin .MuiInputBase-root:focus {
+  border-color: #ff6262;
+}
+.otpFieldMargin .Mui-focused {
+  outline: 2px solid rgb(255, 96, 96) !important;
+}
+.otpFieldMargin .Mui-focused:hover {
+  outline: 2px solid rgb(255, 96, 96) !important;
+}
+
+.muiVisibilityIcon {
+  color: #e74f4f;
+  font-size: 20px !important;
+}
+
+.loginButtonMargin {
+  margin-top: 2rem;
+  margin-bottom: 15px;
+}
+
+.verifyButtonMargin {
+  margin-top: 20px;
+}
+
+.changePassButtonMargin {
+  margin-top: 20px !important;
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+.emailOTPButtonsMargin {
+  margin-top: 5px;
+}
+
+.otpButtonWidth {
+  width: 125px;
+  margin: 10px !important;
+}
+
+.otpEmailButtonWidth {
+  width: 140px;
+  margin: 10px !important;
+}
+
+.spanText {
+  color: #4f4f4f !important;
+  font-size: 13.5px !important;
+}
+
+.loginSpan {
+  margin-top: 10px;
+}
+
+.signupMargin {
+  margin-bottom: 1rem;
+}
+
+.uploadPicLabel .MuiButtonBase-root {
+  border-radius: 50% !important;
+}
+
+.errorSpanLogin {
+  color: #ff3f3f;
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+}
+
+.errorSpanNoLabel {
+  color: #ff3f3f;
+  text-align: center;
+  font-size: 11.5px !important;
+  font-weight: 500;
+  margin-top: 8px !important;
+}
+
+@media screen and (max-width: 1746px) {
+  .otpFieldMargin {
+    margin-left: 4rem;
+    margin-right: 4rem;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .welcomeLogin {
+    font-size: 42px;
+  }
+  .otpFieldMargin {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+}
+@media screen and (max-width: 1146px) {
+  .welcomeLogin {
+    font-size: 39px;
+  }
+  .otpFieldMargin {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .otpFieldMargin .MuiBox-root {
+    gap: 10px;
+  }
+}
+@media screen and (max-width: 900px) {
+  .otpFieldMargin {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+}
+@media screen and (max-width: 600px) {
+  .welcomeLogin {
+    font-size: 35px;
+  }
+  .loginMain {
+    margin-bottom: 5px;
+  }
+  .otpFieldMargin {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+  .otpFieldMargin .MuiBox-root {
+    gap: 16px;
+  }
+}
+@media screen and (max-width: 475px) {
+  .otpFieldMargin {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .otpFieldMargin .MuiBox-root {
+    gap: 10px;
+  }
 }

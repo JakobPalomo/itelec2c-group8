@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -32,12 +33,23 @@ function InputText({
   errMessage = "",
   options = [],
   setOptions,
+  visibility = false,
+  setVisibility,
+  iconOn,
+  iconOff,
+  noLabel = false,
   children,
 }) {
   let paddingRight = "20px";
+  let height = "auto";
+  if (type === "password") {
+    height = "43px";
+  }
 
   // Default Value
   useEffect(() => {
+    console.log(iconOn);
+    console.log(iconOff);
     if (defaultValue !== undefined || defaultValue !== null) {
       setValue(defaultValue);
     }
@@ -81,16 +93,18 @@ function InputText({
 
   return (
     <div className="inputTextMargin">
-      <Typography
-        id="transition-modal-title"
-        variant="h6"
-        component="h2"
-        className="formLabel"
-      >
-        {label}
-        {required === true && <span className="asteriskSpan">*</span>}
-        {hasError === true && <span className="errorSpan">{errMessage}</span>}
-      </Typography>
+      {noLabel === false && (
+        <Typography
+          id="transition-modal-title"
+          variant="h6"
+          component="h2"
+          className="formLabel"
+        >
+          {label}
+          {required === true && <span className="asteriskSpan">*</span>}
+          {hasError === true && <span className="errorSpan">{errMessage}</span>}
+        </Typography>
+      )}
       <div className="relativeDiv">
         {multipleValues === false && freeSoloInput === false ? (
           <>
@@ -102,9 +116,17 @@ function InputText({
               placeholder={placeholder}
               InputProps={{
                 readOnly: disabled,
+                ...(iconOn &&
+                  iconOff && {
+                    endAdornment: (
+                      <IconButton onClick={setVisibility}>
+                        {visibility ? iconOn : iconOff}
+                      </IconButton>
+                    ),
+                  }),
               }}
               inputProps={{ maxLength: maxLength, minLength: minLength }}
-              multiline
+              multiline={type !== "password"}
               maxRows={4}
               select={selectData.length !== 0}
               SelectProps={{
@@ -125,6 +147,7 @@ function InputText({
               }}
               sx={{
                 "& .MuiOutlinedInput-root": {
+                  height: height,
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                     borderColor: "#FFBA5A", //#FF6262 pink
                   },
@@ -139,6 +162,10 @@ function InputText({
                   p: "10px",
                   paddingLeft: "20px",
                   paddingRight: paddingRight,
+                },
+                "& .MuiIconButton-root": {
+                  marginRight: "10px",
+                  marginTop: "0.2px",
                 },
                 display: "flex",
                 backgroundColor: "white",
@@ -169,6 +196,16 @@ function InputText({
                 ))}
             </TextField>
             {children}
+            {noLabel === true && (
+              <Typography
+                id="transition-modal-title"
+                variant="h6"
+                component="h2"
+                className="errorSpanNoLabel"
+              >
+                {hasError === true && <span>{errMessage}</span>}
+              </Typography>
+            )}
           </>
         ) : freeSoloInput === true ? (
           <>
@@ -310,7 +347,6 @@ function InputText({
                     "& .MuiAutocomplete-endAdornment": {
                       right: "40px !important",
                     },
-
                     display: "flex",
                     backgroundColor: "white",
                     borderRadius: "20px",
