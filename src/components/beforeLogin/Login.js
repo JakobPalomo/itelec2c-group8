@@ -14,7 +14,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const defaultTheme = createTheme();
 
-function Login({ setIsLoggedIn, ...sharedProps }) {
+function Login({ setIsLoggedIn, setCurrUser, ...sharedProps }) {
   const navigate = useNavigate();
   const initialErrorData = [
     { field: "email", hasError: false, errMessage: "" },
@@ -103,6 +103,21 @@ function Login({ setIsLoggedIn, ...sharedProps }) {
     const hasError = tempErrors.some((field) => field.hasError);
     if (!hasError && setIsLoggedIn !== undefined) {
       setIsLoggedIn(true);
+      setCurrUser({
+        user_id: "DBUSERIDHERE",
+        username: "myusername",
+        email: "email@gmail.com",
+        district: "Tondo",
+        city: "Manila",
+        region: "Metro Manila",
+        profile: 1,
+        reviews: [],
+        contributions: [],
+        saves: [],
+        upvotes: [],
+        otp: 0,
+      });
+
       navigate("/home");
     } else if (!hasError && setIsLoggedIn === undefined) {
       tempErrors.find((field) => field.field === "both").hasError = true;
