@@ -13,15 +13,11 @@ import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../../styles/Login.css";
-import InputText from "../modals/InputText.js";
-import { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
-import TextField from "@mui/material/TextField";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { styled } from "@mui/material/styles";
-import "../../styles/Login.css";
 
 const defaultTheme = createTheme();
 const VisuallyHiddenInput = styled("input")({
