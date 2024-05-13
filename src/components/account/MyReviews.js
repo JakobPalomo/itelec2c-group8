@@ -1,5 +1,15 @@
+import "../../styles/MyReviews.css";
+import Review from "../palengke/Review.js";
+
 function MyReviews({ ...sharedProps }) {
-  return <div>My Reviews Page</div>;
+  return (
+    <>
+      <div className="myReviews">My Reviews Page</div>
+      <div className="myreviewcontent">
+        <Review />
+      </div>
+    </>
+  );
 }
 
 export default MyReviews;

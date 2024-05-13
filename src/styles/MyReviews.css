@@ -1,0 +1,7 @@
+.myreviewcontent {
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  margin-top: 30px;
+  margin-left: 500px;
+}
