@@ -219,7 +219,6 @@ function Login({ setIsLoggedIn, ...sharedProps }) {
                   <span className="spanText">Don't have an account? </span>
                   <Link
                     href="/register"
-                    href="/register"
                     variant="body2"
                     style={{ textDecoration: "underline" }}
                     className="spanText"
