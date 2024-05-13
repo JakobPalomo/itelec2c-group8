@@ -47,6 +47,7 @@ function Home({ isLoggedIn, ...sharedProps }) {
           className="addPalengkeModal"
         >
           <AddPalengke
+            openMap={openMap}
             setOpenMap={setOpenMap}
             setOpenMediaModal={setOpenMediaModal}
             setIndexToEdit={setIndexToEdit}

@@ -200,6 +200,28 @@ app.get("/placedetails", async (req, res) => {
   }
 });
 
+app.get("/location-to-address", async (req, res) => {
+  const { lat, lng } = req.query;
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GMAPS_API_KEY}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.status === "OK" && data.results.length > 0) {
+      // Extract the formatted address from the first result
+      const formattedAddress = data.results[0].formatted_address;
+      res.json({ address: formattedAddress });
+    } else {
+      console.error("Reverse geocoding error:", data.status);
+      res.status(404).json({ error: "No address found" });
+    }
+  } catch (error) {
+    console.error("Error fetching place details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/sample", (req, res) => {
   res.json({ users: ["userOne", "userTwo", "userThree"] });
 });

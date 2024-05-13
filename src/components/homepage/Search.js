@@ -6,6 +6,8 @@ import TuneIcon from "@mui/icons-material/Tune";
 import DelayedTooltip from "../ui/DelayedTooltip";
 
 function Search() {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
   return (
     <div className="bg">
       <div className="center">
@@ -19,7 +21,12 @@ function Search() {
               />
 
               <IconButton size="small" className="muiFilterIconButton">
-                <DelayedTooltip title="Filter Search" delay={1000}>
+                <DelayedTooltip
+                  title="Filter Search"
+                  delay={1000}
+                  open={tooltipOpen}
+                  setOpen={setTooltipOpen}
+                >
                   <TuneIcon />
                 </DelayedTooltip>
               </IconButton>

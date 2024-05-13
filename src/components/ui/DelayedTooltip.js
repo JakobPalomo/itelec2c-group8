@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 
-function DelayedTooltip({ title, children, delay }) {
-  const [open, setOpen] = useState(false);
+function DelayedTooltip({
+  title = "",
+  children,
+  delay = 1000,
+  open = false,
+  setOpen,
+}) {
+  // const [open, setOpen] = useState(false);
   let timer;
 
   const handleTooltipOpen = () => {

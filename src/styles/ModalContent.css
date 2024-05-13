@@ -78,9 +78,19 @@
   font-size: 17px !important;
 }
 
+.muiLocationIconDarkGrey {
+  color: #585858 !important;
+  font-size: 17px !important;
+}
+
 .muiLocationIconGrey {
   color: #979797 !important;
   font-size: 17px !important;
+}
+
+.addressSpan {
+  font-weight: 500;
+  color: #424242 !important;
 }
 
 .uploadMediaCont {
