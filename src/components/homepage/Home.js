@@ -54,6 +54,7 @@ function Home({ ...sharedProps }) {
           className="addPalengkeModal"
         >
           <AddPalengke
+            openMap={openMap}
             setOpenMap={setOpenMap}
             setOpenMediaModal={setOpenMediaModal}
             setIndexToEdit={setIndexToEdit}

@@ -28,7 +28,7 @@ function ConfirmModal({
     >
       <div className="confirmModalCont">
         {noIcon === false && <WarningIcon className="muiWarningIcon" />}
-        {parentSize === true && <div style={{ height: "25px" }}></div>}
+        {/* {parentSize === true && <div style={{ height: "25px" }}></div>} */}
         {children}
       </div>
       <div
@@ -54,6 +54,8 @@ function ConfirmModal({
               setOpenPrevModal(false);
             } else if (context === "register") {
               confirmYes();
+            } else if (context === "selectLocation") {
+              confirmYes();
             }
           }}
         >
@@ -69,6 +71,7 @@ function ConfirmModal({
             } else if (context === "addMedia") {
               confirmYes(false);
             } else if (context === "addPalengke") {
+            } else if (context === "selectLocation") {
             }
           }}
         >

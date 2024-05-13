@@ -20,6 +20,7 @@ function InputText({
   required = false,
   disabled = false,
   setValue,
+  setOtherValue,
   value = "",
   arrayValue = [],
   defaultValue = "",
@@ -215,13 +216,18 @@ function InputText({
                 if (newValue == null) {
                   setValue("");
                 } else {
+                  console.log("newValue:");
+                  console.log(newValue);
                   if (typeof newValue.label === "string") {
                     setValue(newValue.label);
+                    setOtherValue(newValue.location);
                   } else if (newValue && newValue.inputValue) {
                     // Create a new value from the user input
                     setValue(newValue.inputValue);
+                    setOtherValue(newValue.location);
                   } else {
                     setValue("");
+                    setOtherValue({});
                   }
                 }
               }}

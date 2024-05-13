@@ -14,6 +14,7 @@ import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 const { REACT_APP_GMAPS_API_KEY } = process.env;
 
 function AddPalengke({
+  openMap,
   setOpenMap,
   setOpenMediaModal,
   setIndexToEdit,
@@ -98,7 +99,6 @@ function AddPalengke({
     setAddress(trimmedAddress);
     setDescription(trimmedDescription);
     setOtherNames(trimmedOtherNames);
-    setLocation({ lat: 0, lng: 0 });
     setBusinessStatus(parseInt(business_status));
 
     const tempErrors = initialErrorData;
@@ -233,6 +233,7 @@ function AddPalengke({
           parentSize={true}
           prevModalHeight={prevModalHeight}
         >
+          <div style={{ height: "20px" }}></div>
           <strong className="confirmModalHeaderMarginTop">
             Are all details entered correct?
           </strong>
@@ -252,7 +253,7 @@ function AddPalengke({
             {location.lat !== undefined && location.lng !== undefined && (
               <HeaderAndDetail
                 header="Location"
-                detail={location.lat.toString() + location.lng.toString()}
+                detail={`${location.lat}, ${location.lng}`}
                 margin="0px 0px 20px 0px"
               />
             )}
@@ -301,33 +302,16 @@ function AddPalengke({
             hasError={getHasError("palengkeName")}
             errMessage={getErrMessage("palengkeName")}
           />
-          {/* <InputText
-            type="text"
-            label="Address"
-            required={true}
-            // disabled={true}
-            setValue={setAddress}
-            value={address}
-            maxLength={255}
-            placeholder="Select a location in the map"
-            hasError={getHasError("address")}
-            errMessage={getErrMessage("address")}
-          >
-            <DelayedTooltip title="Select Location" delay={1000}>
-              <IconButton
-                className="locationIconButton"
-                onClick={() => setOpenMap(true)}
-              >
-                <FmdGoodRoundedIcon className="muiLocationIconPink" />
-              </IconButton>
-            </DelayedTooltip>
-          </InputText> */}
           <LocationSearch
             address={address}
             setAddress={setAddress}
+            location={location}
+            setLocation={setLocation}
             getHasError={getHasError}
             getErrMessage={getErrMessage}
+            openMap={openMap}
             setOpenMap={setOpenMap}
+            prevModalHeight={prevModalHeight}
           />
           <InputText
             type="text"

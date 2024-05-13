@@ -82,14 +82,20 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
     }
   };
 
-  const [openTooltip, setOpenTooltip] = useState(false);
+  const [homeTooltipOpen, setHomeTooltipOpen] = useState(false);
+  const [accountTooltipOpen, setAccountTooltipOpen] = useState(false);
 
   return (
     <AppBar position="static" className="muiAppBar">
       <Toolbar disableGutters className="muiToolbar">
         {/* Logo and Text */}
         <Box sx={{ flexGrow: 1, minWidth: "220px" }}>
-          <DelayedTooltip title="Home" delay={1000}>
+          <DelayedTooltip
+            title="Home"
+            delay={1000}
+            open={homeTooltipOpen}
+            setOpen={setHomeTooltipOpen}
+          >
             <Link to="/">
               <img src={logoPath} alt="Logo" className="navLogo" />
               <img src={logoTextPath} alt="Logo" className="navLogoText" />
@@ -114,7 +120,12 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
             {/* Dropdown */}
             <Box sx={{ flexGrow: 0 }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <DelayedTooltip title="Account" delay={1000}>
+                <DelayedTooltip
+                  title="Account"
+                  delay={1000}
+                  open={accountTooltipOpen}
+                  setOpen={setAccountTooltipOpen}
+                >
                   <Avatar
                     {...stringAvatar("Ira Rayzel Ji")}
                     className="poppins"

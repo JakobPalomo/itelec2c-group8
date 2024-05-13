@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import "../../styles/Modal.css";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
@@ -16,6 +17,8 @@ function MyModal({
   className = "",
   modalHeight = "unset",
 }) {
+  const [closeTooltipOpen, setCloseTooltipOpen] = useState(false);
+
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -50,7 +53,12 @@ function MyModal({
                 className="muiCloseIconButton"
                 onClick={() => setOpen(false)}
               >
-                <DelayedTooltip title="Close" delay={1000}>
+                <DelayedTooltip
+                  title="Close"
+                  delay={1000}
+                  open={closeTooltipOpen}
+                  setOpen={setCloseTooltipOpen}
+                >
                   <CloseIcon className="muiCloseIcon" />
                 </DelayedTooltip>
               </IconButton>

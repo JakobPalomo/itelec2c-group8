@@ -1,21 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
-import Modal from "../../components/modals/MyModal";
+import ConfirmModal from "../../components/modals/ConfirmModal";
+import LocationSelectorModal from "./LocationSelectorModal.js";
 import InputText from "../../components/modals/InputText.js";
 import DelayedTooltip from "../../components/ui/DelayedTooltip";
 import IconButton from "@mui/material/IconButton";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { setLocationType } from "react-geocode";
+import "../../styles/openMapModal.css";
 
 const { REACT_APP_GMAPS_API_KEY } = process.env;
 
 function LocationSearch({
   address,
   setAddress,
+  location,
+  setLocation,
   getHasError,
   getErrMessage,
+  openMap,
   setOpenMap,
+  prevModalHeight,
 }) {
   //   const loader = new Loader({
   //     apiKey: "YOUR_API_KEY",
@@ -49,6 +56,13 @@ function LocationSearch({
   //   });
 
   const [options, setOptions] = useState([]);
+  const [openSelectLoc, setOpenSelectLoc] = useState(false);
+
+  useEffect(() => {
+    if (openMap == true) {
+      setOpenSelectLoc(false);
+    }
+  }, [openSelectLoc]);
 
   useEffect(() => {
     const fetchPlaces = async () => {
@@ -91,30 +105,57 @@ function LocationSearch({
     fetchPlaces();
   }, [address]);
 
+  const onSelectLocation = (location, address) => {
+    setLocation(location);
+    setAddress(address);
+    console.log(location);
+    console.log(address);
+  };
+
   return (
-    <InputText
-      type="text"
-      label="Address"
-      freeSoloInput={true}
-      setValue={setAddress}
-      value={address}
-      maxLength={255}
-      placeholder="Select a location"
-      hasError={getHasError("address")}
-      errMessage={getErrMessage("address")}
-      options={options}
-      setOptions={setOptions}
-      //   inputRef={(ref) => onLoad(ref)}
-    >
-      <DelayedTooltip title="Select Location" delay={1000}>
-        <IconButton
-          className="locationIconButton"
-          onClick={() => setOpenMap(true)}
+    <>
+      {openMap === true && (
+        <LocationSelectorModal
+          open={openMap}
+          setOpen={setOpenMap}
+          onSelectLocation={onSelectLocation}
+          prevModalHeight={prevModalHeight}
+        />
+      )}
+      <InputText
+        type="text"
+        label="Address"
+        freeSoloInput={true}
+        required={true}
+        setValue={setAddress}
+        setOtherValue={setLocation}
+        value={address}
+        maxLength={255}
+        placeholder="Select a location"
+        hasError={getHasError("address")}
+        errMessage={getErrMessage("address")}
+        options={options}
+        setOptions={setOptions}
+        //   inputRef={(ref) => onLoad(ref)}
+      >
+        <DelayedTooltip
+          title="Select Location"
+          delay={1000}
+          open={openSelectLoc}
+          setOpen={setOpenSelectLoc}
         >
-          <FmdGoodRoundedIcon className="muiLocationIconPink" />
-        </IconButton>
-      </DelayedTooltip>
-    </InputText>
+          <IconButton
+            className="locationIconButton"
+            onClick={() => {
+              setOpenSelectLoc(false);
+              setOpenMap(true);
+            }}
+          >
+            <FmdGoodRoundedIcon className="muiLocationIconPink" />
+          </IconButton>
+        </DelayedTooltip>
+      </InputText>
+    </>
   );
 }
 
