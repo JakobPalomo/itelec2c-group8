@@ -9,7 +9,7 @@ import PalengkeList from "./PalengkeList";
 import PalengkeItem from "./PalengkeItem";
 import HomeHeader from "./HomeHeader";
 
-function Home({ isLoggedIn, ...sharedProps }) {
+function Home({ ...sharedProps }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [indexToEdit, setIndexToEdit] = useState();
   const [addPalengkeClicked, setAddPalengkeClicked] = useState(false);
@@ -18,6 +18,13 @@ function Home({ isLoggedIn, ...sharedProps }) {
   const [prevModalHeight, setPrevModalHeight] = useState("unset");
 
   useEffect(() => {
+    console.log(
+      `isLoggedIn: ${sharedProps.isLoggedIn}; currUserid: ${sharedProps.currUser?.user_id}`
+    );
+    console.log("currUser: ");
+    console.log(sharedProps.currUser);
+    console.log(sharedProps);
+
     function updateHeight() {
       const modalElement = document.querySelector(".addPalengkeModal");
       if (modalElement) {
@@ -39,7 +46,7 @@ function Home({ isLoggedIn, ...sharedProps }) {
 
   return (
     <>
-      {!isLoggedIn && (
+      {addPalengkeClicked === true && (
         <Modal
           title="Add New Palengke"
           open={addPalengkeClicked}
@@ -77,7 +84,7 @@ function Home({ isLoggedIn, ...sharedProps }) {
         </Modal>
       )}
       <Search />
-      {isLoggedIn && addPalengkeClicked && (
+      {/* {sharedProps.isLoggedIn && addPalengkeClicked && (
         <h1
           style={{
             textAlign: "center",
@@ -88,26 +95,26 @@ function Home({ isLoggedIn, ...sharedProps }) {
         >
           Please login to add a Palengke.
         </h1>
-      )}
+      )} */}
       <PalengkeList>
-        {isLoggedIn ? (
-          <HomeHeader setAddPalengkeClicked={setAddPalengkeClicked} />
-        ) : (
+        {sharedProps.isLoggedIn ? (
           <HomeHeader
             setAddPalengkeClicked={setAddPalengkeClicked}
             Btn={true}
           />
+        ) : (
+          <HomeHeader setAddPalengkeClicked={setAddPalengkeClicked} />
         )}
 
         <div className="palengkeItemsContainer">
           {sharedProps.palengkeList.map((palengke) => (
             <Link
-              to={!isLoggedIn ? `/palengke/${palengke.palengke_id}` : "#"}
-              key={palengke.palengke_id}
+              to={`/palengke/${palengke.id}`}
+              key={palengke.id}
               style={{
                 textDecoration: "none",
                 color: "black",
-                pointerEvents: !isLoggedIn ? "auto" : "none",
+                pointerEvents: "auto",
               }}
             >
               <PalengkeItem

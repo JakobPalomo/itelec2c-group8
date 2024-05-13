@@ -16,6 +16,7 @@ function ConfirmModal({
   noIcon = false,
   parentSize = false,
   prevModalHeight = "unset",
+  defaultValues,
   children,
 }) {
   return (
@@ -55,6 +56,8 @@ function ConfirmModal({
             } else if (context === "register") {
               confirmYes();
             } else if (context === "selectLocation") {
+              confirmYes();
+            } else if (context === "deleteReview") {
               confirmYes();
             }
           }}

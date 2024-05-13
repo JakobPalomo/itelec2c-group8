@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
@@ -10,40 +11,27 @@ import Review from "./Review.js";
 import MorePalengke from "./MorePalengke.js";
 import HorizontalBars from "./BarChart.js";
 import Modal from "../modals/MyModal";
-import AddReview from "../modals/AddReview.js";
+import AddEditReview from "../modals/AddEditReview.js";
+import ConfirmModal from "../modals/ConfirmModal.js";
 import palengkeImage from "./palengke.jpg";
 import reviewsData from "./reviewsData.json";
 
 function Palengke({ ...sharedProps }) {
-  const [addReviewClicked, setAddReview] = useState(false);
+  const { palengkeId } = useParams();
+
+  const [addEditReviewClicked, setAddEditReviewClicked] = useState(false);
+  const [deleteClicked, setDeleteClicked] = useState(false);
+  const [username, setUsername] = useState("");
+  const [palengke, setPalengke] = useState({});
+  const [palengkeReviews, setPalengkeReviews] = useState([]);
+  const [palengkeAndMyReviews, setPalengkeAndMyReviews] = useState([]);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [defaultValues, setDefaultValues] = useState({});
+
   const [reviewsDataState, setReviewsDataState] = useState(reviewsData); // State variable for reviews data
-  const [newComment, setNewComment] = useState(""); // State variable for new comment
-
-  // Function to handle adding a review
-  const handleCommentSubmit = () => {
-    // Get today's date
-    const today = new Date();
-    const dateString = today.toDateString();
-
-    // Add the new review to the reviewsData array
-    const newReview = {
-      date: dateString,
-      name: "Aliah", // Default name
-      review: newComment,
-    };
-
-    // Add the new review to the beginning of the array
-    const updatedReviewsData = [newReview, ...reviewsDataState];
-
-    // Update the reviewsData state with the new array
-    setReviewsDataState(updatedReviewsData);
-
-    // Close the add review modal
-    setAddReview(false);
-
-    // Reset the new comment state
-    setNewComment("");
-  };
+  const [statusColor, setStatusColor] = useState("");
+  const [ratingColor, setRatingColor] = useState("");
 
   // Function to handle editing a comment
   const handleEditComment = (index, editedComment) => {
@@ -59,98 +47,265 @@ function Palengke({ ...sharedProps }) {
     setReviewsDataState(updatedReviewsData);
   };
 
-  // Function to open add review modal
-  const handleAddReviewClick = () => {
-    setAddReview(true);
+  const getPalengke = (palengkeId) => {
+    const palengke = sharedProps.palengkeList.find(
+      (palengke) => palengke.id === palengkeId
+    );
+    setPalengke(palengke);
   };
+
+  const getPalengkeReviews = () => {
+    const palengkeReviewList = sharedProps.reviewList;
+    if (palengkeReviewList && palengkeReviewList.length > 0) {
+      const filteredReviews = palengkeReviewList.filter(
+        (review) => review.palengke_id === palengkeId
+      );
+      setPalengkeReviews(filteredReviews);
+      getPalengkeAndMyReviews(filteredReviews);
+    }
+  };
+
+  const getPalengkeAndMyReviews = (palengkeReviews) => {
+    console.log(typeof palengkeReviews);
+    const currUserId = sharedProps.currUser?.user_id;
+    if (Array.isArray(palengkeReviews) && currUserId) {
+      const filteredReviews = palengkeReviews.filter(
+        (review) => review.user_id === currUserId
+      );
+      setPalengkeAndMyReviews(filteredReviews);
+    }
+  };
+
+  const getUsername = () => {
+    const currUserId = sharedProps.currUser?.user_id;
+    console.log("userList");
+    console.log(sharedProps.userList);
+    if (currUserId && sharedProps.userList.length !== 0) {
+      const user = sharedProps.userList.find((user) => user.id === currUserId);
+      if (user) {
+        setUsername(user.username);
+      }
+    }
+  };
+
+  const isCurrUserReview = (review_id) => {
+    return palengkeAndMyReviews.some((review) => review.id === review_id);
+  };
+
+  useEffect(() => {
+    console.log(
+      `isLoggedIn: ${sharedProps.isLoggedIn}; currUserid: ${sharedProps.currUser?.user_id}`
+    );
+    console.log(sharedProps.currUser);
+    console.log(`palengkeId: ${palengkeId}`);
+    getPalengke(palengkeId);
+    getPalengkeReviews();
+    getUsername();
+    getRatingColor();
+    console.log(sharedProps);
+    console.log(palengke);
+    console.log(palengkeReviews);
+    console.log(palengkeAndMyReviews);
+  }, []);
+
+  useEffect(() => {
+    console.log("isEditing");
+    console.log(isEditing);
+  }, [isEditing]);
+
+  const handleDeleteReview = async () => {
+    console.log("inside");
+    try {
+      // Send a DELETE request to the server to delete the review
+      const response = await fetch(`/review/delete/${defaultValues.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete review");
+      }
+      setDeleteClicked(false);
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
+  };
+
+  const getFormattedDate = () => {
+    const today = new Date();
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    const formattedDate = today.toLocaleDateString("en-US", options);
+    return formattedDate;
+  };
+
+  const getAverageRating = () => {
+    let totalRating = 0;
+    palengkeReviews.forEach((review) => {
+      totalRating += parseInt(review.rating);
+    });
+    const averageRating = totalRating / palengkeReviews.length;
+    return averageRating;
+  };
+
+  const getAverageRatingInt = () => {
+    return Math.round(parseFloat(getAverageRating()));
+  };
+
+  const getRatingColor = () => {
+    if (palengke.rating !== null) {
+      const roundedNum = Math.round(palengke.rating);
+      if (roundedNum == -1) {
+        setRatingColor("#969595");
+      } else if (roundedNum <= 1) {
+        setRatingColor("#FF6262");
+      } else if (roundedNum <= 2) {
+        setRatingColor("#FF8855");
+      } else if (roundedNum <= 3) {
+        setRatingColor("#F2C038");
+      } else if (roundedNum <= 4) {
+        setRatingColor("#B1CE3B");
+      } else if (roundedNum <= 5) {
+        setRatingColor("#6EA837");
+      }
+    }
+  };
+
   return (
-    <div className="holder">
-      <div className="details">
-        <img alt="market" src={palengkeImage} className="Marketimg"></img>
-        <div className="content">
-          <div className="namerate">
-            <p className="welcome">Palengke Name</p>
-            <div className="ratingContBig" style={{ margin: "20px" }}>
-              <StarRoundedIcon className="muiStarIcon" />5
-            </div>
-            <Report style={{ marginLeft: "500px" }} />
-          </div>
-          <div className="locationBig">
-            <FmdGoodRoundedIcon className="muiLocationIcon" />
-            <div>Somewhere</div>
-          </div>
-          <p className="subtext">Palengke Description:</p>
-          <div className="desc">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="details">
-        <div class="dropdown">
-          <button class="dropbtn">
-            Sort Reviews by
-            <ArrowDropDownIcon />
-          </button>
-          <div class="dropdown-content">
-            <a href="#">Option 1</a>
-            <a href="#">Option 2</a>
-            <a href="#">Option 3</a>
-          </div>
-        </div>
-        <Button
-          variant="contained"
-          className="button addPalengkeButton pinkButton"
-          style={{ textTransform: "none", marginTop: "60px" }}
-          onClick={handleAddReviewClick} // Open modal on button click
+    <>
+      {addEditReviewClicked === true && (
+        <Modal
+          title={isEditing === true ? "Edit a Review" : "Add a Review"}
+          open={addEditReviewClicked}
+          setOpen={setAddEditReviewClicked}
         >
-          Add Review
-          <AddIcon className="muiAddIcon" />
-        </Button>
-      </div>
-      <div className="Overview">
-        <div>
-          <p>Palengke Reviews</p>
-          <p className="welcome">4.7</p>
-          <div>
-            <HalfRating />
-          </div>
-          <p>(524 Reviews)</p>
-          <p>Jan 20, 2024</p>
-        </div>
-        <div className="rev">
-          <HorizontalBars />
-        </div>
-      </div>
-
-      <div className="reviewList">
-        {reviewsDataState.map((review, index) => (
-          <Review
-            key={index}
-            index={index}
-            {...review}
-            onEdit={handleEditComment}
-            onDelete={handleDeleteComment}
+          <AddEditReview
+            user_id={sharedProps.currUser?.user_id}
+            palengke_id={palengkeId}
+            setOpen={setAddEditReviewClicked}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            defaultValues={defaultValues}
           />
-        ))}
-      </div>
+        </Modal>
+      )}
+      {deleteClicked === true && (
+        <ConfirmModal
+          title="Confirm Delete"
+          open={deleteClicked}
+          setOpen={setDeleteClicked}
+          confirmYes={handleDeleteReview}
+          context="deleteReview"
+        >
+          <div>Are you sure you want to delete this review?</div>
+        </ConfirmModal>
+      )}
+      <div className="holder">
+        <div className="details">
+          <img alt="market" src={palengkeImage} className="Marketimg"></img>
+          <div className="content">
+            <div className="namerate">
+              <p className="welcome">{palengke.name}</p>
+              <div
+                className="ratingContBig"
+                style={{
+                  margin: "20px",
+                  backgroundColor: `${ratingColor} !important`,
+                }}
+              >
+                <StarRoundedIcon className="muiStarIcon" />
+                {getAverageRating()}
+              </div>
+              <Report style={{ marginLeft: "500px" }} />
+            </div>
+            <div className="locationBig">
+              <FmdGoodRoundedIcon className="muiLocationIcon" />
+              <div>{palengke.address}</div>
+            </div>
+            {/* <p className="subtext">Palengke Description:</p> */}
+            <div className="desc">
+              <p>
+                {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. */}
+                {palengke.description}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="details">
+          <div class="dropdown">
+            <button class="dropbtn">
+              Sort Reviews by
+              <ArrowDropDownIcon />
+            </button>
+            <div class="dropdown-content">
+              <a href="#">Option 1</a>
+              <a href="#">Option 2</a>
+              <a href="#">Option 3</a>
+            </div>
+          </div>
+          {sharedProps.isLoggedIn === true && (
+            <Button
+              variant="contained"
+              className="button addPalengkeButton pinkButton"
+              style={{ textTransform: "none", marginTop: "60px" }}
+              onClick={() => {
+                setAddEditReviewClicked(true);
+              }}
+            >
+              Add Review
+              <AddIcon className="muiAddIcon" />
+            </Button>
+          )}
+        </div>
+        <div className="Overview">
+          <div>
+            <p>Palengke Reviews</p>
+            <p className="welcome">{getAverageRating()}</p>
+            <div>
+              <HalfRating
+                defaultValue={getAverageRatingInt()}
+                disabled={true}
+              />
+            </div>
+            <p>({palengkeReviews.length} Reviews)</p>
+            <p>{getFormattedDate()}</p>
+          </div>
+          <div className="rev">
+            <HorizontalBars data={palengkeReviews} />
+          </div>
+        </div>
 
-      <center>
-        <p className="more">
-          <a href="#" className="more">
-            Show more reviews ...
-          </a>
-        </p>
-        <MorePalengke {...sharedProps} />
-      </center>
+        <div className="reviewList">
+          {palengkeReviews.map((review, index) => {
+            return (
+              <Review
+                key={review.id}
+                index={review.id}
+                editable={isCurrUserReview(review.id)}
+                setOpen={setAddEditReviewClicked}
+                setDeleteClicked={setDeleteClicked}
+                review={review}
+                username={username}
+                setIsEditing={setIsEditing}
+                setDefaultValues={setDefaultValues}
+              />
+            );
+          })}
+        </div>
 
-      {/* Modal for adding a review */}
+        <center>
+          <p className="more">
+            <a href="#" className="more">
+              Show more reviews ...
+            </a>
+          </p>
+          <MorePalengke {...sharedProps} />
+        </center>
+
+        {/* Modal for adding a review
       <Modal
         title="Add A Review"
         open={addReviewClicked}
@@ -179,8 +334,9 @@ function Palengke({ ...sharedProps }) {
             Submit
           </Button>
         </div>
-      </Modal>
-    </div>
+      </Modal> */}
+      </div>
+    </>
   );
 }
 

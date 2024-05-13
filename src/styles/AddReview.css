@@ -17,3 +17,18 @@ textarea {
   padding: 8px;
   margin: 12px;
 }
+.errorSpanNoLabel {
+  color: #ff3f3f !important;
+  text-align: center !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  margin-top: 8px !important;
+}
+.ratingMarginBottom {
+  margin-bottom: 10px !important;
+  margin-top: 0px !important;
+}
+.ratingMarginTop {
+  margin-top: 10px;
+  margin-bottom: 5px !important;
+}
