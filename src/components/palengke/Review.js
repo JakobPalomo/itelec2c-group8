@@ -2,8 +2,6 @@ import "../../styles/Palengke.css";
 import HalfRating from "./HalfRating.js";
 import React, { useState, useEffect } from "react";
 import "../../styles/PalengkeList.css";
-import media_types from "../../data/media_types.js";
-import business_statuses from "../../data/business_statuses.js";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
@@ -11,50 +9,90 @@ import CircleIcon from "@mui/icons-material/Circle";
 import RippleButton from "../ui/RippleButton.js";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Button, Menu, MenuItem } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-function Review({ palengke, mediaType, prev }) {
-  const [media, setMedia] = useState("");
+function Review({
+  palengke,
+  mediaType,
+  prev,
+  date,
+  name,
+  review,
+  index,
+  onEdit,
+  onDelete,
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedComment, setEditedComment] = useState(review);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleEditClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    setAnchorEl(null);
+  };
+
+  const handleSaveEdit = () => {
+    onEdit(index, editedComment);
+    setIsEditing(false);
+  };
+
+  const handleDeleteClick = () => {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
+      onDelete(index);
+    }
+  };
+
+  const handleCommentChange = (event) => {
+    setEditedComment(event.target.value);
+  };
+
   return (
     <div className="Reviews">
-      {prev && (
-        <div className="imageContainer">
-          {media !== "" && media !== null ? (
-            mediaType === "image" ? (
-              <img
-                src={media.path}
-                alt={palengke.name}
-                className="palengkeImage"
-              />
-            ) : mediaType === "video" ? (
-              <video className="palengkeImage">
-                <source src={media.path} className="palengkeImage" />
-                Your browser does not support the video tag.
-              </video>
-            ) : (
-              <div className="noImageContainer">
-                <NoPhotographyIcon className="muiNoImageIcon" />
-                No Media Available
-              </div>
-            )
-          ) : (
-            <div className="noImageContainer">
-              <NoPhotographyIcon className="muiNoImageIcon" />
-              No Media Available
-            </div>
-          )}
+      <div>
+        <p>{date}</p>{" "}
+        <div className="edit">
+          <Button onClick={handleEditClick}>
+            <MoreHorizIcon style={{ color: "#fd7335" }} />
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
+          </Menu>
+          {isEditing && <Button onClick={handleSaveEdit}>Save</Button>}
         </div>
+      </div>
+      <HalfRating />
+      {/* Rating display section */}
+      <div>{/* Your rating display code goes here */}</div>
+      <p className="name">{name}</p>
+      {isEditing ? (
+        <TextField
+          multiline
+          rows={4}
+          variant="outlined"
+          fullWidth
+          value={editedComment}
+          onChange={handleCommentChange}
+        />
+      ) : (
+        <p>{review}</p>
       )}
 
-      <p>Jan 20, 2024</p>
-      <div>
-        <HalfRating />
-      </div>
-      <p className="name">Aliah Esteban</p>
-      <p>
-        Working at Sam.AI has been an incredible journey so far. The technology
-        we're building is truly cutting-edge, and being a part of a team that's
-        revolutionizing how people achieve their goals is immensely fulfilling.{" "}
-      </p>
+      {/* Dropdown menu for editing and deleting comments */}
     </div>
   );
 }

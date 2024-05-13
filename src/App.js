@@ -165,9 +165,14 @@ function App() {
               path="/"
               element={
                 isLoggedIn ? (
-                  <Home {...sharedProps} />
+                  <Home isLoggedIn={isLoggedIn} {...sharedProps} />
                 ) : (
-                  <Login setIsLoggedIn={setIsLoggedIn} {...sharedProps} />
+                  <Home isLoggedIn={!isLoggedIn} {...sharedProps} />
+                  // <Login
+                  //   setIsLoggedIn={setIsLoggedIn}
+                  //   {...sharedProps}
+                  //   isLoggedIn={true}
+                  // />
                 )
               }
             />

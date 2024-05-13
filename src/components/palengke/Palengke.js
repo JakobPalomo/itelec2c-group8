@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import "../../styles/Palengke.css";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import Report from "./Report.js";
@@ -10,27 +9,62 @@ import HalfRating from "./HalfRating.js";
 import Review from "./Review.js";
 import MorePalengke from "./MorePalengke.js";
 import HorizontalBars from "./BarChart.js";
-import { useState } from "react";
 import Modal from "../modals/MyModal";
-import AddPalengke from "../modals/AddPalengke.js";
 import AddReview from "../modals/AddReview.js";
-// Import the image file
 import palengkeImage from "./palengke.jpg";
+import reviewsData from "./reviewsData.json";
 
 function Palengke({ ...sharedProps }) {
   const [addReviewClicked, setAddReview] = useState(false);
+  const [reviewsDataState, setReviewsDataState] = useState(reviewsData); // State variable for reviews data
+  const [newComment, setNewComment] = useState(""); // State variable for new comment
 
+  // Function to handle adding a review
+  const handleCommentSubmit = () => {
+    // Get today's date
+    const today = new Date();
+    const dateString = today.toDateString();
+
+    // Add the new review to the reviewsData array
+    const newReview = {
+      date: dateString,
+      name: "Aliah", // Default name
+      review: newComment,
+    };
+
+    // Add the new review to the beginning of the array
+    const updatedReviewsData = [newReview, ...reviewsDataState];
+
+    // Update the reviewsData state with the new array
+    setReviewsDataState(updatedReviewsData);
+
+    // Close the add review modal
+    setAddReview(false);
+
+    // Reset the new comment state
+    setNewComment("");
+  };
+
+  // Function to handle editing a comment
+  const handleEditComment = (index, editedComment) => {
+    const updatedReviewsData = [...reviewsDataState];
+    updatedReviewsData[index].review = editedComment;
+    setReviewsDataState(updatedReviewsData);
+  };
+
+  // Function to handle deleting a comment
+  const handleDeleteComment = (index) => {
+    const updatedReviewsData = [...reviewsDataState];
+    updatedReviewsData.splice(index, 1);
+    setReviewsDataState(updatedReviewsData);
+  };
+
+  // Function to open add review modal
+  const handleAddReviewClick = () => {
+    setAddReview(true);
+  };
   return (
     <div className="holder">
-      {addReviewClicked === true && (
-        <Modal
-          title="Add A Review"
-          open={addReviewClicked}
-          setOpen={setAddReview}
-        >
-          <AddReview setAddPalengkeClicked={setAddReview} />
-        </Modal>
-      )}
       <div className="details">
         <img alt="market" src={palengkeImage} className="Marketimg"></img>
         <div className="content">
@@ -59,7 +93,6 @@ function Palengke({ ...sharedProps }) {
         </div>
       </div>
       <div className="details">
-        {" "}
         <div class="dropdown">
           <button class="dropbtn">
             Sort Reviews by
@@ -75,16 +108,13 @@ function Palengke({ ...sharedProps }) {
           variant="contained"
           className="button addPalengkeButton pinkButton"
           style={{ textTransform: "none", marginTop: "60px" }}
-          onClick={() => setAddReview(true)}
+          onClick={handleAddReviewClick} // Open modal on button click
         >
           Add Review
           <AddIcon className="muiAddIcon" />
         </Button>
       </div>
-      <div
-        className="Overview"
-        style={{ marginBottom: "28px", flexDirection: "row", display: "flex" }}
-      >
+      <div className="Overview">
         <div>
           <p>Palengke Reviews</p>
           <p className="welcome">4.7</p>
@@ -99,20 +129,57 @@ function Palengke({ ...sharedProps }) {
         </div>
       </div>
 
-      <div>
-        <Review />
-        <Review />
-        <Review />
-        <Review />
-        <center>
-          <p className="more">
-            <a href="#" className="more">
-              Show more reviews ...
-            </a>
-          </p>
-          <MorePalengke {...sharedProps} />
-        </center>
+      <div className="reviewList">
+        {reviewsDataState.map((review, index) => (
+          <Review
+            key={index}
+            index={index}
+            {...review}
+            onEdit={handleEditComment}
+            onDelete={handleDeleteComment}
+          />
+        ))}
       </div>
+
+      <center>
+        <p className="more">
+          <a href="#" className="more">
+            Show more reviews ...
+          </a>
+        </p>
+        <MorePalengke {...sharedProps} />
+      </center>
+
+      {/* Modal for adding a review */}
+      <Modal
+        title="Add A Review"
+        open={addReviewClicked}
+        setOpen={setAddReview}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <h2>How would you rate this Palengke?</h2> <HalfRating />
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Enter your review here..."
+            style={{ fontSize: "18px" }}
+          />
+          <Button
+            variant="contained"
+            className="button addReviewButton pinkButton"
+            style={{ textTransform: "none", marginTop: "20px" }}
+            onClick={handleCommentSubmit}
+          >
+            Submit
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

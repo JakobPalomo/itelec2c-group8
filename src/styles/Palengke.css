@@ -156,6 +156,7 @@ h1 {
   padding: 24px;
   display: flex;
   flex-direction: row;
+  margin-bottom: 24px;
 }
 .indiv {
   width: 95%;
@@ -163,6 +164,14 @@ h1 {
 .name {
   font-size: 18px;
   font-weight: bold;
+}
+
+.edit {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  margin-top: -24px;
 }
 
 @media screen and (max-width: 720px) {

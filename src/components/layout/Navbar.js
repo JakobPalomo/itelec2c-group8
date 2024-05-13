@@ -200,7 +200,7 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
             </Box>{" "}
           </>
         ) : (
-          <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+          <Link to="/login" style={{ textDecoration: "none", color: "white" }}>
             <Button color="inherit" className="muiButton">
               Login
             </Button>

@@ -7,23 +7,16 @@ import EditMedia from "../modals/EditMedia";
 import SelectOnMap from "../modals/SelectOnMap";
 import PalengkeList from "./PalengkeList";
 import PalengkeItem from "./PalengkeItem";
-import palengkeData from "../../data/palengkeData";
 import HomeHeader from "./HomeHeader";
 
-function Home({ ...sharedProps }) {
+function Home({ isLoggedIn, ...sharedProps }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [indexToEdit, setIndexToEdit] = useState();
   const [addPalengkeClicked, setAddPalengkeClicked] = useState(false);
   const [openMap, setOpenMap] = useState(false);
   const [openMediaModal, setOpenMediaModal] = useState(false);
-
-  //accessing sharedProps
-  console.log({ ...sharedProps });
-  console.log(sharedProps.palengkeList);
-  const palengkeList = sharedProps.palengkeList;
-  const setPalengkeList = sharedProps.setPalengkeList;
-
   const [prevModalHeight, setPrevModalHeight] = useState("unset");
+
   useEffect(() => {
     function updateHeight() {
       const modalElement = document.querySelector(".addPalengkeModal");
@@ -46,7 +39,7 @@ function Home({ ...sharedProps }) {
 
   return (
     <>
-      {addPalengkeClicked === true && (
+      {!isLoggedIn && (
         <Modal
           title="Add New Palengke"
           open={addPalengkeClicked}
@@ -64,7 +57,7 @@ function Home({ ...sharedProps }) {
             prevModalHeight={prevModalHeight}
             palengkelist={sharedProps.palengkeList}
             setPalengkeList={sharedProps.setPalengkeList}
-            mediaList={sharedProps.me}
+            mediaList={sharedProps.mediaList}
             setMediaList={sharedProps.setMediaList}
           />
         </Modal>
@@ -84,17 +77,37 @@ function Home({ ...sharedProps }) {
         </Modal>
       )}
       <Search />
+      {isLoggedIn && addPalengkeClicked && (
+        <h1
+          style={{
+            textAlign: "center",
+            color: "white",
+            backgroundColor: "#ff6262",
+            padding: "12px",
+          }}
+        >
+          Please login to add a Palengke.
+        </h1>
+      )}
       <PalengkeList>
-        <HomeHeader setAddPalengkeClicked={setAddPalengkeClicked} />
+        {isLoggedIn ? (
+          <HomeHeader setAddPalengkeClicked={setAddPalengkeClicked} />
+        ) : (
+          <HomeHeader
+            setAddPalengkeClicked={setAddPalengkeClicked}
+            Btn={true}
+          />
+        )}
+
         <div className="palengkeItemsContainer">
-          {/* sharedProps.palengkeList */}
           {sharedProps.palengkeList.map((palengke) => (
             <Link
-              to={`/palengke/${palengke.palengke_id}`}
+              to={!isLoggedIn ? `/palengke/${palengke.palengke_id}` : "#"}
               key={palengke.palengke_id}
               style={{
                 textDecoration: "none",
                 color: "black",
+                pointerEvents: !isLoggedIn ? "auto" : "none",
               }}
             >
               <PalengkeItem
