@@ -13,3 +13,59 @@
 .tempAddress {
   text-align: start;
 }
+.gm-style {
+  font-family: "Poppins", sans-serif;
+}
+.gmnoprint.gm-bundled-control div {
+  border-radius: 10px !important;
+  background-color: #ff6262 !important;
+}
+.gmnoprint.gm-bundled-control div:hover {
+  background-color: #e74f4f !important;
+}
+.gm-control-active img {
+  filter: invert(100%) sepia(2%) saturate(633%) hue-rotate(287deg)
+    brightness(160%) contrast(100%);
+}
+.gmnoprint.gm-style-cc div {
+  background-color: rgba(252, 234, 230, 0.9) !important;
+}
+.gmnoprint .gm-style-cc div {
+  background-color: rgba(252, 234, 230, 0.9) !important;
+}
+.gmnoprint .gm-style-cc {
+  background-color: transparent !important;
+}
+div[z-index="1000000"][position="absolute"] {
+  display: none !important;
+}
+.gm-style-iw.gm-style-iw-c {
+  background-color: rgba(252, 234, 230, 0.9);
+}
+.gm-style .gm-style-iw-tc::after {
+  background: rgba(252, 234, 230, 0.9);
+}
+.poi-info-window div {
+  background-color: transparent;
+}
+.gm-style .transit-container div {
+  background-color: transparent;
+}
+.gm-style .transit-container {
+  background-color: transparent;
+}
+.poi-info-window a {
+  background-color: transparent;
+}
+.poi-info-window a:link {
+  color: #ff6262;
+}
+.confirmModalButtonCont {
+  margin-bottom: 0;
+}
+.xxGHyP-dialog-view .uNGBb-dialog-view--content {
+  background: rgb(255, 230, 224) !important;
+}
+.LGLeeN-keyboard-shortcuts-view td kbd {
+  background-color: white;
+}

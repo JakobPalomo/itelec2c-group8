@@ -82,12 +82,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // GMAPS JS API SCRIPT
-    loadGoogleMapsScript();
-    // initMap();
-    console.log("host");
-    console.log(process.env.HOST);
-
     // REAL-TIME OBJECT UPDATE
     const collections = ["palengke", "review", "upvote", "user"];
     const stateSetterFunctions = {
