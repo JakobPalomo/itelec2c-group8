@@ -14,21 +14,19 @@ import TextField from "@mui/material/TextField";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 function Review({
-  palengke,
-  mediaType,
-  prev,
-  date,
-  name,
-  review,
+  key,
   index,
-  onEdit,
-  onDelete,
+  editable,
+  setOpen,
+  setDeleteClicked,
+  setIsEditing,
+  setDefaultValues,
+  review,
+  username,
 }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedComment, setEditedComment] = useState(review);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleEditClick = (event) => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -36,32 +34,12 @@ function Review({
     setAnchorEl(null);
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    setAnchorEl(null);
-  };
-
-  const handleSaveEdit = () => {
-    onEdit(index, editedComment);
-    setIsEditing(false);
-  };
-
-  const handleDeleteClick = () => {
-    if (window.confirm("Are you sure you want to delete this comment?")) {
-      onDelete(index);
-    }
-  };
-
-  const handleCommentChange = (event) => {
-    setEditedComment(event.target.value);
-  };
-
   return (
     <div className="Reviews">
       <div>
-        <p>{date}</p>{" "}
+        <p>{review.date}</p>{" "}
         <div className="edit">
-          <Button onClick={handleEditClick}>
+          <Button onClick={handleClick}>
             <MoreHorizIcon style={{ color: "#fd7335" }} />
           </Button>
           <Menu
@@ -69,29 +47,33 @@ function Review({
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                setIsEditing(true);
+                setOpen(true);
+                setDefaultValues(review);
+              }}
+            >
+              Edit
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                setDeleteClicked(true);
+                setDefaultValues(review);
+              }}
+            >
+              Delete
+            </MenuItem>
           </Menu>
-          {isEditing && <Button onClick={handleSaveEdit}>Save</Button>}
         </div>
       </div>
-      <HalfRating />
+      <HalfRating defaultValue={review.rating} disabled={true} />
       {/* Rating display section */}
       <div>{/* Your rating display code goes here */}</div>
-      <p className="name">{name}</p>
-      {isEditing ? (
-        <TextField
-          multiline
-          rows={4}
-          variant="outlined"
-          fullWidth
-          value={editedComment}
-          onChange={handleCommentChange}
-        />
-      ) : (
-        <p>{review}</p>
-      )}
-
+      <p className="name">{username}</p>
+      <p>{review.review}</p>
       {/* Dropdown menu for editing and deleting comments */}
     </div>
   );

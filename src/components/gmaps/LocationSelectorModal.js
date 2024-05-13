@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import ConfirmModal from "../modals/ConfirmModal";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
-import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import "../../styles/map.css";
+
+const { REACT_APP_GMAPS_API_KEY } = process.env;
 
 const LocationSelectorModal = ({
   open,
@@ -10,10 +12,40 @@ const LocationSelectorModal = ({
   onSelectLocation,
   prevModalHeight,
 }) => {
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: REACT_APP_GMAPS_API_KEY,
+  });
+  const [map, setMap] = React.useState(null);
+  const onLoad = React.useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds(center);
+    // map.fitBounds(bounds);
+    map.setCenter(bounds.getCenter());
+    setMap(map);
+  }, []);
+  const onUnmount = React.useCallback(function callback(map) {
+    setMap(null);
+  }, []);
+  const handleMapLoad = React.useCallback(
+    function handleMapLoad(map) {
+      onLoad(map);
+      mapRef.current = map;
+    },
+    [onLoad]
+  );
+  const containerStyle = {
+    width: "100%",
+    height: "100%",
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    overflow: "hidden",
+  };
+
   const defaultLocation = { lat: 14.599512, lng: 120.984222 };
   const [center, setCenter] = useState(defaultLocation);
   const [tempAddress, setTempAddress] = useState("");
   const [markerPosition, setMarkerPosition] = useState(defaultLocation);
+  const [zoom, setZoom] = useState(12);
   const mapRef = useRef(null);
   const markerRef = useRef(null);
 
@@ -67,6 +99,13 @@ const LocationSelectorModal = ({
     // console.log(address);
   };
 
+  const handleZoomChanged = () => {
+    // Update zoom state when zoom level changes
+    if (mapRef.current) {
+      setZoom(mapRef.current.getZoom());
+    }
+  };
+
   return (
     <ConfirmModal
       title="Choose Location"
@@ -81,25 +120,33 @@ const LocationSelectorModal = ({
       prevModalHeight={prevModalHeight}
     >
       <div style={{ width: "100%", height: "590px" }}>
-        <GoogleMap
-          id="map"
-          mapContainerStyle={{ width: "100%", height: "100%" }}
-          center={center}
-          zoom={12}
-          onClick={handleMapClick}
-          onLoad={(map) => (mapRef.current = map)}
-          onCenterChanged={handleCenterChanged}
-        >
-          <MarkerF
-            position={markerPosition}
-            draggable={true}
-            onLoad={(marker) => (markerRef.current = marker)}
-            icon={{
-              url: "/assets/marker.png",
-              scaledSize: new window.google.maps.Size(35, 35), // Adjust size as needed
+        {isLoaded && (
+          <GoogleMap
+            id="map"
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={zoom}
+            onClick={handleMapClick}
+            onCenterChanged={handleCenterChanged}
+            onZoomChanged={handleZoomChanged}
+            onLoad={handleMapLoad}
+            onUnmount={onUnmount}
+            options={{
+              disableDefaultUI: true,
+              zoomControl: true,
             }}
-          />
-        </GoogleMap>
+          >
+            <MarkerF
+              position={markerPosition}
+              draggable={true}
+              onLoad={(marker) => (markerRef.current = marker)}
+              icon={{
+                url: "/assets/marker.png",
+                scaledSize: new window.google.maps.Size(35, 35), // Adjust size as needed
+              }}
+            />
+          </GoogleMap>
+        )}
       </div>
       <div className="addressCont">
         <div>

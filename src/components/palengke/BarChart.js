@@ -11,50 +11,40 @@ const chartSetting = {
   width: 650,
   height: 250,
 };
-const dataset = [
-  {
-    london: 59,
-    paris: 57,
-    newYork: 86,
-    seoul: 21,
-    month: "1 stars",
-  },
-  {
-    london: 50,
-    paris: 52,
-    newYork: 78,
-    seoul: 28,
-    month: "2 stars",
-  },
-  {
-    london: 47,
-    paris: 53,
-    newYork: 106,
-    seoul: 41,
-    month: "3 stars",
-  },
-  {
-    london: 54,
-    paris: 56,
-    newYork: 92,
-    seoul: 73,
-    month: "4 stars",
-  },
-  {
-    london: 57,
-    paris: 69,
-    newYork: 92,
-    seoul: 99,
-    month: "5 stars",
-  },
-];
+function getTotal(data) {
+  const all = data.length;
+  let total = [0, 0, 0, 0, 0];
+  data.forEach((review) => {
+    const rating = parseInt(review.rating);
+    if (rating == 1) {
+      total[0] += 1;
+    } else if (rating == 2) {
+      total[1] += 1;
+    } else if (rating == 3) {
+      total[2] += 1;
+    } else if (rating == 4) {
+      total[3] += 1;
+    } else if (rating == 5) {
+      total[4] += 1;
+    }
+  });
+  return total;
+}
+export default function HorizontalBars({ data }) {
+  const total = getTotal(data);
+  let dataset = [
+    { total: total[0], label: "1 stars" },
+    { total: total[1], label: "2 stars" },
+    { total: total[2], label: "3 stars" },
+    { total: total[3], label: "4 stars" },
+    { total: total[4], label: "5 stars" },
+  ];
 
-export default function HorizontalBars() {
   return (
     <BarChart
       dataset={dataset}
-      yAxis={[{ scaleType: "band", dataKey: "month" }]}
-      series={[{ dataKey: "seoul" }]}
+      yAxis={[{ scaleType: "band", dataKey: "label" }]}
+      series={[{ dataKey: "total" }]}
       layout="horizontal"
       {...chartSetting}
     />

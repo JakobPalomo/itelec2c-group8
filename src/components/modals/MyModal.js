@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/Modal.css";
+import InputText from "../modals/InputText";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";

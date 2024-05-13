@@ -32,6 +32,8 @@ const {
   addDoc,
   getDoc,
   setDoc,
+  deleteDoc,
+  updateDoc,
 } = require("firebase/firestore");
 
 function generateRandomString(length) {
@@ -44,6 +46,8 @@ function generateRandomString(length) {
   return result;
 }
 
+// Parse URL-encoded bodies (form data)
+app.use(express.urlencoded({ extended: true }));
 // Middleware to set CORS headers
 app.use((req, res, next) => {
   // Allow requests from any origin
@@ -164,6 +168,63 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
   } catch (error) {
     console.error("Error adding document:", error);
     res.status(500).send("Error adding document");
+  }
+});
+
+// ADD REVIEW
+app.post("/review/add", upload.none(), async (req, res) => {
+  try {
+    console.log("req.body");
+    console.log(req.body);
+    let { user_id, palengke_id, date, review, rating, upvote_count } = req.body;
+
+    await setDoc(doc(collection(db, "review")), {
+      user_id,
+      palengke_id,
+      date,
+      review,
+      rating,
+      upvote_count,
+    });
+    console.error("Successfully added document");
+    res.status(200).json("Successfully added palengke");
+  } catch (error) {
+    console.error("Error adding document:", error);
+    res.status(500).send("Error adding document");
+  }
+});
+
+// EDIT REVIEW
+app.put("/review/edit/:reviewId", upload.none(), async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const { review, rating } = req.body; // Updated review data
+
+    // Update the review document in the database
+    await updateDoc(doc(db, "review", reviewId), {
+      review,
+      rating,
+    });
+
+    res.status(200).json("Successfully updated review");
+  } catch (error) {
+    console.error("Error updating review:", error);
+    res.status(500).send("Error updating review");
+  }
+});
+
+// DELETE REVIEW
+app.delete("/review/delete/:reviewId", async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+
+    // Delete the review document from the database
+    await deleteDoc(doc(db, "review", reviewId));
+
+    res.status(200).json("Successfully deleted review");
+  } catch (error) {
+    console.error("Error deleting review:", error);
+    res.status(500).send("Error deleting review");
   }
 });
 

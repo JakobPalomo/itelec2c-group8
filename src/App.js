@@ -40,8 +40,41 @@ function loadGoogleMapsScript() {
 }
 
 function App() {
+  const initialUsers = [
+    {
+      user_id: "DBUSERIDHERE",
+      username: "myusername",
+      email: "email@gmail.com",
+      district: "Tondo",
+      city: "Manila",
+      region: "Metro Manila",
+      profile: 1,
+      reviews: [],
+      contributions: [],
+      saves: [],
+      upvotes: [],
+      otp: 0,
+    },
+  ];
+
+  const initialUser = {
+    user_id: "DBUSERIDHERE",
+    username: "myusername",
+    email: "email@gmail.com",
+    district: "Tondo",
+    city: "Manila",
+    region: "Metro Manila",
+    profile: 1,
+    reviews: [],
+    contributions: [],
+    saves: [],
+    upvotes: [],
+    otp: 0,
+  };
+
   // Change true/false here since wla pa login
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [currUser, setCurrUser] = useState(initialUser);
   const [mainMargin, setMainMargin] = useState(0);
 
   // app objects
@@ -49,7 +82,7 @@ function App() {
   const [reviewList, setReviewList] = useState([]);
   const [upvoteList, setUpvoteList] = useState([]);
   const [mediaList, setMediaList] = useState([]);
-  const [userList, setUserList] = useState([]);
+  const [userList, setUserList] = useState(initialUsers);
 
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
@@ -64,6 +97,8 @@ function App() {
     setMediaList: setMediaList,
     userList: userList,
     setUserList: setUserList,
+    currUser: currUser,
+    isLoggedIn: isLoggedIn,
   };
 
   useEffect(() => {
@@ -82,12 +117,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // GMAPS JS API SCRIPT
-    loadGoogleMapsScript();
-    // initMap();
-    console.log("host");
-    console.log(process.env.HOST);
-
     // REAL-TIME OBJECT UPDATE
     const collections = ["palengke", "review", "upvote", "user"];
     const stateSetterFunctions = {
@@ -157,7 +186,12 @@ function App() {
           <Route
             element={
               <Layout>
-                <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+                <Navbar
+                  isLoggedIn={isLoggedIn}
+                  setIsLoggedIn={setIsLoggedIn}
+                  currUser={currUser}
+                  setCurrUser={setCurrUser}
+                />
                 <div style={{ height: "98px" }} className="navTopMargin"></div>
                 <Main mainMargin={mainMargin}>
                   <Outlet />
@@ -171,9 +205,9 @@ function App() {
               path="/"
               element={
                 isLoggedIn ? (
-                  <Home isLoggedIn={isLoggedIn} {...sharedProps} />
+                  <Home {...sharedProps} />
                 ) : (
-                  <Home isLoggedIn={!isLoggedIn} {...sharedProps} />
+                  <Home {...sharedProps} />
                   // <Login
                   //   setIsLoggedIn={setIsLoggedIn}
                   //   {...sharedProps}
@@ -185,7 +219,13 @@ function App() {
             {/* Public Route */}
             <Route
               path="/login"
-              element={<Login setIsLoggedIn={setIsLoggedIn} {...sharedProps} />}
+              element={
+                <Login
+                  setIsLoggedIn={setIsLoggedIn}
+                  setCurrUser={setCurrUser}
+                  {...sharedProps}
+                />
+              }
             />
             <Route
               path="/forgot-password"
