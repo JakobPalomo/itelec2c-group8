@@ -432,6 +432,62 @@ app.post("/user/add/:userId", upload.single("media"), async (req, res) => {
   }
 });
 
+// EDIT USER WITH MEDIA (1 file only)
+app.post(
+  "/user/edit-profile/:userId",
+  upload.single("media"),
+  async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { username, district, city, region, mediaFilename, mediaType } =
+        req.body;
+      let profile = "";
+
+      // Check if a file is provided
+      if (req.file) {
+        const file = req.file;
+        const type = mediaType.startsWith("image/")
+          ? 0
+          : mediaType.startsWith("video/")
+          ? 1
+          : 2;
+        const filename = mediaFilename;
+        const tempPath = file.path;
+        const path = tempPath.replace(/^.*?public/, "").replaceAll("\\", "/");
+        const link = "";
+
+        const docRef = collection(db, "media");
+        try {
+          const addedDocRef = await addDoc(docRef, {
+            type,
+            filename,
+            path,
+            link,
+          });
+          profile = addedDocRef.id;
+        } catch (error) {
+          console.error("Error adding document:", error);
+          throw error;
+        }
+      }
+
+      // Update the user document
+      const updateData = { username, district, city, region };
+      if (profile) {
+        updateData.profile = profile;
+      }
+
+      await updateDoc(doc(db, "user", userId), updateData);
+
+      console.log("Successfully updated user profile");
+      res.status(200).json("Successfully updated user profile");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).send("Error updating profile");
+    }
+  }
+);
+
 app.get("/sample", (req, res) => {
   res.json({ users: ["userOne", "userTwo", "userThree"] });
 });

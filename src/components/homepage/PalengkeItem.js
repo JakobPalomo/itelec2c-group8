@@ -163,7 +163,7 @@ function PalengkeItem({
                 className="ratingCont"
                 style={{ backgroundColor: ratingColor }}
               >
-                {palengke.rating !== -1 ? (
+                {palengke.rating !== 0 ? (
                   <>
                     <StarRoundedIcon className="muiStarIcon" />
                     {palengke.rating.toFixed(1).toString()}
