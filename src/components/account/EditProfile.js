@@ -142,7 +142,15 @@ function EditProfile({
           </div>
           <Button
             variant="contained"
-            sx={{ backgroundColor: "#2C2329", padding: "10px 100px" }}
+            sx={{
+              backgroundColor: "#2C2329",
+              padding: "10px 100px",
+              boxShadow: "none",
+              fontWeight: "bold",
+              "&:hover": {
+                backgroundColor: "#2C2329",
+              },
+            }}
           >
             Delete Account
           </Button>
@@ -151,8 +159,15 @@ function EditProfile({
               variant="contained"
               sx={{
                 backgroundColor: "#FF6262",
-                padding: "10px 20px",
+                padding: "12px 20px",
                 marginLeft: "50px",
+                boxShadow: "none",
+                textTransform: "none",
+                fontWeight: "bold",
+                "&:hover": {
+                  backgroundColor: "#FF5A5A",
+                  boxShadow: "none",
+                },
               }}
             >
               Save Changes
@@ -171,9 +186,17 @@ function EditProfile({
                   sx={{
                     backgroundColor: "#FFFFFF",
                     color: "#FF6262",
-                    border: "1px #FF6262 solid",
+                    border: "2px #FF6262 solid",
                     padding: "10px 45px",
                     marginRight: "50px",
+                    boxShadow: "none",
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    "&:hover": {
+                      backgroundColor: "#FFFFFF",
+                      border: "2px #e74f4f solid",
+                      color: "#FF6262",
+                    },
                   }}
                 >
                   Cancel
