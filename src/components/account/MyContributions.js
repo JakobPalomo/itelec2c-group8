@@ -1,34 +1,56 @@
-import "../../styles/MyContributions.css";
-import PalengkeItem from "../homepage/PalengkeItem";
-import palengkeData from "../../data/palengkeData";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import EditPalengke from '../modals/EditPalengke';
+import '../../styles/MyContributions.css';
 
-function MyContributions({ ...sharedProps }) {
+function MyContributions({ contributions }) {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedPalengke, setSelectedPalengke] = useState(null);
+
+  const openEditModal = (palengke) => {
+    setSelectedPalengke(palengke);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedPalengke(null);
+    setIsEditModalOpen(false);
+  };
+
+  // Add a null check for contributions
+  if (!contributions) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="contributions">
-      <h1 sx={{ margin: "10px" }}>My Contributions</h1>
-      <div>
-        {sharedProps.palengkeList.map((palengke) => (
-          <Link
-            to={`/palengke/${palengke.id}`}
-            key={palengke.id}
-            style={{
-              textDecoration: "none",
-              color: "black",
-              pointerEvents: "auto",
-            }}
-          >
-            <PalengkeItem
-              palengke={palengke}
-              showIcons={true}
-              type={"45%"}
-              min={"900px"}
-              marg={"0"}
-              mediaList={sharedProps.mediaList}
-            />
-          </Link>
+    <div className="myContributions">
+      <h1>My Contributions</h1>
+      <div className="contributionsList">
+        {contributions.map((palengke) => (
+          <div key={palengke.id} className="contributionItem">
+            <h2>{palengke.name}</h2>
+            <p>{palengke.address}</p>
+            <button onClick={() => openEditModal(palengke)}>Edit</button>
+          </div>
         ))}
       </div>
+
+      {isEditModalOpen && selectedPalengke && (
+        <EditPalengke
+          palengke={selectedPalengke}
+          openMap={false}
+          setOpenMap={() => {}}
+          setOpenMediaModal={() => {}}
+          setIndexToEdit={() => {}}
+          setSelectedFiles={() => {}}
+          selectedFiles={[]}
+          setEditPalengkeClicked={setIsEditModalOpen}
+          prevModalHeight={0}
+          palengkeList={contributions}
+          setPalengkeList={() => {}}
+          mediaList={[]}
+          setMediaList={() => {}}
+        />
+      )}
     </div>
   );
 }

@@ -166,7 +166,7 @@ function PalengkeItem({
                 {palengke.rating !== -1 ? (
                   <>
                     <StarRoundedIcon className="muiStarIcon" />
-                    {palengke.rating.toFixed(1).toString()}
+                    {/* {palengke.rating.toFixed(1).toString()} */}
                   </>
                 ) : (
                   <span className="noRatingCont">No rating yet</span>
