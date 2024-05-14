@@ -19,11 +19,15 @@ function MorePalengke({ ...sharedProps }) {
 
       <div className="palengkeItemsContainer">
         <br></br>
-        {palengkeData.slice(0, 4).map((palengke) => (
+        {sharedProps.palengkeList.slice(0, 4).map((palengke) => (
           <Link
-            to={`/palengke/${palengke.palengke_id}`}
-            key={palengke.palengke_id}
-            style={{ textDecoration: "none", color: "black" }}
+            to={`/palengke/${palengke.id}`}
+            key={palengke.id}
+            style={{
+              textDecoration: "none",
+              color: "black",
+              pointerEvents: "auto",
+            }}
           >
             <PalengkeItem
               palengke={palengke}
