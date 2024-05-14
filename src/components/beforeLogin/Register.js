@@ -18,6 +18,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { styled } from "@mui/material/styles";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { db, auth } from "../../firebase";
 
 const defaultTheme = createTheme();
 const VisuallyHiddenInput = styled("input")({
@@ -181,10 +183,46 @@ function Register({ ...sharedProps }) {
     }
   };
 
-  const handleRegister = () => {
-    //register and close modal
-    setOpenConfirmModal(false);
-    navigate("/login");
+  const handleRegister = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("district", district);
+      formData.append("city", city);
+      formData.append("region", region);
+      formData.append("media", profilePic); // Assuming profilePic is a file object
+      formData.append("mediaFilename", profilePic.name);
+      formData.append("mediaType", profilePic.type);
+
+      console.log(formData);
+
+      const response = await fetch(`/user/add/${user.uid}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add user to Firestore");
+      }
+
+      const data = await response.json();
+      console.log("responseok");
+      setOpenConfirmModal(false);
+      navigate("/login");
+
+      return user;
+    } catch (error) {
+      console.error("Error signing up:", error);
+      throw error;
+    }
   };
 
   return (

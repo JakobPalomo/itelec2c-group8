@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputText from "../modals/InputText";
 import "../../styles/Login.css";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -11,10 +10,12 @@ import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
 
 const defaultTheme = createTheme();
 
-function Login({ setIsLoggedIn, setCurrUser, ...sharedProps }) {
+function Login({ setIsLoggedIn, setCurrUser }) {
   const navigate = useNavigate();
   const initialErrorData = [
     { field: "email", hasError: false, errMessage: "" },
@@ -22,63 +23,50 @@ function Login({ setIsLoggedIn, setCurrUser, ...sharedProps }) {
     { field: "both", hasError: false, errMessage: "" },
   ];
 
-  const [email, setEmail] = useState(false);
-  const [password, setPasword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [toggle, setToggle] = useState(false);
   const [errors, setErrors] = useState(initialErrorData);
 
-  // Handling errors
-  const handleSetError = (variable, message) => {
-    console.log(`setting error: ${variable}; ${message}`);
-    const index = errors.findIndex((field) => {
-      console.log(`field.field: ${field.field} = ${variable.toString()}`);
-      console.log(field.field === variable.toString());
-      return field.field === variable.toString();
+  const handleSetError = (variable, message, clearOthers = false) => {
+    const updatedErrors = errors.map((field) => {
+      if (
+        clearOthers &&
+        (field.field === "email" || field.field === "password")
+      ) {
+        return { ...field, hasError: false, errMessage: "" };
+      }
+      return field.field === variable
+        ? { ...field, hasError: true, errMessage: message }
+        : field;
     });
-    if (index !== -1) {
-      const updatedFields = [...errors];
-      updatedFields[index] = {
-        ...updatedFields[index],
-        hasError: true,
-        errMessage: message,
-      };
-      setErrors(updatedFields);
-    }
+    setErrors(updatedErrors);
   };
+
   const getHasError = (variable) => {
-    const index = errors.findIndex(
-      (field) => field.field === variable.toString()
-    );
-    if (index !== -1) {
-      return errors[index].hasError;
-    }
+    const errorField = errors.find((field) => field.field === variable);
+    return errorField ? errorField.hasError : false;
   };
+
   const getErrMessage = (variable) => {
-    const index = errors.findIndex(
-      (field) => field.field === variable.toString()
-    );
-    if (index !== -1) {
-      return errors[index].errMessage;
-    }
+    const errorField = errors.find((field) => field.field === variable);
+    return errorField ? errorField.errMessage : "";
   };
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const handleVisibility = () => {
-    setToggle(!toggle);
-  };
 
-  const handleLogin = () => {
-    const tempErrors = initialErrorData;
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const tempErrors = [...initialErrorData];
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email === "") {
       tempErrors.find((field) => field.field === "email").hasError = true;
       tempErrors.find((field) => field.field === "email").errMessage =
         "This field is required";
-    } else if (emailPattern.test(email) === false) {
+    } else if (!emailPattern.test(email)) {
       tempErrors.find((field) => field.field === "email").hasError = true;
       tempErrors.find((field) => field.field === "email").errMessage =
         "Not a valid email address";
@@ -90,39 +78,34 @@ function Login({ setIsLoggedIn, setCurrUser, ...sharedProps }) {
         "This field is required";
     }
 
-    // Temporary invalid credentials (authenticate here)
-    let incorrectCredentials = false;
-    if (email !== "" && password !== "" && incorrectCredentials) {
-      tempErrors.find((field) => field.field === "both").hasError = true;
-      tempErrors.find((field) => field.field === "both").errMessage =
-        "Invalid username or password";
-    }
-
     setErrors(tempErrors);
 
     const hasError = tempErrors.some((field) => field.hasError);
-    if (!hasError && setIsLoggedIn !== undefined) {
-      setIsLoggedIn(true);
-      setCurrUser({
-        user_id: "DBUSERIDHERE",
-        username: "myusername",
-        email: "email@gmail.com",
-        district: "Tondo",
-        city: "Manila",
-        region: "Metro Manila",
-        profile: 1,
-        reviews: [],
-        contributions: [],
-        saves: [],
-        upvotes: [],
-        otp: 0,
-      });
+    if (!hasError) {
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
 
-      navigate("/home");
-    } else if (!hasError && setIsLoggedIn === undefined) {
-      tempErrors.find((field) => field.field === "both").hasError = true;
-      tempErrors.find((field) => field.field === "both").errMessage =
-        "Error logging in, please try again";
+        // Fetch user data from your backend
+        const response = await fetch(`/user/${userCredential.user.uid}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        const userData = await response.json();
+
+        // Set the fetched user data to the current user state
+        setIsLoggedIn(true);
+        setCurrUser(userData);
+
+        navigate("/home");
+        return userCredential.user;
+      } catch (error) {
+        console.error("Error signing in:", error);
+        handleSetError("both", "Invalid username or password", true);
+      }
     }
   };
 
@@ -189,10 +172,10 @@ function Login({ setIsLoggedIn, setCurrUser, ...sharedProps }) {
                 errMessage={getErrMessage("email")}
               />
               <InputText
-                type={showPassword === true ? "text" : "password"}
+                type={showPassword ? "text" : "password"}
                 label="Password"
                 required={true}
-                setValue={setPasword}
+                setValue={setPassword}
                 value={password}
                 maxLength={100}
                 placeholder="Your password"
@@ -210,11 +193,10 @@ function Login({ setIsLoggedIn, setCurrUser, ...sharedProps }) {
               )}
               <Box className="loginButtonMargin">
                 <Button
-                  type="button"
+                  type="submit"
                   variant="contained"
                   className="button pinkButton bigButton flexButton"
                   style={{ textTransform: "none" }}
-                  onClick={handleLogin}
                 >
                   Login
                 </Button>

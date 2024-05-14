@@ -98,6 +98,25 @@ app.get("/list/:collection", async (req, res) => {
   }
 });
 
+// GET USER
+app.get("/user/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const user = { id: userSnap.id, ...userSnap.data() };
+      res.status(200).json(user);
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    console.error("Error getting documents:", error);
+    res.status(500).send("Error getting documents");
+  }
+});
+
 // ADD PALENGKE WITH MEDIA (10 files only)
 app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
   try {
@@ -280,6 +299,70 @@ app.get("/location-to-address", async (req, res) => {
   } catch (error) {
     console.error("Error fetching place details:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// ADD USER WITH MEDIA (1 file only)
+app.post("/user/add/:userId", upload.single("media"), async (req, res) => {
+  try {
+    const mediaFilename = req.body.mediaFilename;
+    const mediaType = req.body.mediaType;
+    const file = req.file; // Use req.file for single file upload
+
+    let documentId;
+    const type =
+      mediaType && mediaType.startsWith("image/")
+        ? 0
+        : mediaType.startsWith("video/")
+        ? 1
+        : 2;
+    const filename = mediaFilename || "";
+    const tempPath = file.path || "";
+    const path = tempPath.replace(/^.*?public/, "").replaceAll("\\", "/");
+    const link = "";
+
+    const docRef = collection(db, "media");
+    try {
+      const addedDocRef = await addDoc(docRef, {
+        type,
+        filename,
+        path,
+        link,
+      });
+      documentId = addedDocRef.id;
+    } catch (error) {
+      console.error("Error adding document:", error);
+      throw error;
+    }
+
+    console.log(documentId.toString());
+    const profile = documentId;
+    const userId = req.params.userId;
+    const { username, email, district, city, region } = req.body;
+    const reviews = [];
+    const contributions = [];
+    const saves = [];
+    const upvotes = [];
+    const otp = 0;
+
+    await setDoc(doc(db, "user", userId), {
+      username,
+      email,
+      district,
+      city,
+      region,
+      profile,
+      reviews,
+      contributions,
+      saves,
+      upvotes,
+      otp,
+    });
+    console.error("Successfully added document");
+    res.status(200).json("Successfully added user");
+  } catch (error) {
+    console.error("Error adding document:", error);
+    res.status(500).send("Error adding document");
   }
 });
 

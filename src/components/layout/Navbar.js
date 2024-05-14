@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { db, auth } from "../../firebase";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -55,7 +57,7 @@ function stringAvatar(name) {
   };
 }
 
-function Navbar({ isLoggedIn, setIsLoggedIn }) {
+function Navbar({ isLoggedIn, setIsLoggedIn, currUser, setCurrUser }) {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -75,10 +77,21 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
     setAnchorElUser(null);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (setIsLoggedIn !== undefined) {
-      setIsLoggedIn(false);
-      navigate("/login");
+      try {
+        await signOut(auth);
+        if (isLoggedIn === true) {
+          setIsLoggedIn(false);
+        }
+        if (currUser) {
+          setCurrUser({});
+        }
+        navigate("/login");
+      } catch (error) {
+        console.error("Error signing out:", error);
+        throw error;
+      }
     }
   };
 
