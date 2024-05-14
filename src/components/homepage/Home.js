@@ -75,11 +75,11 @@ function Home({ ...sharedProps }) {
           />
         </Modal>
       )}
-      {openMap === true && (
+      {/* {openMap === true && (
         <Modal title="Select On Map" open={openMap} setOpen={setOpenMap}>
           <SelectOnMap setOpenMap={setOpenMap} />
         </Modal>
-      )}
+      )} */}
       {openMediaModal === true && (
         <Modal
           title={selectedFiles[indexToEdit].name}
@@ -108,8 +108,8 @@ function Home({ ...sharedProps }) {
           <HomeHeader setAddPalengkeClicked={setAddPalengkeClicked} />
         )}
 
-        {/* <div className="palengkeItemsContainer">
-          {filteredPalengkeList.map((palengke) => (
+        <div className="palengkeItemsContainer">
+          {/* {filteredPalengkeList.map((palengke) => (
             <Link
               to={`/palengke/${palengke.id}`}
               key={palengke.id}
@@ -124,8 +124,8 @@ function Home({ ...sharedProps }) {
                 mediaList={sharedProps.mediaList}
               />
             </Link>
-          ))}
-        </div> */}
+          ))} */}
+        </div>
       </PalengkeList>
     </>
   );

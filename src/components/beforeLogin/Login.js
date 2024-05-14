@@ -99,6 +99,7 @@ function Login({ setIsLoggedIn, setCurrUser }) {
         // Set the fetched user data to the current user state
         setIsLoggedIn(true);
         setCurrUser(userData);
+        localStorage.setItem("currUser", JSON.stringify(userData));
 
         navigate("/home");
         return userCredential.user;

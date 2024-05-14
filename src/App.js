@@ -73,7 +73,7 @@ function App() {
   };
 
   // Change true/false here since wla pa login
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currUser, setCurrUser] = useState({});
   const [userProfilePic, setUserProfilePic] = useState({});
   const [userContributions, setUserContributions] = useState([]);
@@ -88,9 +88,16 @@ function App() {
   const [upvoteList, setUpvoteList] = useState([]);
   const [mediaList, setMediaList] = useState([]);
   const [userList, setUserList] = useState([]);
+  let palengkeList2 = [];
+  let reviewList2 = [];
+  let upvoteList2 = [];
+  let mediaList2 = [];
+  let userList2 = [];
 
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [editProfilePic, setEditProfilePic] = useState("");
+
+  const [newPalengkeList, setNewPalengkeList] = useState([]);
 
   const sharedProps = {
     palengkeList: palengkeList,
@@ -129,6 +136,14 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("currUser");
+    if (storedUser) {
+      setCurrUser(JSON.parse(storedUser));
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  useEffect(() => {
     // REAL-TIME OBJECT UPDATE
     const collections = ["palengke", "review", "upvote", "user"];
     const stateSetterFunctions = {
@@ -144,7 +159,7 @@ function App() {
     collections.forEach((collectionName) => {
       const unsubscribe = onSnapshot(
         collection(db, collectionName),
-        async (querySnapshot) => {
+        (querySnapshot) => {
           const stateSetter = stateSetterFunctions[collectionName];
           if (stateSetter) {
             const updatedData = [];
@@ -154,7 +169,11 @@ function App() {
                 ...doc.data(),
               });
             });
+            console.log(`Updating state for collection: ${collectionName}`);
+            console.log(updatedData);
             stateSetter(updatedData);
+            console.log(`State updated for collection: ${collectionName}`);
+            console.log(updatedData);
 
             if (collectionName == "palengke" || collectionName == "review") {
               // Fetch the media collection
@@ -166,21 +185,6 @@ function App() {
                 .catch((error) => {
                   console.error("Error fetching media:", error);
                 });
-            }
-
-            if (collectionName == "user") {
-              // Fetch user contriibutions, reviews, saves, upvotes, update currUser
-              try {
-                // Fetch user data
-                const response = await fetch(`/user/${currUser.id}`);
-                if (!response.ok) {
-                  throw new Error("Failed to fetch user data");
-                }
-                const userData = await response.json();
-                setCurrUser(userData);
-              } catch (error) {
-                console.log("Fetch user data failed", error);
-              }
             }
           } else {
             console.error(
@@ -207,6 +211,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // fetchData();
+  }, []);
+
+  useEffect(() => {
     if (currUser?.id) {
       getProfilePicPath();
       getUserContributions();
@@ -215,6 +223,18 @@ function App() {
       getUserUpvotes();
     }
   }, [currUser]);
+
+  useEffect(() => {
+    console.log("SHARED PROPS: ");
+    console.log(sharedProps);
+  }, [
+    palengkeList,
+    reviewList,
+    upvoteList,
+    mediaList,
+    userList,
+    newPalengkeList,
+  ]);
 
   useEffect(() => {
     console.log("USER PIC & ARRAYS: ");
