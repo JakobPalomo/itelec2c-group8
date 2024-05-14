@@ -89,7 +89,7 @@ function EditProfile({
       />
       <div className="editprofile">
         <div className="editfields">
-          <div>
+          <div className="fields">
             <InputText
               type="text"
               label="Edit Username:"
@@ -149,7 +149,11 @@ function EditProfile({
           <div className="editbuttons">
             <Button
               variant="contained"
-              sx={{ backgroundColor: "#FF6262", padding: "10px 20px" }}
+              sx={{
+                backgroundColor: "#FF6262",
+                padding: "10px 20px",
+                marginLeft: "50px",
+              }}
             >
               Save Changes
             </Button>
@@ -169,6 +173,7 @@ function EditProfile({
                     color: "#FF6262",
                     border: "1px #FF6262 solid",
                     padding: "10px 45px",
+                    marginRight: "50px",
                   }}
                 >
                   Cancel
