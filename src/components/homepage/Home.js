@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Search from "./Search";
 import Modal from "../modals/MyModal";
@@ -16,6 +16,7 @@ function Home({ ...sharedProps }) {
   const [openMap, setOpenMap] = useState(false);
   const [openMediaModal, setOpenMediaModal] = useState(false);
   const [prevModalHeight, setPrevModalHeight] = useState("unset");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     console.log(
@@ -44,6 +45,11 @@ function Home({ ...sharedProps }) {
     console.log(selectedFiles);
   }, [selectedFiles]);
 
+  // Filter the palengke list based on the search term
+  const filteredPalengkeList = sharedProps.palengkeList.filter((palengke) =>
+    palengke.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       {addPalengkeClicked === true && (
@@ -69,6 +75,11 @@ function Home({ ...sharedProps }) {
           />
         </Modal>
       )}
+      {openMap === true && (
+        <Modal title="Select On Map" open={openMap} setOpen={setOpenMap}>
+          <SelectOnMap setOpenMap={setOpenMap} />
+        </Modal>
+      )}
       {openMediaModal === true && (
         <Modal
           title={selectedFiles[indexToEdit].name}
@@ -83,19 +94,7 @@ function Home({ ...sharedProps }) {
           />
         </Modal>
       )}
-      <Search />
-      {/* {sharedProps.isLoggedIn && addPalengkeClicked && (
-        <h1
-          style={{
-            textAlign: "center",
-            color: "white",
-            backgroundColor: "#ff6262",
-            padding: "12px",
-          }}
-        >
-          Please login to add a Palengke.
-        </h1>
-      )} */}
+      <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <PalengkeList>
         {sharedProps.isLoggedIn ? (
           <HomeHeader
@@ -107,7 +106,7 @@ function Home({ ...sharedProps }) {
         )}
 
         <div className="palengkeItemsContainer">
-          {sharedProps.palengkeList.map((palengke) => (
+          {filteredPalengkeList.map((palengke) => (
             <Link
               to={`/palengke/${palengke.id}`}
               key={palengke.id}

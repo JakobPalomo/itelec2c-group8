@@ -174,6 +174,7 @@ function AddEditReview({
         </Typography>
       )}
       <InputText
+        fullWidth
         type="text"
         label="Review"
         required={true}
