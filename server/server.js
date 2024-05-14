@@ -34,6 +34,8 @@ const {
   setDoc,
   deleteDoc,
   updateDoc,
+  query,
+  where,
 } = require("firebase/firestore");
 
 function generateRandomString(length) {
@@ -98,6 +100,89 @@ app.get("/list/:collection", async (req, res) => {
   }
 });
 
+// GET USER
+app.get("/user/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const user = { id: userSnap.id, ...userSnap.data() };
+      res.status(200).json(user);
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    console.error("Error getting documents:", error);
+    res.status(500).send("Error getting documents");
+  }
+});
+
+app.get("/user-profile", async (req, res) => {
+  try {
+    const userId = req.query.userid;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const user = userSnap.data();
+    let media = {};
+
+    if (user.profile) {
+      const mediaRef = doc(db, "media", user.profile);
+      const mediaSnap = await getDoc(mediaRef);
+
+      if (mediaSnap.exists()) {
+        media = { id: mediaSnap.id, ...mediaSnap.data() };
+      }
+    }
+
+    res.status(200).json(media);
+  } catch (error) {
+    console.error("Error getting documents:", error);
+    res.status(500).send("Error getting documents");
+  }
+});
+
+// GET USER ARRAYS
+app.get("/user-arrays", async (req, res) => {
+  try {
+    const userId = req.query.userid;
+    const collectionName = req.query.collection;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const user = userSnap.data();
+    const documentIds = user[collectionName] || [];
+
+    if (documentIds.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    const collectionRef = collection(db, collectionName);
+    const q = query(collectionRef, where("__name__", "in", documentIds));
+    const querySnapshot = await getDocs(q);
+
+    const data = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error getting documents:", error);
+    res.status(500).send("Error getting documents");
+  }
+});
+
 // ADD PALENGKE WITH MEDIA (10 files only)
 app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
   try {
@@ -146,8 +231,8 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
     const location = JSON.parse(req.body.location);
     const other_names = JSON.parse(req.body.other_names);
     // const files = req.files;
-    const rating = -1;
-    const reviews_count = 0;
+    // const rating = 0;
+    // const reviews_count = 0;
     const reviews = [];
 
     await setDoc(doc(collection(db, "palengke")), {
@@ -159,8 +244,8 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
       other_names,
       // fileUrls: files.map((file) => file.path),
       media,
-      rating,
-      reviews_count,
+      // rating,
+      // reviews_count,
       reviews,
     });
     console.error("Successfully added document");
@@ -280,6 +365,70 @@ app.get("/location-to-address", async (req, res) => {
   } catch (error) {
     console.error("Error fetching place details:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// ADD USER WITH MEDIA (1 file only)
+app.post("/user/add/:userId", upload.single("media"), async (req, res) => {
+  try {
+    const mediaFilename = req.body.mediaFilename;
+    const mediaType = req.body.mediaType;
+    const file = req.file; // Use req.file for single file upload
+
+    let documentId;
+    const type =
+      mediaType && mediaType.startsWith("image/")
+        ? 0
+        : mediaType.startsWith("video/")
+        ? 1
+        : 2;
+    const filename = mediaFilename || "";
+    const tempPath = file.path || "";
+    const path = tempPath.replace(/^.*?public/, "").replaceAll("\\", "/");
+    const link = "";
+
+    const docRef = collection(db, "media");
+    try {
+      const addedDocRef = await addDoc(docRef, {
+        type,
+        filename,
+        path,
+        link,
+      });
+      documentId = addedDocRef.id;
+    } catch (error) {
+      console.error("Error adding document:", error);
+      throw error;
+    }
+
+    console.log(documentId.toString());
+    const profile = documentId;
+    const userId = req.params.userId;
+    const { username, email, district, city, region } = req.body;
+    const reviews = [];
+    const contributions = [];
+    const saves = [];
+    const upvotes = [];
+    const otp = 0;
+
+    await setDoc(doc(db, "user", userId), {
+      username,
+      email,
+      district,
+      city,
+      region,
+      profile,
+      reviews,
+      contributions,
+      saves,
+      upvotes,
+      otp,
+    });
+    console.error("Successfully added document");
+    res.status(200).json("Successfully added user");
+  } catch (error) {
+    console.error("Error adding document:", error);
+    res.status(500).send("Error adding document");
   }
 });
 

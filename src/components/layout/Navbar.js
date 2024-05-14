@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { db, auth } from "../../firebase";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -17,7 +19,7 @@ import "../../styles/globalStyles.css";
 import "../../styles/Navbar.css";
 const logoPath = "/assets/palengkerist-logo-white.png";
 const logoTextPath = "/assets/palengkerist-text-white.png";
-const profilePicPath = "/assets/sample-profile.jpg";
+const profilePath = "/assets/sample-profile.jpg";
 const navbarDesignPath = "/assets/navbar-design.svg";
 
 const pages = [];
@@ -46,16 +48,40 @@ function stringToColor(string) {
   return color;
 }
 
-function stringAvatar(name) {
+function stringAvatar(passedname) {
+  let name = "";
+  if (passedname == "undefined" || passedname == "null") {
+    name = "P";
+  } else {
+    name = passedname;
+  }
+
+  const nameParts = name.split(" ");
+  const initials =
+    nameParts.length > 1
+      ? `${nameParts[0][0]}${nameParts[1][0]}`
+      : `${nameParts[0][0]}`;
+
   return {
     sx: {
       bgcolor: stringToColor(name),
     },
-    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+    children: initials,
   };
 }
 
-function Navbar({ isLoggedIn, setIsLoggedIn }) {
+function Navbar({
+  isLoggedIn,
+  setIsLoggedIn,
+  currUser,
+  setCurrUser,
+  userProfilePic,
+  setUserProfilePic,
+  setUserReviews,
+  setUserSaves,
+  setUserUpvotes,
+  setUserContributions,
+}) {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -75,15 +101,40 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
     setAnchorElUser(null);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (setIsLoggedIn !== undefined) {
-      setIsLoggedIn(false);
-      navigate("/login");
+      try {
+        await signOut(auth);
+        if (isLoggedIn === true) {
+          setIsLoggedIn(false);
+        }
+        if (currUser) {
+          setCurrUser({});
+          setUserProfilePic({});
+          setUserReviews([]);
+          setUserSaves([]);
+          setUserUpvotes([]);
+          setUserContributions({});
+        }
+        navigate("/login");
+      } catch (error) {
+        console.error("Error signing out:", error);
+        throw error;
+      }
     }
   };
 
   const [homeTooltipOpen, setHomeTooltipOpen] = useState(false);
   const [accountTooltipOpen, setAccountTooltipOpen] = useState(false);
+
+  const getUsername = () => {
+    if (currUser) {
+      return currUser.username;
+    }
+    return "";
+  };
+
+  let username = getUsername();
 
   return (
     <AppBar position="static" className="muiAppBar">
@@ -127,9 +178,10 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
                   setOpen={setAccountTooltipOpen}
                 >
                   <Avatar
-                    {...stringAvatar("Ira Rayzel Ji")}
+                    {...(currUser.username && stringAvatar(currUser.username))}
+                    sx={{ bgcolor: "#B92F37" }}
                     className="poppins"
-                    src={profilePicPath}
+                    src={userProfilePic ? userProfilePic.path : ""}
                   />
                   {/* comment src out/empty string for letter to work */}
                 </DelayedTooltip>
