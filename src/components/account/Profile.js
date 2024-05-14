@@ -6,7 +6,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
 import EditProfile from "./EditProfile";
 
-export default function Profile({ isEditProfileOpen, setIsEditProfileOpen }) {
+export default function Profile({
+  isEditProfileOpen,
+  setIsEditProfileOpen,
+  ...sharedProps
+}) {
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -28,16 +32,34 @@ export default function Profile({ isEditProfileOpen, setIsEditProfileOpen }) {
     return color;
   }
 
-  function stringAvatar(name) {
+  function stringAvatar(passedname) {
+    let name = "";
+    if (passedname == "undefined" || passedname == "null") {
+      name = "P";
+    } else {
+      name = passedname;
+    }
+
+    const nameParts = name.split(" ");
+    const initials =
+      nameParts.length > 1
+        ? `${nameParts[0][0]}${nameParts[1][0]}`
+        : `${nameParts[0][0]}`;
+
     return {
       sx: {
         backgroundColor: `${stringToColor(name)} !important`,
-        width: 200,
-        height: 200,
       },
-      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+      children: initials,
     };
   }
+
+  const getAddress = () => {
+    if (sharedProps.currUser) {
+      return `${sharedProps.currUser.district}, ${sharedProps.currUser.city}, ${sharedProps.currUser.region}`;
+    }
+    return "";
+  };
 
   useEffect(() => {
     console.log("isEditProfileOpen");
@@ -51,7 +73,9 @@ export default function Profile({ isEditProfileOpen, setIsEditProfileOpen }) {
         <div className="pfp">
           <div className="relative profilepic">
             <Avatar
-              {...stringAvatar("Ira Rayzel Ji")}
+              {...(sharedProps.currUser.username &&
+                stringAvatar(sharedProps.currUser.username))}
+              sx={{ bgcolor: "#B92F37" }}
               className="avatar"
               alt="Aliah"
               src="" ///assets/pfp.jpg
@@ -63,10 +87,10 @@ export default function Profile({ isEditProfileOpen, setIsEditProfileOpen }) {
             )}
           </div>
           <div className="pfpinfo">
-            <h1>ALIAH ESTEBAN MAASIM</h1>
+            <h1>{sharedProps.currUser?.username}</h1>
             <div>
               <PlaceIcon sx={{ fontSize: "30px" }} />
-              <h2>Pasig Palengke, 258 Dr. Pilapil St., Pasig</h2>
+              <h2>{getAddress()}</h2>
             </div>
           </div>
         </div>

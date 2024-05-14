@@ -19,6 +19,7 @@ export default function Account({
       <Profile
         isEditProfileOpen={isEditProfileOpen}
         setIsEditProfileOpen={setIsEditProfileOpen}
+        {...sharedProps}
       />
       <div className="recent">
         <div className="title">

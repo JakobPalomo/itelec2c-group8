@@ -48,16 +48,40 @@ function stringToColor(string) {
   return color;
 }
 
-function stringAvatar(name) {
+function stringAvatar(passedname) {
+  let name = "";
+  if (passedname == "undefined" || passedname == "null") {
+    name = "P";
+  } else {
+    name = passedname;
+  }
+
+  const nameParts = name.split(" ");
+  const initials =
+    nameParts.length > 1
+      ? `${nameParts[0][0]}${nameParts[1][0]}`
+      : `${nameParts[0][0]}`;
+
   return {
     sx: {
       bgcolor: stringToColor(name),
     },
-    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+    children: initials,
   };
 }
 
-function Navbar({ isLoggedIn, setIsLoggedIn, currUser, setCurrUser }) {
+function Navbar({
+  isLoggedIn,
+  setIsLoggedIn,
+  currUser,
+  setCurrUser,
+  userProfilePic,
+  setUserProfilePic,
+  setUserReviews,
+  setUserSaves,
+  setUserUpvotes,
+  setUserContributions,
+}) {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -86,6 +110,11 @@ function Navbar({ isLoggedIn, setIsLoggedIn, currUser, setCurrUser }) {
         }
         if (currUser) {
           setCurrUser({});
+          setUserProfilePic({});
+          setUserReviews([]);
+          setUserSaves([]);
+          setUserUpvotes([]);
+          setUserContributions({});
         }
         navigate("/login");
       } catch (error) {
@@ -98,21 +127,14 @@ function Navbar({ isLoggedIn, setIsLoggedIn, currUser, setCurrUser }) {
   const [homeTooltipOpen, setHomeTooltipOpen] = useState(false);
   const [accountTooltipOpen, setAccountTooltipOpen] = useState(false);
 
-  const [profilePic, setProfilePic] = useState({});
-  const getProfilePicPath = async () => {
-    try {
-      const response = await fetch(`/user/profile/${currUser?.id}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch user data");
-      }
-      const media = await response.json();
-      setProfilePic(media);
-    } catch (error) {}
+  const getUsername = () => {
+    if (currUser) {
+      return currUser.username;
+    }
+    return "";
   };
 
-  useEffect(() => {
-    getProfilePicPath();
-  }, []);
+  let username = getUsername();
 
   return (
     <AppBar position="static" className="muiAppBar">
@@ -156,9 +178,10 @@ function Navbar({ isLoggedIn, setIsLoggedIn, currUser, setCurrUser }) {
                   setOpen={setAccountTooltipOpen}
                 >
                   <Avatar
-                    {...stringAvatar("Ira Rayzel Ji")}
+                    {...(currUser.username && stringAvatar(currUser.username))}
+                    sx={{ bgcolor: "#B92F37" }}
                     className="poppins"
-                    src={profilePic ? profilePic.path : ""}
+                    src={userProfilePic ? userProfilePic.path : ""}
                   />
                   {/* comment src out/empty string for letter to work */}
                 </DelayedTooltip>

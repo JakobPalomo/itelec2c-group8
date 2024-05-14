@@ -34,6 +34,8 @@ const {
   setDoc,
   deleteDoc,
   updateDoc,
+  query,
+  where,
 } = require("firebase/firestore");
 
 function generateRandomString(length) {
@@ -117,10 +119,9 @@ app.get("/user/:userId", async (req, res) => {
   }
 });
 
-// GET USER PROFILE
-app.get("/user/profile/:userId", async (req, res) => {
+app.get("/user-profile", async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const userId = req.query.userid;
     const userRef = doc(db, "user", userId);
     const userSnap = await getDoc(userRef);
 
@@ -128,7 +129,7 @@ app.get("/user/profile/:userId", async (req, res) => {
       return res.status(404).send("User not found");
     }
 
-    const user = { id: userSnap.id, ...userSnap.data() };
+    const user = userSnap.data();
     let media = {};
 
     if (user.profile) {
@@ -141,6 +142,41 @@ app.get("/user/profile/:userId", async (req, res) => {
     }
 
     res.status(200).json(media);
+  } catch (error) {
+    console.error("Error getting documents:", error);
+    res.status(500).send("Error getting documents");
+  }
+});
+
+// GET USER ARRAYS
+app.get("/user-arrays", async (req, res) => {
+  try {
+    const userId = req.query.userid;
+    const collectionName = req.query.collection;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const user = userSnap.data();
+    const documentIds = user[collectionName] || [];
+
+    if (documentIds.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    const collectionRef = collection(db, collectionName);
+    const q = query(collectionRef, where("__name__", "in", documentIds));
+    const querySnapshot = await getDocs(q);
+
+    const data = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.status(200).json(data);
   } catch (error) {
     console.error("Error getting documents:", error);
     res.status(500).send("Error getting documents");
