@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import InputText from "../modals/InputText";
 import Avatar from "@mui/material/Avatar";
@@ -16,11 +16,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { MuiOtpInput } from "mui-one-time-password-input";
+import emailjs from "@emailjs/browser";
 
 const defaultTheme = createTheme();
 
 function ForgotPassword({ ...sharedProps }) {
   const navigate = useNavigate();
+  const form = useRef();
   const initialEmailErrorData = {
     hasError: false,
     errMessage: "",
@@ -32,7 +34,7 @@ function ForgotPassword({ ...sharedProps }) {
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(initialEmailErrorData);
-  const [generatedOTP, setGeneratedOTP] = useState();
+  const [generatedOTP, setGeneratedOTP] = useState(0);
   const [isOTPGenerated, setIsOTPGenerated] = useState(false);
   const [otp, setOtp] = useState("");
   const [OTPError, setOTPError] = useState(initialOTPErrorData);
@@ -54,6 +56,27 @@ function ForgotPassword({ ...sharedProps }) {
   };
   const getErrMessage = (errors) => {
     return errors.errMessage;
+  };
+
+  const serviceId = "service_2rae78o";
+  const templateId = "template_i5girgd";
+  const publicKey = "WhMuOqSUglpspgNFJ";
+
+  const sendEmail = () => {
+    emailjs
+      .send(serviceId, templateId, templateParams, publicKey)
+      .then((response) => {
+        console.log("Email sent successfully!", response);
+      })
+      .catch((error) => {
+        console.error("Error sending email:", error);
+      });
+  };
+
+  const templateParams = {
+    from_email: "irarayzel.ji.cics@ust.edu.ph",
+    to_email: email,
+    otp: generatedOTP,
   };
 
   useEffect(() => {
@@ -97,6 +120,7 @@ function ForgotPassword({ ...sharedProps }) {
     setErrors(tempErrors);
 
     if (tempErrors.hasError === false) {
+      //send email
       generateOTP();
       setIsOTPGenerated(true);
     }
@@ -141,8 +165,16 @@ function ForgotPassword({ ...sharedProps }) {
 
   const handleResend = () => {
     // generate otp before start timer
+    generateOTP();
+    setIsOTPGenerated(true);
     startTimer();
   };
+
+  useEffect(() => {
+    if (otp !== 0) {
+      sendEmail();
+    }
+  }, [generatedOTP]);
 
   const handleOTPVerify = (errors, setErrors) => {
     const tempErrors = errors;

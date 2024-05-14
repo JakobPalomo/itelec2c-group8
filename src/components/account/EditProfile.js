@@ -403,6 +403,7 @@ function EditProfile({
       // Delete the user from Firebase Authentication
       await auth.deleteUser(sharedProps.currUser.id);
       setIsLoggedIn(false);
+      localStorage.removeItem("currUser");
       sharedProps.setCurrUser({});
       navigate("/login");
       console.log(`Successfully deleted user: ${sharedProps.currUser.id}`);

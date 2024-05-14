@@ -107,6 +107,7 @@ function Navbar({
         await signOut(auth);
         if (isLoggedIn === true) {
           setIsLoggedIn(false);
+          localStorage.removeItem("currUser");
         }
         if (currUser) {
           setCurrUser({});
