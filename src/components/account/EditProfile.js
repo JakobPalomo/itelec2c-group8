@@ -18,9 +18,16 @@ function EditProfile({
   const [coverPhoto, setCoverPhoto] = useState(null); // State for cover photo
   const [pfpPhoto, setPfpPhoto] = useState(null); // State for profile picture
   const [showPassword, setShowPassword] = React.useState(false);
+  const [password, setPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   const handleCoverPhotoChange = (e) => {
@@ -29,6 +36,49 @@ function EditProfile({
 
   const handlePfpPhotoChange = (e) => {
     setPfpPhoto(e.target.files[0]);
+  };
+
+  const getHasError = (variable) => {
+    const index = errors.findIndex(
+      (field) => field.field === variable.toString()
+    );
+    if (index !== -1) {
+      return errors[index].hasError;
+    }
+  };
+
+  const getErrMessage = (variable) => {
+    const index = errors.findIndex(
+      (field) => field.field === variable.toString()
+    );
+    if (index !== -1) {
+      return errors[index].errMessage;
+    }
+  };
+
+  const handleSetError = (variable, message) => {
+    console.log(`setting error: ${variable}; ${message}`);
+    const index = errors.findIndex((field) => {
+      console.log(`field.field: ${field.field} = ${variable.toString()}`);
+      console.log(field.field === variable.toString());
+      return field.field === variable.toString();
+    });
+    if (index !== -1) {
+      const updatedFields = [...errors];
+      updatedFields[index] = {
+        ...updatedFields[index],
+        hasError: true,
+        errMessage: message,
+      };
+      setErrors(updatedFields);
+    }
+  };
+
+  const handleError = (field, message) => {
+    setErrors((prevErrors) => [
+      ...prevErrors,
+      { field, hasError: true, errMessage: message },
+    ]);
   };
 
   return (
@@ -59,83 +109,35 @@ function EditProfile({
               maxLength={255}
               placeholder="Select a location in the map"
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="New Password:"
-              type={showPassword ? "text" : "password"} // Show password if showPassword is true
-              id="password"
-              autoComplete="current-password"
-              variant="outlined"
-              InputLabelProps={{ style: { color: "#696969" } }}
-              InputProps={{
-                style: { backgroundColor: "#ffffff", borderRadius: "24px" },
-                endAdornment: (
-                  <Button onClick={handlePasswordVisibility}>
-                    {showPassword ? (
-                      <VisibilityIcon sx={{ color: "#E74F4F" }} />
-                    ) : (
-                      <VisibilityOffIcon sx={{ color: "#E74F4F" }} />
-                    )}
-                  </Button>
-                ),
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#d4d4d4", // Normal border color
-                    borderRadius: "24px", // Border radius
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#d4d4d4", // Border color on hover
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#FFBA5A", // Border color on focus
-                    borderWidth: 2,
-                  },
-                },
-              }}
+            <InputText
+              type={showPassword === true ? "text" : "password"}
+              label="Password"
+              required={true}
+              setValue={setPassword}
+              value={password}
+              maxLength={100}
+              placeholder="Your password"
+              hasError={getHasError("password")}
+              errMessage={getErrMessage("password")}
+              visibility={showPassword}
+              setVisibility={handlePasswordVisibility}
+              iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
+              iconOff={<VisibilityOffIcon className="muiVisibilityIcon" />}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Confirm New Password:"
-              type={showPassword ? "text" : "password"} // Show password if showPassword is true
-              id="password"
-              autoComplete="current-password"
-              variant="outlined"
-              InputLabelProps={{ style: { color: "#696969" } }}
-              InputProps={{
-                style: { backgroundColor: "#ffffff", borderRadius: "24px" },
-                endAdornment: (
-                  <Button onClick={handlePasswordVisibility}>
-                    {showPassword ? (
-                      <VisibilityIcon sx={{ color: "#E74F4F" }} />
-                    ) : (
-                      <VisibilityOffIcon sx={{ color: "#E74F4F" }} />
-                    )}
-                  </Button>
-                ),
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#d4d4d4", // Normal border color
-                    borderRadius: "24px", // Border radius
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#d4d4d4", // Border color on hover
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#FFBA5A", // Border color on focus
-                    borderWidth: 2,
-                  },
-                },
-              }}
+            <InputText
+              type={showConfirmPassword === true ? "text" : "password"}
+              label="Confirm Password"
+              required={true}
+              setValue={setConfirmPassword}
+              value={confirmPassword}
+              maxLength={100}
+              placeholder="Confirm your password"
+              hasError={getHasError("confirmPassword")}
+              errMessage={getErrMessage("confirmPassword")}
+              visibility={showConfirmPassword}
+              setVisibility={handleConfirmPasswordVisibility}
+              iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
+              iconOff={<VisibilityOffIcon className="muiVisibilityIcon" />}
             />
           </div>
           <Button
