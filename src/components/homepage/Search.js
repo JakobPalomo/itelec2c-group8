@@ -1,11 +1,11 @@
 import "../../styles/Search.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import TuneIcon from "@mui/icons-material/Tune";
 import DelayedTooltip from "../ui/DelayedTooltip";
 
-function Search() {
+function Search({ searchTerm, setSearchTerm }) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
   return (
@@ -18,8 +18,9 @@ function Search() {
               <input
                 className="searchBar"
                 placeholder="Search for Palengke in your area..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
-
               <IconButton size="small" className="muiFilterIconButton">
                 <DelayedTooltip
                   title="Filter Search"
