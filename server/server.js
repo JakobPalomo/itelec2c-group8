@@ -117,6 +117,36 @@ app.get("/user/:userId", async (req, res) => {
   }
 });
 
+// GET USER PROFILE
+app.get("/user/profile/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const user = { id: userSnap.id, ...userSnap.data() };
+    let media = {};
+
+    if (user.profile) {
+      const mediaRef = doc(db, "media", user.profile);
+      const mediaSnap = await getDoc(mediaRef);
+
+      if (mediaSnap.exists()) {
+        media = { id: mediaSnap.id, ...mediaSnap.data() };
+      }
+    }
+
+    res.status(200).json(media);
+  } catch (error) {
+    console.error("Error getting documents:", error);
+    res.status(500).send("Error getting documents");
+  }
+});
+
 // ADD PALENGKE WITH MEDIA (10 files only)
 app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
   try {

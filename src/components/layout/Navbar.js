@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { db, auth } from "../../firebase";
@@ -19,7 +19,7 @@ import "../../styles/globalStyles.css";
 import "../../styles/Navbar.css";
 const logoPath = "/assets/palengkerist-logo-white.png";
 const logoTextPath = "/assets/palengkerist-text-white.png";
-const profilePicPath = "/assets/sample-profile.jpg";
+const profilePath = "/assets/sample-profile.jpg";
 const navbarDesignPath = "/assets/navbar-design.svg";
 
 const pages = [];
@@ -98,6 +98,22 @@ function Navbar({ isLoggedIn, setIsLoggedIn, currUser, setCurrUser }) {
   const [homeTooltipOpen, setHomeTooltipOpen] = useState(false);
   const [accountTooltipOpen, setAccountTooltipOpen] = useState(false);
 
+  const [profilePic, setProfilePic] = useState({});
+  const getProfilePicPath = async () => {
+    try {
+      const response = await fetch(`/user/profile/${currUser?.id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const media = await response.json();
+      setProfilePic(media);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getProfilePicPath();
+  }, []);
+
   return (
     <AppBar position="static" className="muiAppBar">
       <Toolbar disableGutters className="muiToolbar">
@@ -142,7 +158,7 @@ function Navbar({ isLoggedIn, setIsLoggedIn, currUser, setCurrUser }) {
                   <Avatar
                     {...stringAvatar("Ira Rayzel Ji")}
                     className="poppins"
-                    src={profilePicPath}
+                    src={profilePic ? profilePic.path : ""}
                   />
                   {/* comment src out/empty string for letter to work */}
                 </DelayedTooltip>
