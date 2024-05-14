@@ -146,9 +146,11 @@ function EditProfile({
               backgroundColor: "#2C2329",
               padding: "10px 100px",
               boxShadow: "none",
+              textTransform: "none",
               fontWeight: "bold",
               "&:hover": {
-                backgroundColor: "#2C2329",
+                boxShadow: "none",
+                backgroundColor: "#1E171C",
               },
             }}
           >
