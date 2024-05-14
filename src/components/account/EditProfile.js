@@ -89,7 +89,7 @@ function EditProfile({
       />
       <div className="editprofile">
         <div className="editfields">
-          <div>
+          <div className="fields">
             <InputText
               type="text"
               label="Edit Username:"
@@ -142,14 +142,35 @@ function EditProfile({
           </div>
           <Button
             variant="contained"
-            sx={{ backgroundColor: "#2C2329", padding: "10px 100px" }}
+            sx={{
+              backgroundColor: "#2C2329",
+              padding: "10px 100px",
+              boxShadow: "none",
+              textTransform: "none",
+              fontWeight: "bold",
+              "&:hover": {
+                boxShadow: "none",
+                backgroundColor: "#1E171C",
+              },
+            }}
           >
             Delete Account
           </Button>
           <div className="editbuttons">
             <Button
               variant="contained"
-              sx={{ backgroundColor: "#FF6262", padding: "10px 20px" }}
+              sx={{
+                backgroundColor: "#FF6262",
+                padding: "12px 20px",
+                marginLeft: "50px",
+                boxShadow: "none",
+                textTransform: "none",
+                fontWeight: "bold",
+                "&:hover": {
+                  backgroundColor: "#FF5A5A",
+                  boxShadow: "none",
+                },
+              }}
             >
               Save Changes
             </Button>
@@ -167,8 +188,17 @@ function EditProfile({
                   sx={{
                     backgroundColor: "#FFFFFF",
                     color: "#FF6262",
-                    border: "1px #FF6262 solid",
+                    border: "2px #FF6262 solid",
                     padding: "10px 45px",
+                    marginRight: "50px",
+                    boxShadow: "none",
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    "&:hover": {
+                      backgroundColor: "#FFFFFF",
+                      border: "2px #e74f4f solid",
+                      color: "#FF6262",
+                    },
                   }}
                 >
                   Cancel
