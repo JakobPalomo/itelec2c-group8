@@ -94,7 +94,10 @@ function Home({ ...sharedProps }) {
           />
         </Modal>
       )}
-      <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <div className="dark">
+        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      </div>
+
       <PalengkeList>
         {sharedProps.isLoggedIn ? (
           <HomeHeader
