@@ -4,7 +4,6 @@ import "../../styles/Profile.css";
 import { Avatar, IconButton, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
-import EditProfile from "./EditProfile";
 
 export default function Profile({ isEditProfileOpen, setIsEditProfileOpen }) {
   function stringToColor(string) {

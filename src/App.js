@@ -24,7 +24,7 @@ import MyContributions from "./components/account/MyContributions";
 import MyReviews from "./components/account/MyReviews";
 import Settings from "./components/account/Settings";
 import MySaves from "./components/account/MySaves";
-import EditProfile from "./components/account/EditProfile";
+import EditProfile from "./components/modals/EditProfile";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase.js";
 const { REACT_APP_GMAPS_API_KEY } = process.env;

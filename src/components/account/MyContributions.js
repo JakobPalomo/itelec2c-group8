@@ -8,11 +8,13 @@ function MyContributions({ ...sharedProps }) {
     <div className="contributions">
       <h1 sx={{ margin: "10px" }}>My Contributions</h1>
       {palengkeData.slice(0, 1).map((palengke) => (
+
         <Link
           to={`/palengke/${palengke.palengke_id}`}
           key={palengke.palengke_id}
           style={{ textDecoration: "none", color: "black" }}
         >
+          
           <PalengkeItem
             palengke={palengke}
             showIcons={true}

@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
+import PalengkeItem from "../homepage/PalengkeItem.js";
 const { REACT_APP_GMAPS_API_KEY } = process.env;
 
 function AddPalengke({
@@ -379,6 +380,98 @@ function AddPalengke({
           </Button>
         </div>
       </div>
+
+
+      {/* <div className="editPalengkeModalBody">
+        <div>
+          <InputText
+            type="text"
+            label="Edit Palengke Name"
+            required={true}
+            setValue={setName}
+            value={name}
+            maxLength={100}
+            placeholder="Name of the palengke"
+            hasError={getHasError("palengkeName")}
+            errMessage={getErrMessage("palengkeName")}
+          />
+          <LocationSearch
+            address={address}
+            setAddress={setAddress}
+            location={location}
+            setLocation={setLocation}
+            getHasError={getHasError}
+            getErrMessage={getErrMessage}
+            openMap={openMap}
+            setOpenMap={setOpenMap}
+            prevModalHeight={prevModalHeight}
+          />
+          <InputText
+            type="text"
+            label="Edit Business Status"
+            required={true}
+            setValue={setBusinessStatus}
+            value={business_status}
+            maxLength={1000}
+            selectData={business_statuses}
+            defaultValue={0}
+            hasError={getHasError("business_status")}
+            errMessage={getErrMessage("business_status")}
+          />
+          <InputText
+            type="text"
+            label="Edit Description"
+            setValue={setDescription}
+            value={description}
+            maxLength={1000}
+            placeholder="Provide a short description"
+            hasError={getHasError("description")}
+            errMessage={getErrMessage("description")}
+          />
+          <InputText
+            type="text"
+            label="Edit Other Names"
+            multipleValues={true}
+            setValue={setOtherNames}
+            arrayValue={other_names}
+            maxLength={100}
+            placeholder="Other names referred to"
+            hasError={getHasError("other_names")}
+            errMessage={getErrMessage("other_names")}
+          />
+          <UploadMedia
+            setOpenModal={setOpenMediaModal}
+            setSelectedFiles={setSelectedFiles}
+            selectedFiles={selectedFiles}
+            setIndexToEdit={setIndexToEdit}
+            hasError={getHasError("media")}
+            errMessage={getErrMessage("media")}
+          />
+        </div>
+        <div className="editPalengkeModalButtons">
+          <Button
+            variant="contained"
+            className="button pinkButton mediaButtonMargin"
+            style={{ textTransform: "none" }}
+            onClick={(e) => {
+              e.preventDefault();
+              validatePalengkeDetails();
+            }}
+          >
+            Submit
+          </Button>
+          <Button
+            variant="outlined"
+            className="outlinedButton outlinedPinkButton mediaButtonMargin"
+            style={{ textTransform: "none" }}
+            onClick={() => {
+              handleCancelAndClearInput();
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      </div> */}
     </div>
   );
 }

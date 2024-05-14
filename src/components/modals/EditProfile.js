@@ -1,21 +1,33 @@
 import React, { useState } from "react";
-import InputText from "./InputText.js";
+import { Link } from "react-router-dom";
+import InputText from "../modals/InputText.js";
+import Profile from "../account/Profile";
 import { TextField, Grid, Avatar, Button } from "@mui/material";
 import "../../styles/EditProfile.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import Typography from "@mui/material/Typography";
 
-function EditProfile({ setEditProfileClicked }) {
+function EditProfile({
+  isEditProfileOpen,
+  setIsEditProfileOpen,
+  ...sharedProps
+}) {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [coverPhoto, setCoverPhoto] = useState(null); // State for cover photo
   const [pfpPhoto, setPfpPhoto] = useState(null); // State for profile picture
   const [showPassword, setShowPassword] = React.useState(false);
+  const [password, setPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   const handleCoverPhotoChange = (e) => {
@@ -26,160 +38,147 @@ function EditProfile({ setEditProfileClicked }) {
     setPfpPhoto(e.target.files[0]);
   };
 
+  const getHasError = (variable) => {
+    const index = errors.findIndex(
+      (field) => field.field === variable.toString()
+    );
+    if (index !== -1) {
+      return errors[index].hasError;
+    }
+  };
+
+  const getErrMessage = (variable) => {
+    const index = errors.findIndex(
+      (field) => field.field === variable.toString()
+    );
+    if (index !== -1) {
+      return errors[index].errMessage;
+    }
+  };
+
+  const handleSetError = (variable, message) => {
+    console.log(`setting error: ${variable}; ${message}`);
+    const index = errors.findIndex((field) => {
+      console.log(`field.field: ${field.field} = ${variable.toString()}`);
+      console.log(field.field === variable.toString());
+      return field.field === variable.toString();
+    });
+    if (index !== -1) {
+      const updatedFields = [...errors];
+      updatedFields[index] = {
+        ...updatedFields[index],
+        hasError: true,
+        errMessage: message,
+      };
+      setErrors(updatedFields);
+    }
+  };
+
+  const handleError = (field, message) => {
+    setErrors((prevErrors) => [
+      ...prevErrors,
+      { field, hasError: true, errMessage: message },
+    ]);
+  };
+
   return (
-    <div className="editprofile">
-      <div className="editphoto">
-        <Grid container spacing={2} alignItems="center">
-          {/* Profile editing fields */}
-          <Grid item xs={12}>
-            <div className="cover" />
-          </Grid>
-          <Grid item xs={12}>
-            <div
-              className="profile"
-              style={{
-                position: "relative",
-                textAlign: "center",
-                marginBottom: "20px",
-              }}
-            >
-              <Avatar
-                className="avatar"
-                alt="Aliah"
-                src="/assets/pfp.jpg"
-                sx={{ width: 150, height: 150 }}
-              />
-            </div>
-          </Grid>
-        </Grid>
-      </div>
-      <div className="editfields">
-        <div>
-          <InputText
-            type="text"
-            label="Edit Username:"
-            required={false}
-            setValue={setName}
-            value={name}
-            maxLength={100}
-            placeholder="Username"
-            sx={{ width: "100px" }}
-          />
-          <InputText
-            type="text"
-            label="Edit Location:"
-            required={false}
-            setValue={setAddress}
-            value={address}
-            maxLength={255}
-            placeholder="Select a location in the map"
-          />
-          <Typography variant="subtitle2">Password</Typography>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            type={showPassword ? "text" : "password"} // Show password if showPassword is true
-            id="password"
-            autoComplete="current-password"
-            placeholder="Enter your current password"
-            variant="outlined"
-            InputProps={{
-              style: { backgroundColor: "#ffffff", borderRadius: "24px" },
-              endAdornment: (
-                <Button onClick={handlePasswordVisibility}>
-                  {showPassword ? (
-                    <VisibilityIcon sx={{ color: "#E74F4F" }} />
-                  ) : (
-                    <VisibilityOffIcon sx={{ color: "#E74F4F" }} />
-                  )}
-                </Button>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#d4d4d4", // Normal border color
-                  borderRadius: "24px", // Border radius
-                },
-                "&:hover fieldset": {
-                  borderColor: "#d4d4d4", // Border color on hover
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#FFBA5A", // Border color on focus
-                  borderWidth: 2,
-                },
-              },
-            }}
-          />
-          <Typography variant="subtitle2">Confirm Password</Typography>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            type={showPassword ? "text" : "password"} // Show password if showPassword is true
-            id="password"
-            autoComplete="new-password"
-            placeholder="Enter your new password"
-            variant="outlined"
-            InputProps={{
-              style: { backgroundColor: "#ffffff", borderRadius: "24px" },
-              endAdornment: (
-                <Button onClick={handlePasswordVisibility}>
-                  {showPassword ? (
-                    <VisibilityIcon sx={{ color: "#E74F4F" }} />
-                  ) : (
-                    <VisibilityOffIcon sx={{ color: "#E74F4F" }} />
-                  )}
-                </Button>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#d4d4d4", // Normal border color
-                  borderRadius: "24px", // Border radius
-                },
-                "&:hover fieldset": {
-                  borderColor: "#d4d4d4", // Border color on hover
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#FFBA5A", // Border color on focus
-                  borderWidth: 2,
-                },
-              },
-            }}
-          />
-        </div>
-        <Button
-          variant="contained"
-          sx={{ backgroundColor: "#2C2329", padding: "10px 100px" }}
-        >
-          Delete Account
-        </Button>
-        <div className="editbuttons">
+    <>
+      <Profile
+        isEditProfileOpen={isEditProfileOpen}
+        setIsEditProfileOpen={setIsEditProfileOpen}
+      />
+      <div className="editprofile">
+        <div className="editfields">
+          <div>
+            <InputText
+              type="text"
+              label="Edit Username:"
+              required={true}
+              setValue={setName}
+              value={name}
+              maxLength={100}
+              placeholder="Username"
+              sx={{ width: "100px" }}
+            />
+            <InputText
+              type="text"
+              label="Edit Location:"
+              required={true}
+              setValue={setAddress}
+              value={address}
+              maxLength={255}
+              placeholder="Select a location in the map"
+            />
+            <InputText
+              type={showPassword === true ? "text" : "password"}
+              label="Password"
+              required={true}
+              setValue={setPassword}
+              value={password}
+              maxLength={100}
+              placeholder="Your password"
+              hasError={getHasError("password")}
+              errMessage={getErrMessage("password")}
+              visibility={showPassword}
+              setVisibility={handlePasswordVisibility}
+              iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
+              iconOff={<VisibilityOffIcon className="muiVisibilityIcon" />}
+            />
+            <InputText
+              type={showConfirmPassword === true ? "text" : "password"}
+              label="Confirm Password"
+              required={true}
+              setValue={setConfirmPassword}
+              value={confirmPassword}
+              maxLength={100}
+              placeholder="Confirm your password"
+              hasError={getHasError("confirmPassword")}
+              errMessage={getErrMessage("confirmPassword")}
+              visibility={showConfirmPassword}
+              setVisibility={handleConfirmPasswordVisibility}
+              iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
+              iconOff={<VisibilityOffIcon className="muiVisibilityIcon" />}
+            />
+          </div>
           <Button
             variant="contained"
-            sx={{ backgroundColor: "#FF6262", padding: "10px 20px" }}
+            sx={{ backgroundColor: "#2C2329", padding: "10px 100px" }}
           >
-            Save Changes
+            Delete Account
           </Button>
-          <Button
-            variant="outlined"
-            sx={{
-              backgroundColor: "#FFFFFF",
-              color: "#FF6262",
-              border: "1px #FF6262 solid",
-              padding: "10px 45px",
-            }}
-          >
-            Cancel
-          </Button>
+          <div className="editbuttons">
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#FF6262", padding: "10px 20px" }}
+            >
+              Save Changes
+            </Button>
+            {/* setIsEditProfileOpen */}
+            <div>
+              <Link
+                to={`/account`}
+                style={{
+                  textDecoration: "none",
+                }}
+                onClick={() => setIsEditProfileOpen(false)}
+              >
+                <Button
+                  variant="outlined"
+                  sx={{
+                    backgroundColor: "#FFFFFF",
+                    color: "#FF6262",
+                    border: "1px #FF6262 solid",
+                    padding: "10px 45px",
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

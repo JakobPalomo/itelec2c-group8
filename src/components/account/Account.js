@@ -7,7 +7,6 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Review from "../palengke/Review.js";
 import { useState } from "react";
 import Modal from "../modals/MyModal.js";
-import EditProfile from "./EditProfile.js";
 
 export default function Account({
   isEditProfileOpen,
