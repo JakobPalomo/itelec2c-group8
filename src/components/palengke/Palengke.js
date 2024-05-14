@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
@@ -15,6 +15,8 @@ import AddEditReview from "../modals/AddEditReview.js";
 import ConfirmModal from "../modals/ConfirmModal.js";
 import palengkeImage from "./palengke.jpg";
 import reviewsData from "./reviewsData.json";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Link } from "react-router-dom";
 
 function Palengke({ ...sharedProps }) {
   const { palengkeId } = useParams();
@@ -34,6 +36,9 @@ function Palengke({ ...sharedProps }) {
   const [ratingColor, setRatingColor] = useState("");
 
   const [sortCriterion, setSortCriterion] = useState("date");
+  const handleBackClick = () => {
+    window.history.back();
+  };
 
   // Function to handle editing a comment
   const handleEditComment = (index, editedComment) => {
@@ -208,6 +213,19 @@ function Palengke({ ...sharedProps }) {
         </ConfirmModal>
       )}
       <div className="holder">
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <button
+            onClick={handleBackClick}
+            style={{
+              backgroundColor: "transparent",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            <ArrowBackIcon style={{ color: " #ff6262" }} />
+          </button>
+        </div>
+
         <div className="details">
           <img alt="market" src={palengkeImage} className="Marketimg"></img>
           <div className="content">
