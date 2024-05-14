@@ -109,7 +109,7 @@ function Home({ ...sharedProps }) {
         )}
 
         <div className="palengkeItemsContainer">
-          {/* {filteredPalengkeList.map((palengke) => (
+          {filteredPalengkeList.map((palengke) => (
             <Link
               to={`/palengke/${palengke.id}`}
               key={palengke.id}
@@ -124,7 +124,7 @@ function Home({ ...sharedProps }) {
                 mediaList={sharedProps.mediaList}
               />
             </Link>
-          ))} */}
+          ))}
         </div>
       </PalengkeList>
     </>
