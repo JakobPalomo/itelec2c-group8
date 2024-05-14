@@ -108,7 +108,7 @@ function Home({ ...sharedProps }) {
           <HomeHeader setAddPalengkeClicked={setAddPalengkeClicked} />
         )}
 
-        <div className="palengkeItemsContainer">
+        {/* <div className="palengkeItemsContainer">
           {filteredPalengkeList.map((palengke) => (
             <Link
               to={`/palengke/${palengke.id}`}
@@ -125,7 +125,7 @@ function Home({ ...sharedProps }) {
               />
             </Link>
           ))}
-        </div>
+        </div> */}
       </PalengkeList>
     </>
   );

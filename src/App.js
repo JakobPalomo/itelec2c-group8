@@ -87,9 +87,10 @@ function App() {
   const [reviewList, setReviewList] = useState([]);
   const [upvoteList, setUpvoteList] = useState([]);
   const [mediaList, setMediaList] = useState([]);
-  const [userList, setUserList] = useState(initialUsers);
+  const [userList, setUserList] = useState([]);
 
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [editProfilePic, setEditProfilePic] = useState("");
 
   const sharedProps = {
     palengkeList: palengkeList,
@@ -103,6 +104,7 @@ function App() {
     userList: userList,
     setUserList: setUserList,
     currUser: currUser,
+    setCurrUser: setCurrUser,
     isLoggedIn: isLoggedIn,
     userProfilePic: userProfilePic,
     userReviews: userReviews,
@@ -142,7 +144,7 @@ function App() {
     collections.forEach((collectionName) => {
       const unsubscribe = onSnapshot(
         collection(db, collectionName),
-        (querySnapshot) => {
+        async (querySnapshot) => {
           const stateSetter = stateSetterFunctions[collectionName];
           if (stateSetter) {
             const updatedData = [];
@@ -167,7 +169,18 @@ function App() {
             }
 
             if (collectionName == "user") {
-              // Fetch user contriibutions, reviews, saves, upvotes
+              // Fetch user contriibutions, reviews, saves, upvotes, update currUser
+              try {
+                // Fetch user data
+                const response = await fetch(`/user/${currUser.id}`);
+                if (!response.ok) {
+                  throw new Error("Failed to fetch user data");
+                }
+                const userData = await response.json();
+                setCurrUser(userData);
+              } catch (error) {
+                console.log("Fetch user data failed", error);
+              }
             }
           } else {
             console.error(
@@ -366,6 +379,8 @@ function App() {
                 <Account
                   isEditProfileOpen={isEditProfileOpen}
                   setIsEditProfileOpen={setIsEditProfileOpen}
+                  profile={editProfilePic}
+                  setProfile={setEditProfilePic}
                   {...sharedProps}
                 />
               }
@@ -376,6 +391,9 @@ function App() {
                 <EditProfile
                   isEditProfileOpen={isEditProfileOpen}
                   setIsEditProfileOpen={setIsEditProfileOpen}
+                  profile={editProfilePic}
+                  setProfile={setEditProfilePic}
+                  setIsLoggedIn={setIsLoggedIn}
                   {...sharedProps}
                 />
               }
