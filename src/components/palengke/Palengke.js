@@ -33,6 +33,8 @@ function Palengke({ ...sharedProps }) {
   const [statusColor, setStatusColor] = useState("");
   const [ratingColor, setRatingColor] = useState("");
 
+  const [sortCriterion, setSortCriterion] = useState("date");
+
   // Function to handle editing a comment
   const handleEditComment = (index, editedComment) => {
     const updatedReviewsData = [...reviewsDataState];
@@ -66,7 +68,6 @@ function Palengke({ ...sharedProps }) {
   };
 
   const getPalengkeAndMyReviews = (palengkeReviews) => {
-    console.log(typeof palengkeReviews);
     const currUserId = sharedProps.currUser?.user_id;
     if (Array.isArray(palengkeReviews) && currUserId) {
       const filteredReviews = palengkeReviews.filter(
@@ -78,8 +79,6 @@ function Palengke({ ...sharedProps }) {
 
   const getUsername = () => {
     const currUserId = sharedProps.currUser?.user_id;
-    console.log("userList");
-    console.log(sharedProps.userList);
     if (currUserId && sharedProps.userList.length !== 0) {
       const user = sharedProps.userList.find((user) => user.id === currUserId);
       if (user) {
@@ -93,30 +92,16 @@ function Palengke({ ...sharedProps }) {
   };
 
   useEffect(() => {
-    console.log(
-      `isLoggedIn: ${sharedProps.isLoggedIn}; currUserid: ${sharedProps.currUser?.user_id}`
-    );
-    console.log(sharedProps.currUser);
-    console.log(`palengkeId: ${palengkeId}`);
     getPalengke(palengkeId);
     getPalengkeReviews();
     getUsername();
     getRatingColor();
-    console.log(sharedProps);
-    console.log(palengke);
-    console.log(palengkeReviews);
-    console.log(palengkeAndMyReviews);
-  }, []);
+  }, [palengkeId, sharedProps]);
 
-  useEffect(() => {
-    console.log("isEditing");
-    console.log(isEditing);
-  }, [isEditing]);
+  useEffect(() => {}, [isEditing]);
 
   const handleDeleteReview = async () => {
-    console.log("inside");
     try {
-      // Send a DELETE request to the server to delete the review
       const response = await fetch(`/review/delete/${defaultValues.id}`, {
         method: "DELETE",
       });
@@ -125,6 +110,7 @@ function Palengke({ ...sharedProps }) {
         throw new Error("Failed to delete review");
       }
       setDeleteClicked(false);
+      getPalengkeReviews(); // Refresh the reviews list after deletion
     } catch (error) {
       console.error("Error deleting review:", error);
     }
@@ -140,10 +126,10 @@ function Palengke({ ...sharedProps }) {
   const getAverageRating = () => {
     let totalRating = 0;
     palengkeReviews.forEach((review) => {
-      totalRating += parseInt(review.rating);
+      totalRating += parseInt(review?.rating);
     });
     const averageRating = totalRating / palengkeReviews.length;
-    return averageRating;
+    return averageRating.toFixed(1);
   };
 
   const getAverageRatingInt = () => {
@@ -169,6 +155,28 @@ function Palengke({ ...sharedProps }) {
     }
   };
 
+  // Callback to add a new review to the state
+  const handleAddReview = (newReview) => {
+    setPalengkeReviews((prevReviews) => [...prevReviews, newReview]);
+    getPalengkeAndMyReviews([...palengkeReviews, newReview]); // Update the user's reviews
+  };
+
+  // Function to sort reviews based on the selected criterion
+  const handleSortReviews = (criterion) => {
+    setSortCriterion(criterion);
+    let sortedReviews = [...palengkeReviews];
+    if (criterion === "date") {
+      sortedReviews = sortedReviews.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+    } else if (criterion === "highestRating") {
+      sortedReviews = sortedReviews.sort((a, b) => b.rating - a.rating);
+    } else if (criterion === "lowestRating") {
+      sortedReviews = sortedReviews.sort((a, b) => a.rating - b.rating);
+    }
+    setPalengkeReviews(sortedReviews);
+  };
+
   return (
     <>
       {addEditReviewClicked === true && (
@@ -184,6 +192,7 @@ function Palengke({ ...sharedProps }) {
             isEditing={isEditing}
             setIsEditing={setIsEditing}
             defaultValues={defaultValues}
+            onAddReview={handleAddReview} // Pass the callback
           />
         </Modal>
       )}
@@ -203,7 +212,7 @@ function Palengke({ ...sharedProps }) {
           <img alt="market" src={palengkeImage} className="Marketimg"></img>
           <div className="content">
             <div className="namerate">
-              <p className="welcome">{palengke.name}</p>
+              <p className="welcome">{palengke?.name}</p>
               <div
                 className="ratingContBig"
                 style={{
@@ -218,32 +227,29 @@ function Palengke({ ...sharedProps }) {
             </div>
             <div className="locationBig">
               <FmdGoodRoundedIcon className="muiLocationIcon" />
-              <div>{palengke.address}</div>
+              <div>{palengke?.address}</div>
             </div>
-            {/* <p className="subtext">Palengke Description:</p> */}
             <div className="desc">
-              <p>
-                {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. */}
-                {palengke.description}
-              </p>
+              <p>{palengke?.description}</p>
             </div>
           </div>
         </div>
         <div className="details">
-          <div class="dropdown">
-            <button class="dropbtn">
+          <div className="dropdown">
+            <button className="dropbtn">
               Sort Reviews by
               <ArrowDropDownIcon />
             </button>
-            <div class="dropdown-content">
-              <a href="#">Option 1</a>
-              <a href="#">Option 2</a>
-              <a href="#">Option 3</a>
+            <div className="dropdown-content">
+              <a href="#" onClick={() => handleSortReviews("date")}>
+                Date
+              </a>
+              <a href="#" onClick={() => handleSortReviews("highestRating")}>
+                Highest Rating
+              </a>
+              <a href="#" onClick={() => handleSortReviews("lowestRating")}>
+                Lowest Rating
+              </a>
             </div>
           </div>
           {sharedProps.isLoggedIn === true && (
@@ -279,7 +285,7 @@ function Palengke({ ...sharedProps }) {
         </div>
 
         <div className="reviewList">
-          {palengkeReviews.map((review, index) => {
+          {palengkeReviews.map((review) => {
             return (
               <Review
                 key={review.id}
@@ -304,37 +310,6 @@ function Palengke({ ...sharedProps }) {
           </p>
           <MorePalengke {...sharedProps} />
         </center>
-
-        {/* Modal for adding a review
-      <Modal
-        title="Add A Review"
-        open={addReviewClicked}
-        setOpen={setAddReview}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <h2>How would you rate this Palengke?</h2> <HalfRating />
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Enter your review here..."
-            style={{ fontSize: "18px" }}
-          />
-          <Button
-            variant="contained"
-            className="button addReviewButton pinkButton"
-            style={{ textTransform: "none", marginTop: "20px" }}
-            onClick={handleCommentSubmit}
-          >
-            Submit
-          </Button>
-        </div>
-      </Modal> */}
       </div>
     </>
   );
