@@ -28,8 +28,12 @@
   background-color: white;
   margin: 20px;
   margin-bottom: 30px;
-  margin-left: auto;
-  margin-right: auto;
+}
+a {
+  max-width: 320px;
+}
+strong {
+  text-wrap: nowrap;
 }
 
 .palengkeImage {
@@ -130,6 +134,7 @@ p {
   padding-left: 11px;
   padding-right: 11px;
   filter: drop-shadow(0 0px 4px rgba(97, 97, 97, 0.8));
+  text-wrap: nowrap;
 }
 
 .ratingAndType {
