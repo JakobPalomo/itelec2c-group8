@@ -146,8 +146,8 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
     const location = JSON.parse(req.body.location);
     const other_names = JSON.parse(req.body.other_names);
     // const files = req.files;
-    const rating = -1;
-    const reviews_count = 0;
+    // const rating = 0;
+    // const reviews_count = 0;
     const reviews = [];
 
     await setDoc(doc(collection(db, "palengke")), {
@@ -159,8 +159,8 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
       other_names,
       // fileUrls: files.map((file) => file.path),
       media,
-      rating,
-      reviews_count,
+      // rating,
+      // reviews_count,
       reviews,
     });
     console.error("Successfully added document");
