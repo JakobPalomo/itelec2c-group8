@@ -74,7 +74,12 @@ function App() {
 
   // Change true/false here since wla pa login
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [currUser, setCurrUser] = useState(initialUser);
+  const [currUser, setCurrUser] = useState({});
+  const [userProfilePic, setUserProfilePic] = useState({});
+  const [userContributions, setUserContributions] = useState([]);
+  const [userReviews, setUserReviews] = useState([]);
+  const [userSaves, setUserSaves] = useState([]);
+  const [userUpvotes, setUserUpvotes] = useState([]);
   const [mainMargin, setMainMargin] = useState(0);
 
   // app objects
@@ -99,6 +104,11 @@ function App() {
     setUserList: setUserList,
     currUser: currUser,
     isLoggedIn: isLoggedIn,
+    userProfilePic: userProfilePic,
+    userReviews: userReviews,
+    userSaves: userSaves,
+    userUpvotes: userUpvotes,
+    userContributions: userContributions,
   };
 
   useEffect(() => {
@@ -155,6 +165,10 @@ function App() {
                   console.error("Error fetching media:", error);
                 });
             }
+
+            if (collectionName == "user") {
+              // Fetch user contriibutions, reviews, saves, upvotes
+            }
           } else {
             console.error(
               `No state setter found for collection: ${collectionName}`
@@ -179,6 +193,100 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (currUser?.id) {
+      getProfilePicPath();
+      getUserContributions();
+      getUserReviews();
+      getUserSaves();
+      getUserUpvotes();
+    }
+  }, [currUser]);
+
+  useEffect(() => {
+    console.log("USER PIC & ARRAYS: ");
+    console.log(userProfilePic);
+    console.log(userContributions);
+    console.log(userReviews);
+    console.log(userSaves);
+    console.log(userUpvotes);
+  }, [userProfilePic, userContributions, userReviews, userSaves, userUpvotes]);
+
+  const getProfilePicPath = async () => {
+    try {
+      const response = await fetch(`/user-profile?userid=${currUser?.id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const media = await response.json();
+      setUserProfilePic(media);
+      console.log(media);
+    } catch (error) {
+      console.log("Error getting profile pic.", error);
+    }
+  };
+
+  const getUserContributions = async () => {
+    try {
+      const response = await fetch(
+        `/user-arrays?collection=palengke&userid=${currUser?.id}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const data = await response.json();
+      setUserContributions(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error getting user's contributons.", error);
+    }
+  };
+  const getUserReviews = async () => {
+    try {
+      const response = await fetch(
+        `/user-arrays?collection=review&userid=${currUser?.id}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const data = await response.json();
+      setUserReviews(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error getting user's reviews.", error);
+    }
+  };
+  const getUserSaves = async () => {
+    try {
+      const response = await fetch(
+        `/user-arrays?collection=save&userid=${currUser?.id}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const data = await response.json();
+      setUserSaves(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error getting user's saves.", error);
+    }
+  };
+  const getUserUpvotes = async () => {
+    try {
+      const response = await fetch(
+        `/user-arrays?collection=upvote&userid=${currUser?.id}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const data = await response.json();
+      setUserUpvotes(data);
+      console.log(data);
+    } catch (error) {
+      console.log("Error getting user's upvotes.", error);
+    }
+  };
+
   return (
     <div className="App">
       <Router>
@@ -191,6 +299,12 @@ function App() {
                   setIsLoggedIn={setIsLoggedIn}
                   currUser={currUser}
                   setCurrUser={setCurrUser}
+                  userProfilePic={userProfilePic}
+                  setUserProfilePic={setUserProfilePic}
+                  setUserReviews={setUserReviews}
+                  setUserSaves={setUserSaves}
+                  setUserUpvotes={setUserUpvotes}
+                  setUserContributions={setUserContributions}
                 />
                 <div style={{ height: "98px" }} className="navTopMargin"></div>
                 <Main mainMargin={mainMargin}>
