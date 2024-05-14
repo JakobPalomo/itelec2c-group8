@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  reauthenticateWithCredential,
+  updatePassword,
+  EmailAuthProvider,
+} from "firebase/auth";
+import { auth } from "../../firebase";
 import InputText from "../modals/InputText.js";
 import Profile from "./Profile";
 import ConfirmModal from "../modals/ConfirmModal";
@@ -23,6 +31,7 @@ function EditProfile({
   setIsEditProfileOpen,
   profile,
   setProfile,
+  setIsLoggedIn,
   ...sharedProps
 }) {
   const navigate = useNavigate();
@@ -35,13 +44,15 @@ function EditProfile({
     { field: "all", hasError: false, errMessage: "" },
   ];
   const initialChangePassErrorData = [
+    { field: "oldPassword", hasError: false, errMessage: "" },
     { field: "password", hasError: false, errMessage: "" },
     { field: "confirmPassword", hasError: false, errMessage: "" },
+    { field: "all", hasError: false, errMessage: "" },
   ];
   const initialDeleteAccountErrorData = [
-    { field: "email", hasError: false, errMessage: "" },
-    { field: "password", hasError: false, errMessage: "" },
-    { field: "both", hasError: false, errMessage: "" },
+    { field: "emailDelete", hasError: false, errMessage: "" },
+    { field: "passwordDelete", hasError: false, errMessage: "" },
+    { field: "all", hasError: false, errMessage: "" },
   ];
 
   const [username, setUsername] = useState("");
@@ -50,10 +61,11 @@ function EditProfile({
   const [region, setRegion] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [coverPhoto, setCoverPhoto] = useState(); // State for cover photo
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
   const [password, setPassword] = useState("");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [usernameDelete, setUsernameDelete] = useState("");
+  const [emailDelete, setEmailDelete] = useState("");
   const [passwordDelete, setPasswordDelete] = useState("");
   const [editProfileErrors, setEditProfileErrors] = useState(
     initialEditProfileErrorData
@@ -70,6 +82,7 @@ function EditProfile({
     useState(false);
   const [openDeleteAccountConfirmModal, setOpenDeleteAccountConfirmModal] =
     useState(false);
+  let changePassErr = "";
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -101,6 +114,7 @@ function EditProfile({
     setProfile("");
   };
 
+  // EDIT USER DETAILS
   const validateEditProfileDetails = () => {
     // Trim strings
     const trimmedUsername = username.trim();
@@ -196,6 +210,208 @@ function EditProfile({
     }
   };
 
+  // EDIT PASSWORD
+  const validateEditPassDetails = async () => {
+    const tempErrors = initialChangePassErrorData;
+
+    // Validation checks
+    if (oldPassword === "") {
+      tempErrors.find((field) => field.field === "oldPassword").hasError = true;
+      tempErrors.find((field) => field.field === "oldPassword").errMessage =
+        "This field is required";
+    }
+
+    if (password === "") {
+      tempErrors.find((field) => field.field === "password").hasError = true;
+      tempErrors.find((field) => field.field === "password").errMessage =
+        "This field is required";
+    } else if (password.length < 6) {
+      tempErrors.find((field) => field.field === "password").hasError = true;
+      tempErrors.find((field) => field.field === "password").errMessage =
+        "Password must be at least 6 characters";
+    }
+
+    if (confirmPassword === "") {
+      tempErrors.find(
+        (field) => field.field === "confirmPassword"
+      ).hasError = true;
+      tempErrors.find((field) => field.field === "confirmPassword").errMessage =
+        "This field is required";
+    }
+
+    if (
+      password !== "" &&
+      confirmPassword !== "" &&
+      password !== confirmPassword
+    ) {
+      tempErrors.find(
+        (field) => field.field === "confirmPassword"
+      ).hasError = true;
+      tempErrors.find((field) => field.field === "confirmPassword").errMessage =
+        "Password does not match";
+    }
+
+    const auth = getAuth();
+    const inithasError = tempErrors.some((field) => field.hasError);
+    console.log("Initial errors:", inithasError); // Log initial errors status
+
+    if (!inithasError) {
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          sharedProps.currUser.email,
+          oldPassword
+        );
+        // If sign-in is successful, the password is correct
+        console.log("Re-authentication successful");
+      } catch (error) {
+        console.log("Error code:", error.code);
+        // If sign-in fails, the password is incorrect
+        if (error.code === "auth/invalid-credential") {
+          console.log("Inside wrong password block");
+          tempErrors.find(
+            (field) => field.field === "oldPassword"
+          ).hasError = true;
+          tempErrors.find((field) => field.field === "oldPassword").errMessage =
+            "Wrong password";
+        } else {
+          tempErrors.find((field) => field.field === "all").hasError = true;
+          tempErrors.find((field) => field.field === "all").errMessage =
+            "An error occurred, please try again later";
+        }
+        setChangePassErrors(tempErrors);
+        return; // Exit if there's an error with old password
+      }
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          sharedProps.currUser.email,
+          password
+        );
+        tempErrors.find((field) => field.field === "password").hasError = true;
+        tempErrors.find((field) => field.field === "password").errMessage =
+          "Cannot be the same password";
+        setChangePassErrors(tempErrors);
+        console.log("Password cannot be the same"); // Log same password issue
+        return; // Exit if new password is the same as the old one
+      } catch (error) {
+        // If sign-in fails, it means new password is different from old one, which is good
+        console.log("New password is valid");
+      }
+    }
+
+    setChangePassErrors(tempErrors);
+
+    const hasError = tempErrors.some((field) => field.hasError);
+    if (!hasError) {
+      setOpenEditPassConfirmModal(true);
+      console.log("No errors, ready to change password"); // Log success case
+    }
+  };
+
+  const handleChangePassword = async () => {
+    const user = auth.currentUser;
+
+    if (!user) {
+      console.error("No user is currently signed in");
+      return;
+    }
+
+    // Create a credential for re-authentication
+    const credential = EmailAuthProvider.credential(emailDelete, oldPassword);
+
+    try {
+      // Re-authenticate the user
+      await reauthenticateWithCredential(user, credential);
+      console.log("User re-authenticated");
+
+      // Update the password
+      await updatePassword(user, password);
+      console.log("Password updated successfully");
+    } catch (error) {
+      console.error("Error updating password:", error);
+    }
+  };
+
+  //DELETE ACCOUNT
+  const validateDeleteAccount = async () => {
+    const tempErrors = initialDeleteAccountErrorData;
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailDelete === "") {
+      tempErrors.find((field) => field.field === "emailDelete").hasError = true;
+      tempErrors.find((field) => field.field === "emailDelete").errMessage =
+        "This field is required";
+    } else if (!emailPattern.test(emailDelete)) {
+      tempErrors.find((field) => field.field === "emailDelete").hasError = true;
+      tempErrors.find((field) => field.field === "emailDelete").errMessage =
+        "Not a valid email address";
+    }
+
+    if (passwordDelete === "") {
+      tempErrors.find(
+        (field) => field.field === "passwordDelete"
+      ).hasError = true;
+      tempErrors.find((field) => field.field === "passwordDelete").errMessage =
+        "This field is required";
+    }
+    console.log(`pass is empty: ${password === ""}`);
+    console.log(password);
+
+    setDeleteAccountErrors(tempErrors);
+
+    const hasError = tempErrors.some((field) => field.hasError);
+    if (!hasError) {
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          emailDelete,
+          passwordDelete
+        );
+        setOpenDeleteAccountConfirmModal(true);
+      } catch (error) {
+        console.error("Error signing in:", error);
+        console.log(error.code);
+        if (error.code == "auth/invalid-credentials") {
+          handleSetError(
+            "all",
+            "Invalid username or password",
+            deleteAccountErrors,
+            setDeleteAccountErrors
+          );
+        } else {
+          handleSetError(
+            "all",
+            "An error occured, please try again later.",
+            deleteAccountErrors,
+            setDeleteAccountErrors
+          );
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log(getHasError("all", deleteAccountErrors));
+    console.log(getErrMessage("all", deleteAccountErrors));
+    console.log(deleteAccountErrors);
+  }, [deleteAccountErrors]);
+
+  const handleDeleteAccount = async () => {
+    try {
+      // Delete the user from Firebase Authentication
+      await auth.deleteUser(sharedProps.currUser.id);
+      setIsLoggedIn(false);
+      sharedProps.setCurrUser({});
+      navigate("/login");
+      console.log(`Successfully deleted user: ${sharedProps.currUser.id}`);
+    } catch (error) {
+      console.error("Error deleting user and document:", error);
+      // throw error;
+    }
+  };
+
   return (
     <>
       {openEditProfileConfirmModal === true && (
@@ -247,6 +463,34 @@ function EditProfile({
                 margin="0px 0px 20px 0px"
               />
             )}
+          </div>
+        </ConfirmModal>
+      )}
+      {openEditPassConfirmModal === true && (
+        <ConfirmModal
+          title="Confirm Delete"
+          open={openEditPassConfirmModal}
+          setOpen={setOpenEditPassConfirmModal}
+          confirmYes={handleChangePassword}
+          context="changePassword"
+        >
+          <div>
+            Are you sure you want to change your password? You will be signed
+            out.
+          </div>
+        </ConfirmModal>
+      )}
+      {openDeleteAccountConfirmModal === true && (
+        <ConfirmModal
+          title="Confirm Delete"
+          open={openDeleteAccountConfirmModal}
+          setOpen={setOpenDeleteAccountConfirmModal}
+          confirmYes={handleDeleteAccount}
+          context="deleteAccount"
+        >
+          <div>
+            Are you sure you want to delete this account? You won't be able to
+            login again into this account.
           </div>
         </ConfirmModal>
       )}
@@ -340,12 +584,27 @@ function EditProfile({
             <h1>Edit Password</h1>
             <InputText
               type={showPassword === true ? "text" : "password"}
-              label="Password"
+              label="Old Password"
+              required={true}
+              setValue={setOldPassword}
+              value={oldPassword}
+              maxLength={100}
+              placeholder="Your old password"
+              hasError={getHasError("oldPassword", changePassErrors)}
+              errMessage={getErrMessage("oldPassword", changePassErrors)}
+              visibility={showPassword}
+              setVisibility={handlePasswordVisibility}
+              iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
+              iconOff={<VisibilityOffIcon className="muiVisibilityIcon" />}
+            />
+            <InputText
+              type={showPassword === true ? "text" : "password"}
+              label="New Password"
               required={true}
               setValue={setPassword}
               value={password}
               maxLength={100}
-              placeholder="Your password"
+              placeholder="Your new password"
               hasError={getHasError("password", changePassErrors)}
               errMessage={getErrMessage("password", changePassErrors)}
               visibility={showPassword}
@@ -355,12 +614,12 @@ function EditProfile({
             />
             <InputText
               type={showConfirmPassword === true ? "text" : "password"}
-              label="Confirm Password"
+              label="Confirm New Password"
               required={true}
               setValue={setConfirmPassword}
               value={confirmPassword}
               maxLength={100}
-              placeholder="Confirm your password"
+              placeholder="Confirm your new password"
               hasError={getHasError("confirmPassword", changePassErrors)}
               errMessage={getErrMessage("confirmPassword", changePassErrors)}
               visibility={showConfirmPassword}
@@ -368,6 +627,11 @@ function EditProfile({
               iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
               iconOff={<VisibilityOffIcon className="muiVisibilityIcon" />}
             />
+            {getHasError("all", changePassErrors) && (
+              <span className="centerText errorSpanProfile">
+                {getErrMessage("all", changePassErrors)}
+              </span>
+            )}
             <div className="editButtons">
               <Box>
                 <Button
@@ -375,7 +639,7 @@ function EditProfile({
                   variant="contained"
                   className="button pinkButton bigButton otpButtonWidth"
                   style={{ textTransform: "none", width: "fit-content" }}
-                  onClick={() => {}}
+                  onClick={validateEditPassDetails}
                 >
                   Change Password
                 </Button>
@@ -385,15 +649,15 @@ function EditProfile({
             <h1>Delete Account</h1>
             <InputText
               type="text"
-              label="Username"
+              label="Email Address"
               required={true}
-              setValue={setUsernameDelete}
-              value={usernameDelete}
+              setValue={setEmailDelete}
+              value={emailDelete}
               maxLength={100}
-              placeholder="Your username"
+              placeholder="Your email address"
               sx={{ width: "100px" }}
-              hasError={getHasError("usernameDelete", deleteAccountErrors)}
-              errMessage={getErrMessage("usernameDelete", deleteAccountErrors)}
+              hasError={getHasError("emailDelete", deleteAccountErrors)}
+              errMessage={getErrMessage("emailDelete", deleteAccountErrors)}
             />
             <InputText
               type={showPassword === true ? "text" : "password"}
@@ -410,6 +674,11 @@ function EditProfile({
               iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
               iconOff={<VisibilityOffIcon className="muiVisibilityIcon" />}
             />
+            {getHasError("all", deleteAccountErrors) && (
+              <span className="centerText errorSpanProfile">
+                {getErrMessage("all", deleteAccountErrors)}
+              </span>
+            )}
             <div className="editButtons">
               <Button
                 type="button"
@@ -421,7 +690,7 @@ function EditProfile({
                   color: "",
                   width: "fit-Content",
                 }}
-                onClick={() => {}}
+                onClick={validateDeleteAccount}
               >
                 Delete Account
               </Button>

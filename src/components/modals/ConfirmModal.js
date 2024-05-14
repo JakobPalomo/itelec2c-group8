@@ -61,6 +61,10 @@ function ConfirmModal({
               confirmYes();
             } else if (context === "edit profile") {
               confirmYes();
+            } else if (context === "deleteAccount") {
+              confirmYes();
+            } else {
+              confirmYes();
             }
           }}
         >

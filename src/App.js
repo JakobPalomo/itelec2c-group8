@@ -393,6 +393,7 @@ function App() {
                   setIsEditProfileOpen={setIsEditProfileOpen}
                   profile={editProfilePic}
                   setProfile={setEditProfilePic}
+                  setIsLoggedIn={setIsLoggedIn}
                   {...sharedProps}
                 />
               }

@@ -371,38 +371,42 @@ app.get("/location-to-address", async (req, res) => {
 // ADD USER WITH MEDIA (1 file only)
 app.post("/user/add/:userId", upload.single("media"), async (req, res) => {
   try {
-    const mediaFilename = req.body.mediaFilename;
-    const mediaType = req.body.mediaType;
     const file = req.file; // Use req.file for single file upload
+    let documentId = "";
 
-    let documentId;
-    const type =
-      mediaType && mediaType.startsWith("image/")
-        ? 0
-        : mediaType.startsWith("video/")
-        ? 1
-        : 2;
-    const filename = mediaFilename || "";
-    const tempPath = file.path || "";
-    const path = tempPath.replace(/^.*?public/, "").replaceAll("\\", "/");
-    const link = "";
+    if (file) {
+      // Check if a file is uploaded
+      const mediaFilename = req.body.mediaFilename;
+      const mediaType = req.body.mediaType;
+      const type =
+        mediaType && mediaType.startsWith("image/")
+          ? 0
+          : mediaType.startsWith("video/")
+          ? 1
+          : 2;
+      const filename = mediaFilename || "";
+      const tempPath = file.path || "";
+      const path = tempPath.replace(/^.*?public/, "").replaceAll("\\", "/");
+      const link = "";
 
-    const docRef = collection(db, "media");
-    try {
-      const addedDocRef = await addDoc(docRef, {
-        type,
-        filename,
-        path,
-        link,
-      });
-      documentId = addedDocRef.id;
-    } catch (error) {
-      console.error("Error adding document:", error);
-      throw error;
+      const docRef = collection(db, "media");
+      try {
+        const addedDocRef = await addDoc(docRef, {
+          type,
+          filename,
+          path,
+          link,
+        });
+        documentId = addedDocRef.id;
+      } catch (error) {
+        console.error("Error adding document:", error);
+        throw error;
+      }
+
+      console.log(documentId.toString());
     }
 
-    console.log(documentId.toString());
-    const profile = documentId;
+    const profile = documentId; // Will be null if no file was uploaded
     const userId = req.params.userId;
     const { username, email, district, city, region } = req.body;
     const reviews = [];
@@ -424,7 +428,7 @@ app.post("/user/add/:userId", upload.single("media"), async (req, res) => {
       upvotes,
       otp,
     });
-    console.error("Successfully added document");
+    console.log("Successfully added user document");
     res.status(200).json("Successfully added user");
   } catch (error) {
     console.error("Error adding document:", error);

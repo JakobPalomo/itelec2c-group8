@@ -170,7 +170,13 @@
   margin-top: 8px !important;
 }
 
-@media screen and (max-width: 1746px) {
+.centerProfileModal {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
+@media screen and (max-width: #ff3f3f) {
   .otpFieldMargin {
     margin-left: 4rem;
     margin-right: 4rem;
