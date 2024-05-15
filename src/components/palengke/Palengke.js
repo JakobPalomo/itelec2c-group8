@@ -123,7 +123,7 @@ function Palengke({ ...sharedProps }) {
     } else {
       setRatingColor("#636363");
     }
-  }, [palengkeReviews]);
+  }, []);
 
   useEffect(() => {
     getPalengke(palengkeId);
@@ -208,7 +208,7 @@ function Palengke({ ...sharedProps }) {
     setPalengkeReviews(sortedReviews);
   };
 
-  console.log("Rating color:", ratingColor);
+  // console.log("Rating color:", ratingColor);
 
   return (
     <>
@@ -225,6 +225,9 @@ function Palengke({ ...sharedProps }) {
             onEditReview={handleEditReview}
             defaultValues={defaultValues}
             setDefaultValues={setDefaultValues}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            userId={sharedProps.currUser.id}
           />
         </Modal>
       )}
