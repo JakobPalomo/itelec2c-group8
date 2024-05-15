@@ -91,7 +91,7 @@ function Palengke({ ...sharedProps }) {
   );
 
   const getUsername = useCallback(() => {
-    const currUserId = sharedProps.currUser?.user_id;
+    const currUserId = sharedProps.currUser?.id;
     if (currUserId && sharedProps.userList.length !== 0) {
       const user = sharedProps.userList.find((user) => user.id === currUserId);
       if (user) {
