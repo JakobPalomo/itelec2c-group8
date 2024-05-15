@@ -50,8 +50,8 @@ function AddEditReview({
   // Validation function
   const validateReviewDetails = () => {
     console.log(rating, review, palengkeId, userId);
-    let trimmedReview;
-    let trimmedRating;
+    let trimmedReview = review;
+    let trimmedRating = rating;
     if (review == undefined || review == "undefined") {
       setReview("");
       trimmedReview = "";
@@ -60,7 +60,8 @@ function AddEditReview({
       trimmedRating = 0;
       setRating(0);
     }
-
+    console.log("rating", rating);
+    console.log(trimmedRating <= 0, trimmedRating);
     // Trim strings
     trimmedReview = review.trim();
     setReview(trimmedReview);
@@ -93,6 +94,8 @@ function AddEditReview({
         handleEditReview(defaultValues.id);
       }
     }
+
+    console.log(tempErrors);
   };
 
   const handleAddReview = async () => {
