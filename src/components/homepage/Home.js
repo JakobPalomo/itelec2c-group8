@@ -139,7 +139,6 @@ function Home({ ...sharedProps }) {
               <PalengkeItem
                 palengke={palengke}
                 mediaList={sharedProps.mediaList}
-                rating={getAverageRating(palengke)}
                 {...sharedProps}
               />
             </Link>

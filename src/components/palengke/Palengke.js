@@ -32,6 +32,7 @@ function Palengke({ ...sharedProps }) {
   const [reviewsDataState, setReviewsDataState] = useState(reviewsData);
   const [statusColor, setStatusColor] = useState("");
   const [ratingColor, setRatingColor] = useState("");
+  const [rating, setRating] = useState("");
   const [sortCriterion, setSortCriterion] = useState("date");
 
   const handleBackClick = () => {
@@ -75,6 +76,7 @@ function Palengke({ ...sharedProps }) {
       setPalengkeReviews(filteredReviews);
       getPalengkeAndMyReviews(filteredReviews);
     }
+    getRatingColor();
   }, [sharedProps.reviewList, palengkeId]);
 
   const getPalengkeAndMyReviews = useCallback(
@@ -129,14 +131,14 @@ function Palengke({ ...sharedProps }) {
     getPalengke(palengkeId);
     getPalengkeReviews();
     getUsername();
+  }, [palengkeId, getPalengke, getPalengkeReviews, getUsername]);
+
+  useEffect(() => {
+    setRating(getAverageRating());
     getRatingColor();
-  }, [
-    palengkeId,
-    getPalengke,
-    getPalengkeReviews,
-    getUsername,
-    getRatingColor,
-  ]);
+    console.log("rating", rating);
+    console.log("rating color", ratingColor);
+  }, [palengkeReviews]);
 
   const handleDeleteReview = async () => {
     try {
@@ -268,10 +270,10 @@ function Palengke({ ...sharedProps }) {
                   backgroundColor: ratingColor || "#636363", // Fallback color if ratingColor is invalid
                 }}
               >
-                {getAverageRating() !== 0 ? (
+                {rating !== 0 ? (
                   <>
                     <StarRoundedIcon className="muiStarIcon" />
-                    {getAverageRating()}
+                    {rating}
                   </>
                 ) : (
                   <div

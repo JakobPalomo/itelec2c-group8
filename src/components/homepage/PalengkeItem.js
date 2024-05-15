@@ -19,7 +19,6 @@ function PalengkeItem({
   marg,
   showIcons,
   prev,
-  rating,
   ...sharedProps
 }) {
   const [media, setMedia] = useState("");
@@ -27,6 +26,7 @@ function PalengkeItem({
   const [status, setStatus] = useState("");
   const [statusColor, setStatusColor] = useState("");
   const [ratingColor, setRatingColor] = useState("");
+  const [rating, setRating] = useState("");
 
   const getMedia = () => {
     if (palengke.media && palengke.media.length > 0) {
@@ -83,7 +83,7 @@ function PalengkeItem({
         setRatingColor("#6EA837");
       }
     } else {
-      setRatingColor("#636363");
+      setRatingColor("#888888");
     }
   };
 
@@ -107,9 +107,8 @@ function PalengkeItem({
   useEffect(() => {
     getMedia();
     getStatus();
-    getRatingColor();
     getPalengkeReviews();
-    console.log(rating);
+    console.log("rating", rating);
     console.log(palengke.reviews);
     console.log(palengkeReviews.length);
     console.log(sharedProps.reviewList);
@@ -126,7 +125,15 @@ function PalengkeItem({
       );
       setPalengkeReviews(filteredReviews);
     }
+    getRatingColor();
   }, [palengke.id, sharedProps.reviewList]);
+
+  useEffect(() => {
+    setRating(getAverageRating());
+    getRatingColor();
+    console.log("rating", rating);
+    console.log("rating color", ratingColor);
+  }, [palengkeReviews]);
 
   return (
     <div
@@ -205,7 +212,8 @@ function PalengkeItem({
                 {rating > 0 ? (
                   <>
                     <StarRoundedIcon className="muiStarIcon" />
-                    {palengke.rating.toFixed(1).toString()}
+                    {/* {palengke.rating.toFixed(1).toString()} */}
+                    {rating}
                   </>
                 ) : (
                   <span className="noRatingCont">No rating yet</span>
