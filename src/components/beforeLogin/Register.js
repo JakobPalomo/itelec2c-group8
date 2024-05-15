@@ -198,9 +198,13 @@ function Register({ ...sharedProps }) {
       formData.append("district", district);
       formData.append("city", city);
       formData.append("region", region);
-      formData.append("media", profilePic); // Assuming profilePic is a file object
-      formData.append("mediaFilename", profilePic.name);
-      formData.append("mediaType", profilePic.type);
+
+      if (profilePic) {
+        // Check if profilePic is provided
+        formData.append("media", profilePic);
+        formData.append("mediaFilename", profilePic.name);
+        formData.append("mediaType", profilePic.type);
+      }
 
       console.log(formData);
 
@@ -240,6 +244,23 @@ function Register({ ...sharedProps }) {
             Are all details entered correct?
           </strong>
           <div className="detailsCont">
+            {profilePic && (
+              <div className="centerProfileModal">
+                <Avatar
+                  sx={{
+                    m: 0,
+                    bgcolor: "#FF6262", // Change bgcolor to #FF6262
+                    width: 150,
+                    height: 150,
+                    cursor: "pointer",
+                    outline: "2px solid #ff6262",
+                  }}
+                  src={profilePic && `${URL.createObjectURL(profilePic)}`}
+                >
+                  <CameraAltIcon sx={{ fontSize: 60 }} />
+                </Avatar>
+              </div>
+            )}
             <HeaderAndDetail
               header="Username"
               detail={username}
@@ -288,7 +309,7 @@ function Register({ ...sharedProps }) {
             md={7}
             sx={{
               backgroundImage:
-                "url(https://source.unsplash.com/random?wallpapers)",
+                "url(https://source.unsplash.com/random?wetmarket)",
               backgroundRepeat: "no-repeat",
               backgroundColor: (t) =>
                 t.palette.mode === "light"

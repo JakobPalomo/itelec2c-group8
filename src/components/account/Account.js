@@ -11,6 +11,8 @@ import Modal from "../modals/MyModal.js";
 export default function Account({
   isEditProfileOpen,
   setIsEditProfileOpen,
+  profile,
+  setProfile,
   ...sharedProps
 }) {
   return (
@@ -18,6 +20,8 @@ export default function Account({
       <Profile
         isEditProfileOpen={isEditProfileOpen}
         setIsEditProfileOpen={setIsEditProfileOpen}
+        profile={profile}
+        setProfile={() => {}}
         {...sharedProps}
       />
       <div className="recent">

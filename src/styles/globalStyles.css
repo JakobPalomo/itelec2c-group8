@@ -29,6 +29,14 @@ Button {
   background-color: #e74f4f !important;
   text-transform: "none" !important;
 }
+.redButton {
+  background-color: #b62e2e !important;
+}
+.redButton:hover,
+.redButton:active {
+  background-color: #972323 !important;
+  text-transform: "none" !important;
+}
 .yellowButton {
   background-color: #ffae3c !important;
 }

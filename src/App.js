@@ -73,7 +73,7 @@ function App() {
   };
 
   // Change true/false here since wla pa login
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currUser, setCurrUser] = useState({});
   const [userProfilePic, setUserProfilePic] = useState({});
   const [userContributions, setUserContributions] = useState([]);
@@ -87,9 +87,17 @@ function App() {
   const [reviewList, setReviewList] = useState([]);
   const [upvoteList, setUpvoteList] = useState([]);
   const [mediaList, setMediaList] = useState([]);
-  const [userList, setUserList] = useState(initialUsers);
+  const [userList, setUserList] = useState([]);
+  let palengkeList2 = [];
+  let reviewList2 = [];
+  let upvoteList2 = [];
+  let mediaList2 = [];
+  let userList2 = [];
 
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [editProfilePic, setEditProfilePic] = useState("");
+
+  const [newPalengkeList, setNewPalengkeList] = useState([]);
 
   const sharedProps = {
     palengkeList: palengkeList,
@@ -103,6 +111,7 @@ function App() {
     userList: userList,
     setUserList: setUserList,
     currUser: currUser,
+    setCurrUser: setCurrUser,
     isLoggedIn: isLoggedIn,
     userProfilePic: userProfilePic,
     userReviews: userReviews,
@@ -124,6 +133,14 @@ function App() {
     return () => {
       window.removeEventListener("resize", updateMainMargin);
     };
+  }, []);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("currUser");
+    if (storedUser) {
+      setCurrUser(JSON.parse(storedUser));
+      setIsLoggedIn(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -152,7 +169,11 @@ function App() {
                 ...doc.data(),
               });
             });
+            console.log(`Updating state for collection: ${collectionName}`);
+            console.log(updatedData);
             stateSetter(updatedData);
+            console.log(`State updated for collection: ${collectionName}`);
+            console.log(updatedData);
 
             if (collectionName == "palengke" || collectionName == "review") {
               // Fetch the media collection
@@ -164,10 +185,6 @@ function App() {
                 .catch((error) => {
                   console.error("Error fetching media:", error);
                 });
-            }
-
-            if (collectionName == "user") {
-              // Fetch user contriibutions, reviews, saves, upvotes
             }
           } else {
             console.error(
@@ -194,6 +211,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // fetchData();
+  }, []);
+
+  useEffect(() => {
     if (currUser?.id) {
       getProfilePicPath();
       getUserContributions();
@@ -202,6 +223,18 @@ function App() {
       getUserUpvotes();
     }
   }, [currUser]);
+
+  useEffect(() => {
+    console.log("SHARED PROPS: ");
+    console.log(sharedProps);
+  }, [
+    palengkeList,
+    reviewList,
+    upvoteList,
+    mediaList,
+    userList,
+    newPalengkeList,
+  ]);
 
   useEffect(() => {
     console.log("USER PIC & ARRAYS: ");
@@ -366,6 +399,8 @@ function App() {
                 <Account
                   isEditProfileOpen={isEditProfileOpen}
                   setIsEditProfileOpen={setIsEditProfileOpen}
+                  profile={editProfilePic}
+                  setProfile={setEditProfilePic}
                   {...sharedProps}
                 />
               }
@@ -376,6 +411,9 @@ function App() {
                 <EditProfile
                   isEditProfileOpen={isEditProfileOpen}
                   setIsEditProfileOpen={setIsEditProfileOpen}
+                  profile={editProfilePic}
+                  setProfile={setEditProfilePic}
+                  setIsLoggedIn={setIsLoggedIn}
                   {...sharedProps}
                 />
               }

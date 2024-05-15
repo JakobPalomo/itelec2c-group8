@@ -13,40 +13,62 @@ import "../../styles/AddReview.css";
 import { useState, useEffect } from "react";
 
 function AddEditReview({
-  user_id = "",
-  palengke_id = "",
-  setOpen,
   isEditing,
   setIsEditing,
+  setOpen,
+  userId,
+  palengkeId,
+  onAddReview,
+  onEditReview,
   defaultValues,
+  setDefaultValues,
 }) {
   const initialErrorData = [
     { field: "rating", hasError: false, errMessage: "" },
     { field: "review", hasError: false, errMessage: "" },
   ];
 
-  const [userId, setUserId] = useState("");
-  const [palengkeId, setPalengkeId] = useState("");
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [errors, setErrors] = useState(initialErrorData);
 
+  const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  };
+
   useEffect(() => {
-    if (defaultValues) {
+    console.log("default Values", defaultValues);
+    if (isEmptyObject(defaultValues) == false) {
       setRating(defaultValues.rating);
       setReview(defaultValues.review);
+    } else {
+      setReview("");
+      setRating(0);
     }
   }, []);
 
   // Validation function
   const validateReviewDetails = () => {
+    console.log(rating, review, palengkeId, userId);
+    let trimmedReview = review;
+    let trimmedRating = rating;
+    if (review == undefined || review == "undefined") {
+      setReview("");
+      trimmedReview = "";
+    }
+    if (rating == undefined || rating == "undefined") {
+      trimmedRating = 0;
+      setRating(0);
+    }
+    console.log("rating", rating);
+    console.log(trimmedRating <= 0, trimmedRating);
     // Trim strings
-    const trimmedReview = review.trim();
+    trimmedReview = review.trim();
     setReview(trimmedReview);
 
     let tempErrors = initialErrorData.map((error) => ({ ...error })); // Create a copy of the initialErrorData array
 
-    if (rating === 0) {
+    if (trimmedRating <= 0) {
       tempErrors = tempErrors.map((error) =>
         error.field === "rating"
           ? { ...error, hasError: true, errMessage: "Rating is required" }
@@ -72,9 +94,12 @@ function AddEditReview({
         handleEditReview(defaultValues.id);
       }
     }
+
+    console.log(tempErrors);
   };
 
   const handleAddReview = async () => {
+    console.log(review, rating);
     const today = new Date();
     const dateString = today.toDateString();
     const formData = new FormData();
@@ -139,8 +164,8 @@ function AddEditReview({
   };
 
   useEffect(() => {
-    setUserId(user_id);
-    setPalengkeId(palengke_id);
+    // setUserId(userId);
+    // setPalengkeId(palengkeId);
     console.log("defaultValues");
     console.log(defaultValues);
   }, []);
@@ -148,7 +173,7 @@ function AddEditReview({
   useEffect(() => {
     console.log("rating");
     console.log(
-      `rating ${rating}; review: ${review}; palengeke_id: ${palengke_id}; user_id: ${user_id}`
+      `rating ${rating}; review: ${review}; palengeke_id: ${palengkeId}; user_id: ${userId}`
     );
   }, [rating, review]);
 

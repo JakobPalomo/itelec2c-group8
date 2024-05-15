@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import {
+  getAuth,
+  updatePassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../../firebase";
 import InputText from "../modals/InputText";
 import "../../styles/Login.css";
 import Button from "@mui/material/Button";
@@ -114,7 +120,20 @@ function ChangePassword({ ...sharedProps }) {
     if (!hasError) {
       console.log("to change password");
       // change password here
+      changePassword();
       navigate("/login");
+    }
+  };
+
+  const changePassword = async () => {
+    try {
+      const user = await auth.getUserByEmail(email);
+      console.log("user");
+      console.log(user);
+      await auth.updateUser(user.uid, { password: password });
+      console.log("Password updated successfully");
+    } catch (error) {
+      console.log(error);
     }
   };
 
