@@ -40,19 +40,20 @@ export default function Account({
           </Link>
         </div>
         <center>
-          {palengkeData.slice(0, 1).map((palengke) => (
+          {sharedProps.userContributions.slice(0, 1).map((palengke) => (
             <Link
-              to={`/palengke/${palengke.palengke_id}`}
-              key={palengke.palengke_id}
+              to={`/palengke/${palengke.id}`}
+              key={palengke.id}
               style={{ textDecoration: "none", color: "black" }}
             >
               <PalengkeItem
                 palengke={palengke}
                 type={"45%"}
-                min={"900px"}
+                min={"60%"}
                 marg={"0"}
                 showIcons={false}
                 mediaList={sharedProps.mediaList}
+                {...sharedProps}
               />
             </Link>
           ))}
@@ -65,20 +66,21 @@ export default function Account({
         </div>
         <div className="profilereview">
           <center>
-            {palengkeData.slice(0, 1).map((palengke) => (
+            {sharedProps.userReviews.slice(0, 1).map((review) => (
               <Link
-                to={`/palengke/${palengke.palengke_id}`}
-                key={palengke.palengke_id}
+                to={`/palengke/${review.palengke_id}`}
+                key={review.id}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <PalengkeItem
-                  palengke={palengke}
+                  palengke={review}
                   type={"45%"}
-                  min={"900px"}
+                  min={"60%"}
                   marg={"0"}
                   prev={true}
                   showIcons={false}
-                  mediaList={sharedProps.mediaList}
+                  preview={true}
+                  {...sharedProps}
                 />
               </Link>
             ))}

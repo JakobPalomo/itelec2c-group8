@@ -32,6 +32,7 @@ function MorePalengke({ ...sharedProps }) {
             <PalengkeItem
               palengke={palengke}
               mediaList={sharedProps.mediaList}
+              {...sharedProps}
             />
           </Link>
         ))}

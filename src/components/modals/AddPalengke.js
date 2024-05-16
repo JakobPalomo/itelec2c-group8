@@ -26,6 +26,7 @@ function AddPalengke({
   setPalengkeList,
   mediaList,
   setMediaList,
+  currUser,
 }) {
   const initialErrorData = [
     { field: "palengkeName", hasError: false, errMessage: "" },
@@ -150,7 +151,7 @@ function AddPalengke({
       console.log(formData);
 
       // Upload the FormData to the server
-      const response = fetch("/palengke/add", {
+      const response = fetch(`/palengke/add?userId=${currUser.id}`, {
         method: "POST",
         body: formData,
       })

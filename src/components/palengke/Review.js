@@ -1,7 +1,8 @@
-import "../../styles/Palengke.css";
-import HalfRating from "./HalfRating.js";
 import React, { useState, useEffect } from "react";
+import HalfRating from "./HalfRating.js";
+import "../../styles/Palengke.css";
 import "../../styles/PalengkeList.css";
+import Avatar from "@mui/material/Avatar";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
@@ -9,9 +10,10 @@ import CircleIcon from "@mui/icons-material/Circle";
 import RippleButton from "../ui/RippleButton.js";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { stringAvatar, stringToColor } from "../../functions/utils.js";
 
 function Review({
   key,
@@ -22,7 +24,7 @@ function Review({
   setIsEditing,
   setDefaultValues,
   review,
-  username,
+  ...sharedProps
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -34,14 +36,40 @@ function Review({
     setAnchorEl(null);
   };
 
+  const getUsername = (userId) => {
+    console.log("getting username");
+    if (userId && sharedProps.userList.length !== 0) {
+      const user = sharedProps.userList.find((user) => user.id === userId);
+      if (user) {
+        console.log("username", user.username);
+        return user.username;
+      }
+    }
+  };
+
+  const getReviewUserProfilePic = (userId) => {
+    if (userId && sharedProps.userList.length !== 0) {
+      const user = sharedProps.userList.find((user) => user.id === userId);
+      if (user) {
+        const mediaId = user.profile;
+        const media = sharedProps.mediaList.find(
+          (media) => media.id === mediaId
+        );
+        if (media) {
+          return media.path;
+        }
+      }
+    }
+  };
+
   return (
     <div className="Reviews">
+      <p>{review.date}</p>
       <div>
-        <p>{review.date}</p>{" "}
         <div className="edit">
-          <Button onClick={handleClick}>
+          <IconButton className="menuEdit" onClick={handleClick}>
             <MoreHorizIcon style={{ color: "#fd7335" }} />
-          </Button>
+          </IconButton>
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -72,8 +100,18 @@ function Review({
       <HalfRating defaultValue={review.rating} disabled={true} />
       {/* Rating display section */}
       <div>{/* Your rating display code goes here */}</div>
-      <p className="name">{username}</p>
-      <p>{review.review}</p>
+      <div className="profileAndUsername">
+        <Avatar
+          {...(getUsername(review.user_id) &&
+            stringAvatar(getUsername(review.user_id)))}
+          className="poppins"
+          src={getReviewUserProfilePic(review.user_id)}
+        />
+        <span className="name overflow-wrap">
+          {getUsername(review.user_id)}
+        </span>
+      </div>
+      <p className="overflow-wrap">{review.review}</p>
       {/* Dropdown menu for editing and deleting comments */}
     </div>
   );

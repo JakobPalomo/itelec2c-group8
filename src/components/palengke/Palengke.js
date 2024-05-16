@@ -24,6 +24,7 @@ function Palengke({ ...sharedProps }) {
   const [addEditReviewClicked, setAddEditReviewClicked] = useState(false);
   const [deleteClicked, setDeleteClicked] = useState(false);
   const [username, setUsername] = useState("");
+  const [reviewUserProfilePic, setReviewUserProfilePic] = useState("");
   const [palengke, setPalengke] = useState({});
   const [palengkeReviews, setPalengkeReviews] = useState([]);
   const [palengkeAndMyReviews, setPalengkeAndMyReviews] = useState([]);
@@ -92,53 +93,43 @@ function Palengke({ ...sharedProps }) {
     [sharedProps.currUser]
   );
 
-  const getUsername = useCallback(() => {
-    const currUserId = sharedProps.currUser?.id;
-    if (currUserId && sharedProps.userList.length !== 0) {
-      const user = sharedProps.userList.find((user) => user.id === currUserId);
-      if (user) {
-        setUsername(user.username);
-      }
-    }
-  }, [sharedProps.currUser, sharedProps.userList]);
-
   const isCurrUserReview = (review_id) => {
     return palengkeAndMyReviews.some((review) => review.id === review_id);
   };
 
   const getRatingColor = useCallback(() => {
-    const roundedNum = getAverageRatingInt();
+    const roundedNum = rating;
     if (roundedNum > 0) {
-      if (roundedNum <= 1) {
+      if (roundedNum <= 0) {
         setRatingColor("#969595");
-      } else if (roundedNum <= 2) {
+      } else if (roundedNum <= 1) {
         setRatingColor("#FF6262");
-      } else if (roundedNum <= 3) {
+      } else if (roundedNum <= 2) {
         setRatingColor("#FF8855");
-      } else if (roundedNum <= 4) {
+      } else if (roundedNum <= 3) {
         setRatingColor("#F2C038");
-      } else if (roundedNum <= 5) {
+      } else if (roundedNum <= 4) {
         setRatingColor("#B1CE3B");
-      } else if (roundedNum <= 6) {
+      } else if (roundedNum <= 5) {
         setRatingColor("#6EA837");
       }
     } else {
       setRatingColor("#636363");
     }
-  }, []);
+  }, [rating]);
 
   useEffect(() => {
     getPalengke(palengkeId);
     getPalengkeReviews();
-    getUsername();
-  }, [palengkeId, getPalengke, getPalengkeReviews, getUsername]);
+  }, [palengkeId, getPalengke, getPalengkeReviews]);
 
   useEffect(() => {
     setRating(getAverageRating());
-    getRatingColor();
-    console.log("rating", rating);
-    console.log("rating color", ratingColor);
   }, [palengkeReviews]);
+
+  useEffect(() => {
+    getRatingColor();
+  }, [rating]);
 
   const handleDeleteReview = async () => {
     try {
@@ -338,6 +329,7 @@ function Palengke({ ...sharedProps }) {
             <p className="welcome">{getAverageRating()}</p>
             <div>
               <HalfRating
+                name="read-only"
                 defaultValue={getAverageRatingInt()}
                 disabled={true}
               />
@@ -360,9 +352,9 @@ function Palengke({ ...sharedProps }) {
                 setOpen={setAddEditReviewClicked}
                 setDeleteClicked={setDeleteClicked}
                 review={review}
-                username={username}
                 setIsEditing={setIsEditing}
                 setDefaultValues={setDefaultValues}
+                {...sharedProps}
               />
             );
           })}

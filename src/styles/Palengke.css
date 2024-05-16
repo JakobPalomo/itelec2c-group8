@@ -142,12 +142,19 @@ h1 {
 .rev {
   margin-left: 25%;
 }
-
+.menuEdit {
+  position: absolute !important;
+  transform: translate(40%, 0%);
+}
 .Reviews {
-  margin-top: 4px;
+  margin-bottom: 10px;
   background-color: #ffffff;
   width: 100%;
-  padding: 24px;
+  padding: 15px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .Overview {
   margin-top: 4px;
@@ -157,13 +164,50 @@ h1 {
   display: flex;
   flex-direction: row;
   margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .indiv {
   width: 95%;
 }
 .name {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
+}
+
+.editedSpan {
+  color: #636363;
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.twolines {
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.oneline {
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.profileAndUsername {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.profileAndUsername span {
+  margin-left: 10px;
 }
 
 .edit {
@@ -171,7 +215,6 @@ h1 {
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  margin-top: -24px;
 }
 
 @media screen and (max-width: 720px) {

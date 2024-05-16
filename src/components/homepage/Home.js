@@ -89,6 +89,7 @@ function Home({ ...sharedProps }) {
             setPalengkeList={sharedProps.setPalengkeList}
             mediaList={sharedProps.mediaList}
             setMediaList={sharedProps.setMediaList}
+            currUser={sharedProps.currUser}
           />
         </Modal>
       )}

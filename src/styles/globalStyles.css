@@ -125,6 +125,10 @@ Button .MuiTouchRipple-root {
   margin-top: 8px !important;
 }
 
+.overflow-wrap {
+  overflow-wrap: anywhere;
+}
+
 @media screen and (max-width: 600px) {
   .navTopMargin {
     height: 90px !important;

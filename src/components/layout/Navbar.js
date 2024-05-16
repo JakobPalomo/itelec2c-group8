@@ -180,7 +180,6 @@ function Navbar({
                 >
                   <Avatar
                     {...(currUser.username && stringAvatar(currUser.username))}
-                    sx={{ bgcolor: "#B92F37" }}
                     className="poppins"
                     src={userProfilePic ? userProfilePic.path : ""}
                   />

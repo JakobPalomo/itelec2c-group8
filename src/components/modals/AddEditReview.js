@@ -114,7 +114,7 @@ function AddEditReview({
       console.log(formData);
 
       // Upload the FormData to the server
-      const response = await fetch("/review/add", {
+      const response = await fetch(`/review/add?userId=${userId}`, {
         method: "POST",
         body: formData,
       });
@@ -129,11 +129,14 @@ function AddEditReview({
   };
 
   const handleEditReview = async (reviewId) => {
+    const today = new Date();
+    const dateString = today.toDateString();
     const formData = new FormData();
     try {
       // Append updated review data to FormData
       formData.append("review", review);
       formData.append("rating", rating);
+      formData.append("edited_date", dateString);
       console.log(formData);
 
       // Upload the FormData to the server
