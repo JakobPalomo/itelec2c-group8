@@ -176,7 +176,7 @@
   margin: 10px;
 }
 
-@media screen and (max-width: #ff3f3f) {
+@media screen and (max-width: 1580px) {
   .otpFieldMargin {
     margin-left: 4rem;
     margin-right: 4rem;

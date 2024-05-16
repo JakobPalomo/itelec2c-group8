@@ -269,6 +269,11 @@
   font-size: 50px !important;
 }
 
+.muiErrorIcon {
+  color: #b62e2e !important;
+  font-size: 50px !important;
+}
+
 .confirmModalButtonCont {
   display: flex;
   justify-content: center;

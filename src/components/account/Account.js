@@ -1,11 +1,11 @@
 import Profile from "./Profile";
 import "../../styles/Account.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import PalengkeItem from "../homepage/PalengkeItem";
 import palengkeData from "../../data/palengkeData";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Review from "../palengke/Review.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "../modals/MyModal.js";
 import EditProfile from "./EditProfile.js";
 
@@ -16,6 +16,13 @@ export default function Account({
   setProfile,
   ...sharedProps
 }) {
+  const location = useLocation();
+  useEffect(() => {
+    if (isEditProfileOpen === true) {
+      setIsEditProfileOpen(false);
+    }
+  }, [location.pathname]);
+
   return (
     <>
       <Profile
