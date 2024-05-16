@@ -171,8 +171,9 @@ function ForgotPassword({ ...sharedProps }) {
   };
 
   useEffect(() => {
-    if (otp !== 0) {
+    if (generatedOTP !== 0 && generatedOTP !== "0") {
       sendEmail();
+      console.log("sent email with", generatedOTP);
     }
   }, [generatedOTP]);
 
