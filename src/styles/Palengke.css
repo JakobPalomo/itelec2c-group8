@@ -146,6 +146,11 @@ h1 {
   position: absolute !important;
   transform: translate(40%, 0%);
 }
+.muiIconReview {
+  color: #e74f4f !important;
+  margin-right: 10px;
+  font-size: 20px !important;
+}
 .Reviews {
   margin-bottom: 10px;
   background-color: #ffffff;

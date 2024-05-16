@@ -3,6 +3,7 @@ import HalfRating from "./HalfRating.js";
 import "../../styles/Palengke.css";
 import "../../styles/PalengkeList.css";
 import Avatar from "@mui/material/Avatar";
+import { shadows } from "@mui/system";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
@@ -10,9 +11,10 @@ import CircleIcon from "@mui/icons-material/Circle";
 import RippleButton from "../ui/RippleButton.js";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Button, IconButton, Menu, MenuItem } from "@mui/material";
+import { Button, Typography, IconButton, Menu, MenuItem } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import EditIcon from "@mui/icons-material/Edit";
 import { stringAvatar, stringToColor } from "../../functions/utils.js";
 
 function Review({
@@ -74,6 +76,21 @@ function Review({
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleClose}
+            MenuListProps={{
+              style: {
+                padding: 0,
+              },
+            }}
+            transformOrigin={{
+              horizontal: "right",
+            }}
+            sx={{
+              "& .MuiPaper-root": {
+                boxShadow: "unset",
+                border: "1px solid #d6d6d6",
+              },
+              transform: "translate(50px, 0)",
+            }}
           >
             <MenuItem
               onClick={() => {
@@ -82,8 +99,25 @@ function Review({
                 setOpen(true);
                 setDefaultValues(review);
               }}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "#FFE6E0",
+                  "& .pinkLinkp": {
+                    fontWeight: "700 !important",
+                  },
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#FFE6E0",
+                },
+
+                padding: "10px 15px 10px 15px",
+                width: "120px",
+              }}
             >
-              Edit
+              <EditIcon className="muiIconReview" />
+              <Typography textAlign="center" className="pinkLinkp">
+                Edit
+              </Typography>
             </MenuItem>
             <MenuItem
               onClick={() => {
@@ -91,8 +125,25 @@ function Review({
                 setDeleteClicked(true);
                 setDefaultValues(review);
               }}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "#FFE6E0",
+                  "& .pinkLinkp": {
+                    fontWeight: "700 !important",
+                  },
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#FFE6E0",
+                },
+
+                padding: "10px 15px 10px 15px",
+                width: "120px",
+              }}
             >
-              Delete
+              <DeleteIcon className="muiIconReview" />
+              <Typography textAlign="center" className="pinkLinkp">
+                Delete
+              </Typography>
             </MenuItem>
           </Menu>
         </div>
