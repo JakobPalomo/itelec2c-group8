@@ -14,8 +14,11 @@ import ConfirmModal from "../modals/ConfirmModal";
 import HeaderAndDetail from "../modals/HeaderAndDetail";
 import { TextField, Grid, Avatar, Button } from "@mui/material";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { MuiOtpInput } from "mui-one-time-password-input";
+import emailjs from "@emailjs/browser";
 import "../../styles/EditProfile.css";
 
 import {
@@ -35,6 +38,7 @@ function EditProfile({
   ...sharedProps
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const initialEditProfileErrorData = [
     { field: "username", hasError: false, errMessage: "" },
     { field: "district", hasError: false, errMessage: "" },
@@ -54,6 +58,9 @@ function EditProfile({
     { field: "passwordDelete", hasError: false, errMessage: "" },
     { field: "all", hasError: false, errMessage: "" },
   ];
+  const initialOTPErrorData = [
+    { field: "otp", hasError: false, errMessage: "" },
+  ];
 
   const [username, setUsername] = useState("");
   const [district, setDistrict] = useState("");
@@ -61,12 +68,23 @@ function EditProfile({
   const [region, setRegion] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [coverPhoto, setCoverPhoto] = useState(); // State for cover photo
-  const [showPassword, setShowPassword] = useState(false);
+
   const [oldPassword, setOldPassword] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [emailDelete, setEmailDelete] = useState("");
   const [passwordDelete, setPasswordDelete] = useState("");
+
+  const [generatedOTP, setGeneratedOTP] = useState(0);
+  const [isOTPGenerated, setIsOTPGenerated] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [recendClicked, setResendClicked] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timerRunning, setTimerRunning] = useState(false);
+
+  // Errors
   const [editProfileErrors, setEditProfileErrors] = useState(
     initialEditProfileErrorData
   );
@@ -76,13 +94,16 @@ function EditProfile({
   const [deleteAccountErrors, setDeleteAccountErrors] = useState(
     initialDeleteAccountErrorData
   );
+  const [OTPError, setOTPError] = useState(initialOTPErrorData);
+
+  // Confirm Modals
   const [openEditProfileConfirmModal, setOpenEditProfileConfirmModal] =
     useState(false);
   const [openEditPassConfirmModal, setOpenEditPassConfirmModal] =
     useState(false);
+  const [openOTPModal, setOpenOTPModal] = useState(false);
   const [openDeleteAccountConfirmModal, setOpenDeleteAccountConfirmModal] =
     useState(false);
-  let changePassErr = "";
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -93,7 +114,7 @@ function EditProfile({
   };
 
   const getProfileSrc = () => {
-    if (sharedProps.userProfilePic.path && profile) {
+    if (profile) {
       return `${URL.createObjectURL(profile)}`;
     } else if (sharedProps.userProfilePic.path) {
       return sharedProps.userProfilePic.path;
@@ -315,11 +336,18 @@ function EditProfile({
 
     if (!user) {
       console.error("No user is currently signed in");
+      handleSetError(
+        "all",
+        "An error occured, please try again later.",
+        changePassErrors,
+        setChangePassErrors
+      );
+      setOpenEditPassConfirmModal(false);
       return;
     }
 
     // Create a credential for re-authentication
-    const credential = EmailAuthProvider.credential(emailDelete, oldPassword);
+    const credential = EmailAuthProvider.credential(user.email, oldPassword);
 
     try {
       // Re-authenticate the user
@@ -329,8 +357,18 @@ function EditProfile({
       // Update the password
       await updatePassword(user, password);
       console.log("Password updated successfully");
+      setOpenEditPassConfirmModal(false);
+      setIsEditProfileOpen(false);
+      navigate("/login");
     } catch (error) {
       console.error("Error updating password:", error);
+      handleSetError(
+        "all",
+        "An error occured, please try again later.",
+        changePassErrors,
+        setChangePassErrors
+      );
+      setOpenEditPassConfirmModal(false);
     }
   };
 
@@ -369,11 +407,11 @@ function EditProfile({
           emailDelete,
           passwordDelete
         );
-        setOpenDeleteAccountConfirmModal(true);
+        setOpenOTPModal(true);
       } catch (error) {
         console.error("Error signing in:", error);
         console.log(error.code);
-        if (error.code == "auth/invalid-credentials") {
+        if (error.code === "auth/invalid-credentials") {
           handleSetError(
             "all",
             "Invalid username or password",
@@ -399,17 +437,176 @@ function EditProfile({
   }, [deleteAccountErrors]);
 
   const handleDeleteAccount = async () => {
+    // Delete the user from Firebase Authentication
     try {
-      // Delete the user from Firebase Authentication
-      await auth.deleteUser(sharedProps.currUser.id);
+      const response = await fetch(`/user/delete/${sharedProps.currUser.id}`, {
+        method: "PUT",
+      });
+
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      const data = await response.text();
+      console.log(data);
+
       setIsLoggedIn(false);
       localStorage.removeItem("currUser");
       sharedProps.setCurrUser({});
+      setIsEditProfileOpen(false);
       navigate("/login");
       console.log(`Successfully deleted user: ${sharedProps.currUser.id}`);
     } catch (error) {
-      console.error("Error deleting user and document:", error);
-      // throw error;
+      console.error("Error deleting user:", error.message);
+      handleSetError(
+        "all",
+        "An error occured, please try again later.",
+        deleteAccountErrors,
+        setDeleteAccountErrors
+      );
+    }
+  };
+
+  //OTP VERIFICATION
+  const serviceId = "service_2rae78o";
+  const templateId = "template_i5girgd";
+  const publicKey = "WhMuOqSUglpspgNFJ";
+
+  const sendEmail = () => {
+    emailjs
+      .send(serviceId, templateId, templateParams, publicKey)
+      .then((response) => {
+        console.log("Email sent successfully!", response);
+      })
+      .catch((error) => {
+        console.error("Error sending email:", error);
+      });
+  };
+
+  const templateParams = {
+    from_email: "irarayzel.ji.cics@ust.edu.ph",
+    to_email: emailDelete,
+    otp: generatedOTP,
+  };
+
+  useEffect(() => {
+    if (openOTPModal === true) {
+      generateOTP();
+      startTimer();
+      setTimerRunning(true);
+    } else {
+      setTimerRunning(false);
+      setOtp("");
+      setOTPError(initialOTPErrorData);
+    }
+  }, [openOTPModal]);
+
+  useEffect(() => {
+    let timerInterval;
+    // Start the timer when timerRunning becomes true
+    if (timerRunning === true) {
+      const timerInterval = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 0) {
+            clearInterval(timerInterval);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+
+      // Clear interval on component unmount
+      return () => {
+        clearInterval(timerInterval);
+        setTimerRunning(false);
+      };
+    } else {
+      setTimeLeft(0);
+    }
+  }, [timerRunning]);
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      setTimerRunning(false);
+    }
+  }, [timeLeft]);
+
+  const generateOTP = () => {
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    setGeneratedOTP(otp);
+    console.log(otp);
+  };
+
+  // Function to start the timer
+  const startTimer = () => {
+    setTimeLeft(300);
+    setTimerRunning(true);
+  };
+
+  // Function to format time in mm:ss format
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes < 10 ? "0" + minutes : minutes}:${
+      seconds < 10 ? "0" + seconds : seconds
+    }`;
+  };
+
+  const handleOtpChange = (value) => {
+    setOtp(value);
+  };
+
+  const validateChar = (value, index) => {
+    return matchIsNumeric(value);
+  };
+  const matchIsString = (value) => {
+    return typeof value === "string";
+  };
+  const matchIsNumeric = (text) => {
+    const isNumber = typeof text === "number";
+    const isString = matchIsString(text);
+    return (isNumber || (isString && text !== "")) && !isNaN(Number(text));
+  };
+
+  const handleResend = () => {
+    // generate otp before start timer
+    generateOTP();
+    setIsOTPGenerated(true);
+    startTimer();
+    setOtp("");
+    setOTPError(initialOTPErrorData);
+  };
+
+  useEffect(() => {
+    if (generatedOTP !== 0 && generatedOTP !== "0") {
+      sendEmail();
+      console.log("sent email with", generatedOTP);
+    }
+  }, [generatedOTP]);
+
+  const handleOTPVerify = (option) => {
+    if (option === true) {
+      const tempErrors = initialOTPErrorData;
+
+      if (parseInt(otp) !== generatedOTP) {
+        tempErrors.find((field) => field.field === "otp").hasError = true;
+        tempErrors.find((field) => field.field === "otp").errMessage =
+          "Incorrect OTP";
+      }
+
+      setOTPError(tempErrors);
+
+      if (
+        tempErrors.find((field) => field.field === "otp").hasError === false
+      ) {
+        setIsOTPGenerated(false);
+        setOtp("");
+        setGeneratedOTP(0);
+        setOpenOTPModal(false);
+        setOpenDeleteAccountConfirmModal(true);
+      }
+    } else {
+      setOpenOTPModal(false);
     }
   };
 
@@ -421,23 +618,25 @@ function EditProfile({
           open={openEditProfileConfirmModal}
           setOpen={setOpenEditProfileConfirmModal}
           confirmYes={handleEditProfile}
-          context="edit profile"
+          context="editProfile"
           noIcon={true}
         >
           <strong className="confirmModalHeaderMarginTop">
             Are all details entered correct?
           </strong>
           <div className="detailsCont">
-            <div className="centerAvatar">
-              <Avatar
-                {...(sharedProps.currUser.username &&
-                  stringAvatar(sharedProps.currUser.username))}
-                sx={{ bgcolor: "#B92F37" }}
-                className="avatarConfirm"
-                alt="Aliah"
-                src={getProfileSrc()} ///assets/pfp.jpg
-              />
-            </div>
+            {getProfileSrc() && (
+              <div className="centerAvatar">
+                <Avatar
+                  {...(sharedProps.currUser.username &&
+                    stringAvatar(sharedProps.currUser.username))}
+                  sx={{ bgcolor: "#B92F37" }}
+                  className="avatarConfirm"
+                  alt="Aliah"
+                  src={getProfileSrc()} ///assets/pfp.jpg
+                />
+              </div>
+            )}
             <HeaderAndDetail
               header="Username"
               detail={username}
@@ -469,7 +668,7 @@ function EditProfile({
       )}
       {openEditPassConfirmModal === true && (
         <ConfirmModal
-          title="Confirm Delete"
+          title="Confirm Change"
           open={openEditPassConfirmModal}
           setOpen={setOpenEditPassConfirmModal}
           confirmYes={handleChangePassword}
@@ -493,6 +692,61 @@ function EditProfile({
             Are you sure you want to delete this account? You won't be able to
             login again into this account.
           </div>
+        </ConfirmModal>
+      )}
+      {openOTPModal === true && (
+        <ConfirmModal
+          title="OTP Verification"
+          open={openOTPModal}
+          setOpen={setOpenOTPModal}
+          confirmYes={handleOTPVerify}
+          context="verifyOTP"
+          noIcon={true}
+          yesText="Verify"
+          noText="Cancel"
+        >
+          <p className="subtextLogin">
+            Enter the OTP code sent to{" "}
+            <span className="emailSpan">{emailDelete}</span>
+          </p>
+          <div className="otpFieldModalMargin">
+            <MuiOtpInput
+              value={otp}
+              onChange={handleOtpChange}
+              length={6}
+              autoFocus
+              validateChar={validateChar}
+              gap={2}
+            />
+            <Typography
+              id="transition-modal-title"
+              variant="h6"
+              component="h2"
+              className="errorSpanNoLabel"
+            >
+              {getHasError("otp", OTPError) === true && (
+                <span>{getErrMessage("otp", OTPError)}</span>
+              )}
+            </Typography>
+          </div>
+          <p className="subtextLogin">Didn’t receive the OTP code?</p>
+          {timeLeft != 0 ? (
+            <p className="subtextLogin">
+              Resend Code in{" "}
+              <span className="emailSpan">{formatTime(timeLeft)}</span>
+            </p>
+          ) : (
+            <p className="subtextLogin">
+              <span
+                className="resendSpan"
+                onClick={() => {
+                  handleResend();
+                }}
+              >
+                Resend Code
+              </span>
+            </p>
+          )}
         </ConfirmModal>
       )}
       <Profile

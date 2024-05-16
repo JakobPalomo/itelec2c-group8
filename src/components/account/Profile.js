@@ -43,9 +43,6 @@ export default function Profile({
       const value = (hash >> (i * 8)) & 0xff;
       color += `00${value.toString(16)}`.slice(-2);
     }
-    /* eslint-enable no-bitwise */
-    console.log("color");
-    console.log(color);
     return color;
   }
 
@@ -117,7 +114,7 @@ export default function Profile({
   }, [isEditProfileOpen]);
 
   const getProfileSrc = () => {
-    if (sharedProps.userProfilePic.path && profile) {
+    if (profile) {
       return `${URL.createObjectURL(profile)}`;
     } else if (sharedProps.userProfilePic.path) {
       return sharedProps.userProfilePic.path;

@@ -30,3 +30,33 @@
   justify-content: center;
   margin-bottom: 10px;
 }
+
+.otpFieldModalMargin .MuiInputBase-input {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.otpFieldModalMargin .MuiTextField-root {
+  /* background-color: red;
+  border-radius: 8px; */
+}
+
+.otpFieldModalMargin .MuiInputBase-root {
+  background-color: white;
+  border-radius: 8px;
+}
+
+.otpFieldModalMargin .MuiInputBase-root:hover {
+  border-color: #ff6262;
+  outline: none !important;
+}
+
+.otpFieldModalMargin .MuiInputBase-root:focus {
+  border-color: #ff6262;
+}
+.otpFieldModalMargin .Mui-focused {
+  outline: 2px solid rgb(255, 96, 96) !important;
+}
+.otpFieldModalMargin .Mui-focused:hover {
+  outline: 2px solid rgb(255, 96, 96) !important;
+}

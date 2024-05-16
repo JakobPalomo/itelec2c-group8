@@ -214,18 +214,20 @@ function Register({ ...sharedProps }) {
       });
 
       if (!response.ok) {
+        console.log("response not ok");
         throw new Error("Failed to add user to Firestore");
       }
 
       const data = await response.json();
-      console.log("responseok");
+      console.log("responseok", data);
       setOpenConfirmModal(false);
       navigate("/login");
 
       return user;
     } catch (error) {
       console.error("Error signing up:", error);
-      throw error;
+      setOpenConfirmModal(false);
+      handleSetError("email", "Email adress already in use");
     }
   };
 

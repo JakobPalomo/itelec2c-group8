@@ -169,13 +169,15 @@ function App() {
                 ...doc.data(),
               });
             });
-            console.log(`Updating state for collection: ${collectionName}`);
-            console.log(updatedData);
             stateSetter(updatedData);
             console.log(`State updated for collection: ${collectionName}`);
             console.log(updatedData);
 
-            if (collectionName == "palengke" || collectionName == "review") {
+            if (
+              collectionName == "palengke" ||
+              collectionName == "review" ||
+              collectionName == "user"
+            ) {
               // Fetch the media collection
               fetch(`/list/media`)
                 .then((res) => res.json())

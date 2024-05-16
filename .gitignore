@@ -5,7 +5,8 @@
 /.pnp
 .pnp.js
 /server/node_modules
-/assets/uploads/*
+/server/palengkerist-31337-6a4e784b0c18.json
+/public/uploads/*
 
 # testing
 /coverage

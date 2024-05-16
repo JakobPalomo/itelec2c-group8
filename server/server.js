@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
-
+const { admin } = require("./admin");
 const { db } = require("./firebase");
 const {
   collection,
@@ -119,6 +119,7 @@ app.get("/user/:userId", async (req, res) => {
   }
 });
 
+// GET USER'S PROFILE
 app.get("/user-profile", async (req, res) => {
   try {
     const userId = req.query.userid;
@@ -180,6 +181,70 @@ app.get("/user-arrays", async (req, res) => {
   } catch (error) {
     console.error("Error getting documents:", error);
     res.status(500).send("Error getting documents");
+  }
+});
+
+// CHANGE PASS (OTP)
+app.post("/user/change-pass", async (req, res) => {
+  const { email, new_password } = req.body;
+
+  try {
+    // Update user's password in Firebase Authentication
+    await admin.auth().updateUserByEmail(email, {
+      password: new_password,
+    });
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).json({ error: "Failed to update password" });
+  }
+});
+
+// DELETE USER
+app.put("/user/delete/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Get the user document reference
+    const userDocRef = admin.firestore().collection("user").doc(userId);
+    console.log("Attempting to fetch userId:", userId);
+
+    // Fetch the user document
+    const userDocSnapshot = await userDocRef.get();
+
+    // Check if the user document exists
+    if (!userDocSnapshot.exists) {
+      console.log(`User with ID ${userId} not found.`);
+      return res.status(404).send("User not found");
+    }
+
+    // Get the user data
+    const userData = userDocSnapshot.data();
+    console.log("userData", userData);
+
+    const mediaId = userData.profile;
+    console.log("mediaId: ", mediaId);
+
+    // If mediaId exists, delete the related media document
+    if (mediaId) {
+      const mediaDocRef = admin.firestore().collection("media").doc(mediaId);
+      await mediaDocRef.delete();
+    }
+
+    // Update the user document
+    await userDocRef.update({
+      username: "Deleted User",
+      profile: "",
+    });
+
+    // Delete the user from authentication
+    await admin.auth().deleteUser(userId);
+
+    res.status(200).send("User updated successfully");
+  } catch (error) {
+    console.log("Error during user deletion process:", error);
+    res.status(500).send("Error updating user: " + error.message);
   }
 });
 
