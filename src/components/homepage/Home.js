@@ -50,6 +50,23 @@ function Home({ ...sharedProps }) {
     palengke.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const getAverageRating = (palengke) => {
+    let totalRating = 0;
+    if (palengke.reviews.length > 0) {
+      palengke.reviews.forEach((review) => {
+        totalRating += parseInt(review?.rating);
+      });
+      const averageRating = totalRating / palengke.reviews.length;
+      return averageRating.toFixed(1);
+    } else {
+      return 0;
+    }
+  };
+
+  const getAverageRatingInt = () => {
+    return Math.round(parseFloat(getAverageRating()));
+  };
+
   return (
     <>
       {addPalengkeClicked === true && (
@@ -122,6 +139,7 @@ function Home({ ...sharedProps }) {
               <PalengkeItem
                 palengke={palengke}
                 mediaList={sharedProps.mediaList}
+                {...sharedProps}
               />
             </Link>
           ))}

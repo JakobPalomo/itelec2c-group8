@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../../styles/PalengkeList.css";
 import media_types from "../../data/media_types.js";
 import business_statuses from "../../data/business_statuses.js";
@@ -19,12 +19,14 @@ function PalengkeItem({
   marg,
   showIcons,
   prev,
+  ...sharedProps
 }) {
   const [media, setMedia] = useState("");
   const [mediaType, setMediaType] = useState("");
   const [status, setStatus] = useState("");
   const [statusColor, setStatusColor] = useState("");
   const [ratingColor, setRatingColor] = useState("");
+  const [rating, setRating] = useState("");
 
   const getMedia = () => {
     if (palengke.media && palengke.media.length > 0) {
@@ -65,29 +67,73 @@ function PalengkeItem({
   };
 
   const getRatingColor = () => {
-    if (palengke.rating !== null) {
-      const roundedNum = Math.round(palengke.rating);
-      if (roundedNum == -1) {
+    const roundedNum = getAverageRatingInt();
+    if (roundedNum > 0) {
+      if (roundedNum <= 1) {
         setRatingColor("#969595");
-      } else if (roundedNum <= 1) {
-        setRatingColor("#FF6262");
       } else if (roundedNum <= 2) {
-        setRatingColor("#FF8855");
+        setRatingColor("#FF6262");
       } else if (roundedNum <= 3) {
-        setRatingColor("#F2C038");
+        setRatingColor("#FF8855");
       } else if (roundedNum <= 4) {
-        setRatingColor("#B1CE3B");
+        setRatingColor("#F2C038");
       } else if (roundedNum <= 5) {
+        setRatingColor("#B1CE3B");
+      } else if (roundedNum <= 6) {
         setRatingColor("#6EA837");
       }
+    } else {
+      setRatingColor("#888888");
     }
+  };
+
+  const getAverageRating = () => {
+    let totalRating = 0;
+    if (palengkeReviews.length != 0) {
+      palengkeReviews.forEach((review) => {
+        totalRating += parseInt(review?.rating);
+      });
+      const averageRating = totalRating / palengkeReviews.length;
+      return averageRating.toFixed(1);
+    } else {
+      return 0;
+    }
+  };
+
+  const getAverageRatingInt = () => {
+    return Math.round(parseFloat(getAverageRating()));
   };
 
   useEffect(() => {
     getMedia();
     getStatus();
-    getRatingColor();
+    getPalengkeReviews();
+    console.log("rating", rating);
+    console.log(palengke.reviews);
+    console.log(palengkeReviews.length);
+    console.log(sharedProps.reviewList);
+    console.log(palengke.id);
   }, []);
+
+  const [palengkeReviews, setPalengkeReviews] = useState([]);
+
+  const getPalengkeReviews = useCallback(() => {
+    const palengkeReviewList = sharedProps.reviewList;
+    if (palengkeReviewList && palengkeReviewList.length > 0) {
+      const filteredReviews = palengkeReviewList.filter(
+        (review) => review.palengke_id === palengke.id
+      );
+      setPalengkeReviews(filteredReviews);
+    }
+    getRatingColor();
+  }, [palengke.id, sharedProps.reviewList]);
+
+  useEffect(() => {
+    setRating(getAverageRating());
+    getRatingColor();
+    console.log("rating", rating);
+    console.log("rating color", ratingColor);
+  }, [palengkeReviews]);
 
   return (
     <div
@@ -163,10 +209,11 @@ function PalengkeItem({
                 className="ratingCont"
                 style={{ backgroundColor: ratingColor }}
               >
-                {parseInt(palengke.rating) > 0 ? (
+                {rating > 0 ? (
                   <>
                     <StarRoundedIcon className="muiStarIcon" />
-                    {palengke.rating.toFixed(1).toString()}
+                    {/* {palengke.rating.toFixed(1).toString()} */}
+                    {rating}
                   </>
                 ) : (
                   <span className="noRatingCont">No rating yet</span>

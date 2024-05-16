@@ -311,7 +311,7 @@ function Register({ ...sharedProps }) {
             md={7}
             sx={{
               backgroundImage:
-                "url(https://source.unsplash.com/random?wallpapers)",
+                "url(https://source.unsplash.com/random?wetmarket)",
               backgroundRepeat: "no-repeat",
               backgroundColor: (t) =>
                 t.palette.mode === "light"
