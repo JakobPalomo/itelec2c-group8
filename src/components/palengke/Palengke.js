@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
-import StarRoundedIcon from "@mui/icons-material/StarRounded";
-import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
-import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
+import { Link, useParams } from "react-router-dom";
 import Report from "./Report";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import HalfRating from "./HalfRating";
 import Review from "./Review";
 import MorePalengke from "./MorePalengke";
@@ -13,10 +8,18 @@ import HorizontalBars from "./BarChart";
 import Modal from "../modals/MyModal";
 import AddEditReview from "../modals/AddEditReview";
 import ConfirmModal from "../modals/ConfirmModal";
+import Carousel from "../ui/Carousel";
 import palengkeImage from "./palengke.jpg";
 import reviewsData from "./reviewsData.json";
+import business_statuses from "../../data/business_statuses.js";
+import AddIcon from "@mui/icons-material/Add";
+import Button from "@mui/material/Button";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import StarRoundedIcon from "@mui/icons-material/StarRounded";
+import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Link } from "react-router-dom";
+import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
+import CircleIcon from "@mui/icons-material/Circle";
 
 function Palengke({ ...sharedProps }) {
   const { palengkeId } = useParams();
@@ -24,13 +27,16 @@ function Palengke({ ...sharedProps }) {
   const [addEditReviewClicked, setAddEditReviewClicked] = useState(false);
   const [deleteClicked, setDeleteClicked] = useState(false);
   const [username, setUsername] = useState("");
+  const [reviewUserProfilePic, setReviewUserProfilePic] = useState("");
   const [palengke, setPalengke] = useState({});
   const [palengkeReviews, setPalengkeReviews] = useState([]);
   const [palengkeAndMyReviews, setPalengkeAndMyReviews] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [defaultValues, setDefaultValues] = useState({});
   const [reviewsDataState, setReviewsDataState] = useState(reviewsData);
+  const [status, setStatus] = useState("");
   const [statusColor, setStatusColor] = useState("");
+  const [media, setMedia] = useState([]);
   const [ratingColor, setRatingColor] = useState("");
   const [rating, setRating] = useState("");
   const [sortCriterion, setSortCriterion] = useState("date");
@@ -92,53 +98,126 @@ function Palengke({ ...sharedProps }) {
     [sharedProps.currUser]
   );
 
-  const getUsername = useCallback(() => {
-    const currUserId = sharedProps.currUser?.id;
-    if (currUserId && sharedProps.userList.length !== 0) {
-      const user = sharedProps.userList.find((user) => user.id === currUserId);
-      if (user) {
-        setUsername(user.username);
-      }
-    }
-  }, [sharedProps.currUser, sharedProps.userList]);
-
   const isCurrUserReview = (review_id) => {
     return palengkeAndMyReviews.some((review) => review.id === review_id);
   };
 
+  const getMedia = useCallback(
+    (palengkeId) => {
+      console.log("palengkeId", palengkeId);
+      const media = [];
+      const palengke = sharedProps.palengkeList.find(
+        (palengke) => palengke.id === palengkeId
+      );
+
+      console.log("Palengke:", palengke);
+
+      if (palengke && palengke.media && palengke.media.length > 0) {
+        const mediaItems = palengke.media.map((mediaId) =>
+          sharedProps.mediaList.find((media) => media.id === mediaId)
+        );
+
+        mediaItems.forEach((item) => {
+          if (item) {
+            media.push(item);
+          } else {
+            console.error("Media not found");
+          }
+        });
+      } else {
+        console.error("No media found for palengke ID:", palengkeId);
+      }
+
+      console.log("Media:", media);
+      setMedia(media);
+      return media;
+    },
+    [sharedProps.mediaList, sharedProps.palengkeList]
+  );
+
+  const getStatus = useCallback(
+    (palengkeId) => {
+      const palengke = sharedProps.palengkeList.find(
+        (palengke) => palengke.id === palengkeId
+      );
+      //find the status name of palengke.business_status
+      if (palengke?.business_status !== null) {
+        const statusObject = business_statuses.find(
+          (status) => status.business_status_id === palengke.business_status
+        );
+        if (statusObject) {
+          setStatus(statusObject.name);
+          setStatusColor(statusObject.color);
+        } else {
+          console.error("Status object not found");
+        }
+      } else {
+        console.error("No business status found for palengke ID:", palengkeId);
+      }
+    },
+    [sharedProps.palengkeList]
+  );
+
   const getRatingColor = useCallback(() => {
-    const roundedNum = getAverageRatingInt();
+    const roundedNum = rating;
     if (roundedNum > 0) {
-      if (roundedNum <= 1) {
+      if (roundedNum <= 0) {
         setRatingColor("#969595");
-      } else if (roundedNum <= 2) {
+      } else if (roundedNum <= 1) {
         setRatingColor("#FF6262");
-      } else if (roundedNum <= 3) {
+      } else if (roundedNum <= 2) {
         setRatingColor("#FF8855");
-      } else if (roundedNum <= 4) {
+      } else if (roundedNum <= 3) {
         setRatingColor("#F2C038");
-      } else if (roundedNum <= 5) {
+      } else if (roundedNum <= 4) {
         setRatingColor("#B1CE3B");
-      } else if (roundedNum <= 6) {
+      } else if (roundedNum <= 5) {
         setRatingColor("#6EA837");
       }
     } else {
       setRatingColor("#636363");
     }
-  }, []);
+  }, [rating]);
 
   useEffect(() => {
     getPalengke(palengkeId);
     getPalengkeReviews();
-    getUsername();
-  }, [palengkeId, getPalengke, getPalengkeReviews, getUsername]);
+
+    getMedia(palengkeId);
+    getStatus(palengkeId);
+  }, [palengkeId, getPalengke, getPalengkeReviews, getMedia, getStatus]);
 
   useEffect(() => {
     setRating(getAverageRating());
-    getRatingColor();
-    console.log("rating", rating);
-    console.log("rating color", ratingColor);
   }, [palengkeReviews]);
+
+  useEffect(() => {
+    getRatingColor();
+  }, [rating]);
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [previousImageIndex, setPreviousImageIndex] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPreviousImageIndex(currentImageIndex);
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % media.length);
+      setIsTransitioning(true);
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, [currentImageIndex, media.length]);
+
+  useEffect(() => {
+    if (isTransitioning) {
+      const timeout = setTimeout(() => {
+        setIsTransitioning(false);
+        setPreviousImageIndex(null);
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isTransitioning]);
 
   const handleDeleteReview = async () => {
     try {
@@ -210,8 +289,6 @@ function Palengke({ ...sharedProps }) {
     setPalengkeReviews(sortedReviews);
   };
 
-  // console.log("Rating color:", ratingColor);
-
   return (
     <>
       {addEditReviewClicked && (
@@ -259,7 +336,8 @@ function Palengke({ ...sharedProps }) {
         </div>
 
         <div className="details">
-          <img alt="market" src={palengkeImage} className="Marketimg"></img>
+          {/* <img alt="market" src={palengkeImage} className="Marketimg"></img> */}
+          <Carousel media={media} />
           <div className="content">
             <div className="namerate">
               <p className="welcome">{palengke?.name}</p>
@@ -288,6 +366,23 @@ function Palengke({ ...sharedProps }) {
                     No rating yet
                   </div>
                 )}
+              </div>
+              {/* Status icon */}
+              <div className="statusIconCont">
+                <div className="statusIcon">
+                  <CircleIcon
+                    className="statusCircle"
+                    style={{ color: statusColor }}
+                  />
+                  <strong>{status}</strong>
+                </div>
+                <div className="statusIconInside">
+                  <CircleIcon
+                    className="statusCircle"
+                    style={{ color: statusColor }}
+                  />
+                  <strong>{status}</strong>
+                </div>
               </div>
               <Report style={{ marginLeft: "500px" }} />
             </div>
@@ -338,6 +433,7 @@ function Palengke({ ...sharedProps }) {
             <p className="welcome">{getAverageRating()}</p>
             <div>
               <HalfRating
+                name="read-only"
                 defaultValue={getAverageRatingInt()}
                 disabled={true}
               />
@@ -360,9 +456,9 @@ function Palengke({ ...sharedProps }) {
                 setOpen={setAddEditReviewClicked}
                 setDeleteClicked={setDeleteClicked}
                 review={review}
-                username={username}
                 setIsEditing={setIsEditing}
                 setDefaultValues={setDefaultValues}
+                {...sharedProps}
               />
             );
           })}

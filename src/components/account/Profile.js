@@ -132,7 +132,6 @@ export default function Profile({
             <Avatar
               {...(sharedProps.currUser.username &&
                 stringAvatar(sharedProps.currUser.username))}
-              sx={{ bgcolor: "#B92F37" }}
               className="avatar"
               alt="Aliah"
               src={getProfileSrc()} ///assets/pfp.jpg

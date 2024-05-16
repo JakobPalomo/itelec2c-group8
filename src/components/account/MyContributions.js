@@ -25,6 +25,7 @@ function MyContributions({ ...sharedProps }) {
               min={"900px"}
               marg={"0"}
               mediaList={sharedProps.mediaList}
+              {...sharedProps}
             />
           </Link>
         ))}

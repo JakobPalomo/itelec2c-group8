@@ -174,10 +174,15 @@ function App() {
             console.log(updatedData);
 
             if (
-              collectionName == "palengke" ||
-              collectionName == "review" ||
-              collectionName == "user"
+              collectionName === "palengke" ||
+              collectionName === "review" ||
+              collectionName === "user"
             ) {
+              getUserSaves();
+              getProfilePicPath();
+              getUserContributions();
+              getUserReviews();
+
               // Fetch the media collection
               fetch(`/list/media`)
                 .then((res) => res.json())
@@ -187,6 +192,8 @@ function App() {
                 .catch((error) => {
                   console.error("Error fetching media:", error);
                 });
+            } else if (collectionName === "upvote") {
+              getUserUpvotes();
             }
           } else {
             console.error(
@@ -271,7 +278,7 @@ function App() {
       }
       const data = await response.json();
       setUserContributions(data);
-      console.log(data);
+      console.log("my contributions", data);
     } catch (error) {
       console.log("Error getting user's contributons.", error);
     }
@@ -286,7 +293,7 @@ function App() {
       }
       const data = await response.json();
       setUserReviews(data);
-      console.log(data);
+      console.log("my reviews", data);
     } catch (error) {
       console.log("Error getting user's reviews.", error);
     }
@@ -301,7 +308,7 @@ function App() {
       }
       const data = await response.json();
       setUserSaves(data);
-      console.log(data);
+      console.log("my saves", data);
     } catch (error) {
       console.log("Error getting user's saves.", error);
     }
@@ -316,7 +323,7 @@ function App() {
       }
       const data = await response.json();
       setUserUpvotes(data);
-      console.log(data);
+      console.log("my upvotes", data);
     } catch (error) {
       console.log("Error getting user's upvotes.", error);
     }

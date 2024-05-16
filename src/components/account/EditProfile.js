@@ -630,7 +630,6 @@ function EditProfile({
                 <Avatar
                   {...(sharedProps.currUser.username &&
                     stringAvatar(sharedProps.currUser.username))}
-                  sx={{ bgcolor: "#B92F37" }}
                   className="avatarConfirm"
                   alt="Aliah"
                   src={getProfileSrc()} ///assets/pfp.jpg
