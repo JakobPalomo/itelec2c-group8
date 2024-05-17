@@ -46,6 +46,7 @@ function Review({
         console.log("username", user.username);
         return user.username;
       }
+      return "Deleted User";
     }
   };
 

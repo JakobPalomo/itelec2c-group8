@@ -20,6 +20,11 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { styled } from "@mui/material/styles";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { db, auth } from "../../firebase";
+import {
+  handleSetError,
+  getHasError,
+  getErrMessage,
+} from "../../functions/utils";
 
 const defaultTheme = createTheme();
 const VisuallyHiddenInput = styled("input")({
@@ -60,41 +65,6 @@ function Register({ ...sharedProps }) {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  // Handling errors
-  const handleSetError = (variable, message) => {
-    console.log(`setting error: ${variable}; ${message}`);
-    const index = errors.findIndex((field) => {
-      console.log(`field.field: ${field.field} = ${variable.toString()}`);
-      console.log(field.field === variable.toString());
-      return field.field === variable.toString();
-    });
-    if (index !== -1) {
-      const updatedFields = [...errors];
-      updatedFields[index] = {
-        ...updatedFields[index],
-        hasError: true,
-        errMessage: message,
-      };
-      setErrors(updatedFields);
-    }
-  };
-  const getHasError = (variable) => {
-    const index = errors.findIndex(
-      (field) => field.field === variable.toString()
-    );
-    if (index !== -1) {
-      return errors[index].hasError;
-    }
-  };
-  const getErrMessage = (variable) => {
-    const index = errors.findIndex(
-      (field) => field.field === variable.toString()
-    );
-    if (index !== -1) {
-      return errors[index].errMessage;
-    }
-  };
 
   const handleFileUploadClick = () => {
     if (fileUploadRef.current) {
@@ -227,7 +197,7 @@ function Register({ ...sharedProps }) {
     } catch (error) {
       console.error("Error signing up:", error);
       setOpenConfirmModal(false);
-      handleSetError("email", "Email adress already in use");
+      handleSetError("email", "Email adress already in use", errors, setErrors);
     }
   };
 
@@ -384,8 +354,8 @@ function Register({ ...sharedProps }) {
                   value={username}
                   maxLength={100}
                   placeholder="Your username"
-                  hasError={getHasError("username")}
-                  errMessage={getErrMessage("username")}
+                  hasError={getHasError("username", errors)}
+                  errMessage={getErrMessage("username", errors)}
                 />
                 <InputText
                   type={showPassword === true ? "text" : "password"}
@@ -395,8 +365,8 @@ function Register({ ...sharedProps }) {
                   value={password}
                   maxLength={100}
                   placeholder="Your password"
-                  hasError={getHasError("password")}
-                  errMessage={getErrMessage("password")}
+                  hasError={getHasError("password", errors)}
+                  errMessage={getErrMessage("password", errors)}
                   visibility={showPassword}
                   setVisibility={handlePasswordVisibility}
                   iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
@@ -410,8 +380,8 @@ function Register({ ...sharedProps }) {
                   value={confirmPassword}
                   maxLength={100}
                   placeholder="Confirm your password"
-                  hasError={getHasError("confirmPassword")}
-                  errMessage={getErrMessage("confirmPassword")}
+                  hasError={getHasError("confirmPassword", errors)}
+                  errMessage={getErrMessage("confirmPassword", errors)}
                   visibility={showConfirmPassword}
                   setVisibility={handleConfirmPasswordVisibility}
                   iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
@@ -425,8 +395,8 @@ function Register({ ...sharedProps }) {
                   value={email}
                   maxLength={100}
                   placeholder="Your email address"
-                  hasError={getHasError("email")}
-                  errMessage={getErrMessage("email")}
+                  hasError={getHasError("email", errors)}
+                  errMessage={getErrMessage("email", errors)}
                 />
                 <InputText
                   type="text"
@@ -435,8 +405,8 @@ function Register({ ...sharedProps }) {
                   value={district}
                   maxLength={100}
                   placeholder="Your district"
-                  hasError={getHasError("district")}
-                  errMessage={getErrMessage("district")}
+                  hasError={getHasError("district", errors)}
+                  errMessage={getErrMessage("district", errors)}
                 />
                 <InputText
                   type="text"
@@ -445,8 +415,8 @@ function Register({ ...sharedProps }) {
                   value={region}
                   maxLength={100}
                   placeholder="Your region"
-                  hasError={getHasError("region")}
-                  errMessage={getErrMessage("region")}
+                  hasError={getHasError("region", errors)}
+                  errMessage={getErrMessage("region", errors)}
                 />
                 <InputText
                   type="text"
@@ -455,8 +425,8 @@ function Register({ ...sharedProps }) {
                   value={city}
                   maxLength={100}
                   placeholder="Your city or province"
-                  hasError={getHasError("city")}
-                  errMessage={getErrMessage("city")}
+                  hasError={getHasError("city", errors)}
+                  errMessage={getErrMessage("city", errors)}
                 />
                 <Box
                   sx={{

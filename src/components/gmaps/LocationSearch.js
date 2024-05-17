@@ -20,6 +20,7 @@ function LocationSearch({
   setLocation,
   getHasError,
   getErrMessage,
+  errors,
   openMap,
   setOpenMap,
   prevModalHeight,
@@ -28,7 +29,7 @@ function LocationSearch({
   const [openSelectLoc, setOpenSelectLoc] = useState(false);
 
   useEffect(() => {
-    if (openMap == true) {
+    if (openMap === true) {
       setOpenSelectLoc(false);
     }
   }, [openSelectLoc]);
@@ -102,8 +103,8 @@ function LocationSearch({
         value={address}
         maxLength={255}
         placeholder="Select a location"
-        hasError={getHasError("address")}
-        errMessage={getErrMessage("address")}
+        hasError={getHasError("address", errors)}
+        errMessage={getErrMessage("address", errors)}
         options={options}
         setOptions={setOptions}
         //   inputRef={(ref) => onLoad(ref)}

@@ -11,6 +11,11 @@ import ConfirmModal from "../modals/ConfirmModal";
 import "../../styles/Login.css";
 import "../../styles/ModalContent.css";
 import "../../styles/EditProfile.css";
+import {
+  handleSetError,
+  getHasError,
+  getErrMessage,
+} from "../../functions/utils.js";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
@@ -42,41 +47,6 @@ function ChangePassword({ ...sharedProps }) {
   const [errors, setErrors] = useState(initialErrorData);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [openErrorModal, setOpenErrorModal] = useState(false);
-
-  // Handling errors
-  const handleSetError = (variable, message) => {
-    console.log(`setting error: ${variable}; ${message}`);
-    const index = errors.findIndex((field) => {
-      console.log(`field.field: ${field.field} = ${variable.toString()}`);
-      console.log(field.field === variable.toString());
-      return field.field === variable.toString();
-    });
-    if (index !== -1) {
-      const updatedFields = [...errors];
-      updatedFields[index] = {
-        ...updatedFields[index],
-        hasError: true,
-        errMessage: message,
-      };
-      setErrors(updatedFields);
-    }
-  };
-  const getHasError = (variable) => {
-    const index = errors.findIndex(
-      (field) => field.field === variable.toString()
-    );
-    if (index !== -1) {
-      return errors[index].hasError;
-    }
-  };
-  const getErrMessage = (variable) => {
-    const index = errors.findIndex(
-      (field) => field.field === variable.toString()
-    );
-    if (index !== -1) {
-      return errors[index].errMessage;
-    }
-  };
 
   // Password Visibility
   const handlePasswordVisibility = () => {
@@ -131,7 +101,6 @@ function ChangePassword({ ...sharedProps }) {
       } else {
         setOpenErrorModal(true);
       }
-      navigate("/login");
     }
   };
 
@@ -157,7 +126,12 @@ function ChangePassword({ ...sharedProps }) {
       navigate("/login");
     } catch (error) {
       console.error("Error adding media:", error);
-      handleSetError("all", "An error occured, please try again later");
+      handleSetError(
+        "all",
+        "An error occured, please try again later",
+        errors,
+        setErrors
+      );
       setOpenConfirmModal(false);
     }
   };
@@ -177,7 +151,7 @@ function ChangePassword({ ...sharedProps }) {
           title="Confirm Delete"
           open={openConfirmModal}
           setOpen={setOpenConfirmModal}
-          confirmYes={handleChangePassword}
+          confirmYes={changePassword}
           context="changePassFromForgotPass"
         >
           <div>Are you sure you want to change your password?</div>
@@ -263,8 +237,8 @@ function ChangePassword({ ...sharedProps }) {
                   value={password}
                   maxLength={100}
                   placeholder="Your password"
-                  hasError={getHasError("password")}
-                  errMessage={getErrMessage("password")}
+                  hasError={getHasError("password", errors)}
+                  errMessage={getErrMessage("password", errors)}
                   visibility={showPassword}
                   setVisibility={handlePasswordVisibility}
                   iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
@@ -278,16 +252,16 @@ function ChangePassword({ ...sharedProps }) {
                   value={confirmPassword}
                   maxLength={100}
                   placeholder="Confirm your password"
-                  hasError={getHasError("confirmPassword")}
-                  errMessage={getErrMessage("confirmPassword")}
+                  hasError={getHasError("confirmPassword", errors)}
+                  errMessage={getErrMessage("confirmPassword", errors)}
                   visibility={showConfirmPassword}
                   setVisibility={handleConfirmPasswordVisibility}
                   iconOn={<VisibilityIcon className="muiVisibilityIcon" />}
                   iconOff={<VisibilityOffIcon className="muiVisibilityIcon" />}
                 />
-                {getHasError("all") && (
+                {getHasError("all", errors) && (
                   <span className="centerText errorSpanProfile">
-                    {getErrMessage("all")}
+                    {getErrMessage("all", errors)}
                   </span>
                 )}
                 <Box

@@ -129,6 +129,45 @@ Button .MuiTouchRipple-root {
   overflow-wrap: anywhere;
 }
 
+.carouselmuiLeftRightIcon {
+  font-size: 30px !important;
+}
+
+.rotateLeft {
+  transform: rotate(90deg);
+}
+.rotateRight {
+  transform: rotate(-90deg);
+}
+
+.iconContainer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.iconContainer::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.altText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
 @media screen and (max-width: 600px) {
   .navTopMargin {
     height: 90px !important;

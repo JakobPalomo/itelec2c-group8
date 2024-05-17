@@ -171,6 +171,7 @@ function ForgotPassword({ ...sharedProps }) {
   };
 
   useEffect(() => {
+    console.log("timerRunning", timerRunning);
     if (generatedOTP !== 0 && generatedOTP !== "0") {
       sendEmail();
       console.log("sent email with", generatedOTP);
@@ -309,7 +310,7 @@ function ForgotPassword({ ...sharedProps }) {
               </span>
               <p className="subtextLogin">
                 Enter the OTP code sent to{" "}
-                <span className="emailSpan">mam**03**@gmail.com</span>
+                <span className="emailSpan">{email}</span>
               </p>
               <div className="otpFieldMargin">
                 <MuiOtpInput

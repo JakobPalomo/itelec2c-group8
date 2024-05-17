@@ -191,12 +191,15 @@ app.get("/user-arrays", async (req, res) => {
 });
 
 // CHANGE PASS (OTP)
-app.post("/user/change-pass", async (req, res) => {
+app.post("/user/change-pass", upload.none(), async (req, res) => {
   const { email, new_password } = req.body;
 
   try {
-    // Update user's password in Firebase Authentication
-    await admin.auth().updateUserByEmail(email, {
+    console.log("email", email);
+    const userRecord = await admin.auth().getUserByEmail(email);
+
+    // Update the user's password
+    await admin.auth().updateUser(userRecord.uid, {
       password: new_password,
     });
 

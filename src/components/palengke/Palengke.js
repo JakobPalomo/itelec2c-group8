@@ -12,6 +12,9 @@ import Carousel from "../ui/Carousel";
 import palengkeImage from "./palengke.jpg";
 import reviewsData from "./reviewsData.json";
 import business_statuses from "../../data/business_statuses.js";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -335,66 +338,70 @@ function Palengke({ ...sharedProps }) {
           </button>
         </div>
 
-        <div className="details">
+        <Box sx={{ flexGrow: 1, padding: 0 }} className="details">
           {/* <img alt="market" src={palengkeImage} className="Marketimg"></img> */}
-          <Carousel media={media} />
-          <div className="content">
-            <div className="namerate">
-              <p className="welcome">{palengke?.name}</p>
-              <div
-                className="ratingContBig"
-                style={{
-                  margin: "20px",
-                  backgroundColor: ratingColor || "#636363", // Fallback color if ratingColor is invalid
-                }}
-              >
-                {rating !== 0 ? (
-                  <>
-                    <StarRoundedIcon className="muiStarIcon" />
-                    {rating}
-                  </>
-                ) : (
-                  <div
-                    style={{
-                      fontSize: "20px",
-                      height: "36px",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                      marginRight: "5px",
-                    }}
-                  >
-                    No rating yet
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <Carousel media={media} />
+            </Grid>
+            <Grid item xs={6} className="content">
+              <div className="namerate">
+                <p className="welcome">{palengke?.name}</p>
+                <div
+                  className="ratingContBig"
+                  style={{
+                    margin: "20px",
+                    backgroundColor: ratingColor || "#636363", // Fallback color if ratingColor is invalid
+                  }}
+                >
+                  {rating !== 0 ? (
+                    <>
+                      <StarRoundedIcon className="muiStarIcon" />
+                      {rating}
+                    </>
+                  ) : (
+                    <div
+                      style={{
+                        fontSize: "20px",
+                        height: "36px",
+                        marginTop: "5px",
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                      }}
+                    >
+                      No rating yet
+                    </div>
+                  )}
+                </div>
+                {/* Status icon */}
+                <div className="statusIconCont">
+                  <div className="statusIcon">
+                    <CircleIcon
+                      className="statusCircle"
+                      style={{ color: statusColor }}
+                    />
+                    <strong>{status}</strong>
                   </div>
-                )}
-              </div>
-              {/* Status icon */}
-              <div className="statusIconCont">
-                <div className="statusIcon">
-                  <CircleIcon
-                    className="statusCircle"
-                    style={{ color: statusColor }}
-                  />
-                  <strong>{status}</strong>
+                  <div className="statusIconInside">
+                    <CircleIcon
+                      className="statusCircle"
+                      style={{ color: statusColor }}
+                    />
+                    <strong>{status}</strong>
+                  </div>
                 </div>
-                <div className="statusIconInside">
-                  <CircleIcon
-                    className="statusCircle"
-                    style={{ color: statusColor }}
-                  />
-                  <strong>{status}</strong>
-                </div>
+                <Report style={{ marginLeft: "500px" }} />
               </div>
-              <Report style={{ marginLeft: "500px" }} />
-            </div>
-            <div className="locationBig">
-              <FmdGoodRoundedIcon className="muiLocationIcon" />
-              <div>{palengke?.address}</div>
-            </div>
-            <div className="desc">
-              <p>{palengke?.description}</p>
-            </div>
-          </div>
-        </div>
+              <div className="locationBig">
+                <FmdGoodRoundedIcon className="muiLocationIcon" />
+                <div>{palengke?.address}</div>
+              </div>
+              <div className="desc">
+                <p>{palengke?.description}</p>
+              </div>
+            </Grid>
+          </Grid>
+        </Box>
         <div className="details">
           <div className="dropdown">
             <button className="dropbtn">

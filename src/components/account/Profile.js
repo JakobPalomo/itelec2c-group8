@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
 import EditProfile from "./EditProfile";
 import { styled } from "@mui/material/styles";
+import { stringAvatar, stringToColor } from "../../functions/utils.js";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -27,46 +28,6 @@ export default function Profile({
   ...sharedProps
 }) {
   const fileUploadRef = useRef(null);
-
-  function stringToColor(string) {
-    let hash = 0;
-    let i;
-
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = "#";
-
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-    return color;
-  }
-
-  function stringAvatar(passedname) {
-    let name = "";
-    if (passedname == "undefined" || passedname == "null") {
-      name = "P";
-    } else {
-      name = passedname;
-    }
-
-    const nameParts = name.split(" ");
-    const initials =
-      nameParts.length > 1
-        ? `${nameParts[0][0]}${nameParts[1][0]}`
-        : `${nameParts[0][0]}`;
-
-    return {
-      sx: {
-        backgroundColor: `${stringToColor(name)} !important`,
-      },
-      children: initials,
-    };
-  }
 
   const getAddress = () => {
     if (

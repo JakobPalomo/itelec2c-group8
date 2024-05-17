@@ -5,7 +5,9 @@ import RippleButton from "../ui/RippleButton.js";
 import media_types from "../../data/media_types.js";
 import business_statuses from "../../data/business_statuses.js";
 import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
+import HideImageIcon from "@mui/icons-material/HideImage";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -31,6 +33,7 @@ function PalengkeItem({
   const [statusColor, setStatusColor] = useState("");
   const [ratingColor, setRatingColor] = useState("");
   const [rating, setRating] = useState("");
+  const [imageError, setImageError] = useState(false);
 
   const getMedia = () => {
     if (palengke.media && palengke.media.length > 0) {
@@ -150,11 +153,27 @@ function PalengkeItem({
           <div className="imageContainer">
             {media !== "" && media !== null ? (
               mediaType === "image" ? (
-                <img
-                  src={media.path}
-                  alt={palengke.name}
-                  className="palengkeImage"
-                />
+                <>
+                  <Box
+                    component="img"
+                    sx={{
+                      display: imageError ? "none" : "block",
+                      objectFit: "cover",
+                      overflow: "hidden",
+                      width: "100%",
+                    }}
+                    src={media.path}
+                    alt={media.filename}
+                    onError={() => setImageError(true)}
+                    className="palengkeImage"
+                  />
+                  {imageError && (
+                    <div className="noImageContainer">
+                      <HideImageIcon className="muiNoImageIcon" />
+                      Broken or Unsupported Media
+                    </div>
+                  )}
+                </>
               ) : mediaType === "video" ? (
                 <video className="palengkeImage">
                   <source src={media.path} className="palengkeImage" />

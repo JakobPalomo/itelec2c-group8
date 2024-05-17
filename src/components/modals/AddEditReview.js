@@ -38,7 +38,7 @@ function AddEditReview({
 
   useEffect(() => {
     console.log("default Values", defaultValues);
-    if (isEmptyObject(defaultValues) == false) {
+    if (isEmptyObject(defaultValues) === false) {
       setRating(defaultValues.rating);
       setReview(defaultValues.review);
     } else {
@@ -52,11 +52,11 @@ function AddEditReview({
     console.log(rating, review, palengkeId, userId);
     let trimmedReview = review;
     let trimmedRating = rating;
-    if (review == undefined || review == "undefined") {
+    if (review === undefined || review === "undefined") {
       setReview("");
       trimmedReview = "";
     }
-    if (rating == undefined || rating == "undefined") {
+    if (rating === undefined || rating === "undefined") {
       trimmedRating = 0;
       setRating(0);
     }

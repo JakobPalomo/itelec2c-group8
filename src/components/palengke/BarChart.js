@@ -16,15 +16,15 @@ function getTotal(data) {
   let total = [0, 0, 0, 0, 0];
   data.forEach((review) => {
     const rating = parseInt(review.rating);
-    if (rating == 1) {
+    if (rating === 1) {
       total[0] += 1;
-    } else if (rating == 2) {
+    } else if (rating === 2) {
       total[1] += 1;
-    } else if (rating == 3) {
+    } else if (rating === 3) {
       total[2] += 1;
-    } else if (rating == 4) {
+    } else if (rating === 4) {
       total[3] += 1;
-    } else if (rating == 5) {
+    } else if (rating === 5) {
       total[4] += 1;
     }
   });
