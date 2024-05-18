@@ -8,7 +8,7 @@ const chartSetting = {
       label: "",
     },
   ],
-  width: 650,
+  minWidth: 650,
   height: 250,
 };
 function getTotal(data) {
@@ -41,12 +41,15 @@ export default function HorizontalBars({ data }) {
   ];
 
   return (
-    <BarChart
-      dataset={dataset}
-      yAxis={[{ scaleType: "band", dataKey: "label" }]}
-      series={[{ dataKey: "total" }]}
-      layout="horizontal"
-      {...chartSetting}
-    />
+    <div className="barChartContainer">
+      <BarChart
+        dataset={dataset}
+        yAxis={[{ scaleType: "band", dataKey: "label" }]}
+        series={[{ dataKey: "total" }]}
+        layout="horizontal"
+        {...chartSetting}
+        className="barChart"
+      />
+    </div>
   );
 }

@@ -9,9 +9,11 @@ import Modal from "../modals/MyModal";
 import AddEditReview from "../modals/AddEditReview";
 import ConfirmModal from "../modals/ConfirmModal";
 import Carousel from "../ui/Carousel";
+import InputText from "../modals/InputText";
 import palengkeImage from "./palengke.jpg";
 import reviewsData from "./reviewsData.json";
 import business_statuses from "../../data/business_statuses.js";
+import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -23,6 +25,7 @@ import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
 import CircleIcon from "@mui/icons-material/Circle";
+import { autoPlay } from "react-swipeable-views-utils";
 
 function Palengke({ ...sharedProps }) {
   const { palengkeId } = useParams();
@@ -42,7 +45,12 @@ function Palengke({ ...sharedProps }) {
   const [media, setMedia] = useState([]);
   const [ratingColor, setRatingColor] = useState("");
   const [rating, setRating] = useState("");
-  const [sortCriterion, setSortCriterion] = useState("date");
+  const [sortCriterion, setSortCriterion] = useState(0);
+  const sortOptions = [
+    { value: 0, name: "Sort Reviews by Date" },
+    { value: 1, name: "Sort Reviews by Highest Rating" },
+    { value: 2, name: "Sort Reviews by Lowest Rating" },
+  ];
 
   const handleBackClick = () => {
     window.history.back();
@@ -247,7 +255,7 @@ function Palengke({ ...sharedProps }) {
 
   const getAverageRating = () => {
     let totalRating = 0;
-    if (palengkeReviews.length != 0) {
+    if (palengkeReviews.length !== 0) {
       palengkeReviews.forEach((review) => {
         totalRating += parseInt(review?.rating);
       });
@@ -276,21 +284,33 @@ function Palengke({ ...sharedProps }) {
   };
 
   const handleSortReviews = (criterion) => {
-    setSortCriterion(criterion);
+    // setSortCriterion(criterion);
+    console.log("sortCriterion: ", sortCriterion);
     const sortedReviews = [...palengkeReviews];
 
-    if (criterion === "date") {
+    if (criterion === 0) {
       sortedReviews.sort(
         (a, b) => new Date(b.review_date) - new Date(a.review_date)
       );
-    } else if (criterion === "highestRating") {
+    } else if (criterion === 1) {
       sortedReviews.sort((a, b) => b.rating - a.rating);
-    } else if (criterion === "lowestRating") {
+    } else if (criterion === 2) {
       sortedReviews.sort((a, b) => a.rating - b.rating);
     }
 
     setPalengkeReviews(sortedReviews);
   };
+
+  // useEffect(() => {
+  //   console.log("sortCriterion: ", sortCriterion);
+  //   if (sortCriterion === 0) {
+  //     handleSortReviews("date");
+  //   } else if (sortCriterion === 1) {
+  //     handleSortReviews("highestRating");
+  //   } else if (sortCriterion === 2) {
+  //     handleSortReviews("lowestRating");
+  //   }
+  // }, [sortCriterion]);
 
   return (
     <>
@@ -325,8 +345,8 @@ function Palengke({ ...sharedProps }) {
         </ConfirmModal>
       )}
       <div className="holder">
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button
+        <Box className="palengekeTopButtons">
+          <IconButton
             onClick={handleBackClick}
             style={{
               backgroundColor: "transparent",
@@ -335,105 +355,103 @@ function Palengke({ ...sharedProps }) {
             }}
           >
             <ArrowBackIcon style={{ color: " #ff6262" }} />
-          </button>
-        </div>
+          </IconButton>
+          <Report style={{ marginLeft: "500px" }} />
+        </Box>
 
-        <Box sx={{ flexGrow: 1, padding: 0 }} className="details">
+        <Box
+          sx={{ flexGrow: 1, padding: 0, paddingTop: 2 }}
+          className="details"
+        >
           {/* <img alt="market" src={palengkeImage} className="Marketimg"></img> */}
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6} className="carousel">
               <Carousel media={media} />
             </Grid>
-            <Grid item xs={6} className="content">
-              <div className="namerate">
-                <p className="welcome">{palengke?.name}</p>
-                <div
-                  className="ratingContBig"
-                  style={{
-                    margin: "20px",
-                    backgroundColor: ratingColor || "#636363", // Fallback color if ratingColor is invalid
-                  }}
-                >
-                  {rating !== 0 ? (
-                    <>
-                      <StarRoundedIcon className="muiStarIcon" />
-                      {rating}
-                    </>
-                  ) : (
+            <Grid item xs={12} md={6} className="content">
+              <Box sx={{ flexGrow: 1, padding: 0 }} className="namerate">
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={10} className="titleGrid">
+                    <p className="welcomeLogin">{palengke?.name}</p>
+                  </Grid>
+                  <Grid item sx={{ flexGrow: 1 }} className="ratingSpacing">
                     <div
-                      style={{
-                        fontSize: "20px",
-                        height: "36px",
-                        marginTop: "5px",
-                        marginLeft: "5px",
-                        marginRight: "5px",
-                      }}
+                      className="ratingContBig"
+                      style={{ backgroundColor: ratingColor || "#636363" }}
                     >
-                      No rating yet
+                      {rating !== 0 ? (
+                        <>
+                          <StarRoundedIcon className="muiStarIcon" />
+                          {rating}
+                        </>
+                      ) : (
+                        <div
+                          style={{
+                            fontSize: "20px",
+                            height: "36px",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                            marginRight: "5px",
+                          }}
+                        >
+                          No rating yet
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </Grid>
+                </Grid>
+              </Box>
+              <Box
+                sx={{ flexGrow: 1, padding: 0, flexDirection: "column" }}
+                className="locationBig"
+              >
+                <div
+                  className="palengkeStatusPill"
+                  style={{ backgroundColor: statusColor }}
+                >
+                  {status}
                 </div>
-                {/* Status icon */}
-                <div className="statusIconCont">
-                  <div className="statusIcon">
-                    <CircleIcon
-                      className="statusCircle"
-                      style={{ color: statusColor }}
-                    />
-                    <strong>{status}</strong>
-                  </div>
-                  <div className="statusIconInside">
-                    <CircleIcon
-                      className="statusCircle"
-                      style={{ color: statusColor }}
-                    />
-                    <strong>{status}</strong>
-                  </div>
+                <div className="address">
+                  <FmdGoodRoundedIcon className="muiLocationIcon addressIconMargin" />
+                  <span>{palengke?.address}</span>
                 </div>
-                <Report style={{ marginLeft: "500px" }} />
-              </div>
-              <div className="locationBig">
-                <FmdGoodRoundedIcon className="muiLocationIcon" />
-                <div>{palengke?.address}</div>
-              </div>
-              <div className="desc">
+              </Box>
+              <Box sx={{ flexGrow: 1, padding: 0 }} className="desc">
                 <p>{palengke?.description}</p>
-              </div>
+              </Box>
             </Grid>
           </Grid>
         </Box>
-        <div className="details">
+        <Box className="details actionDropdownCont">
           <div className="dropdown">
-            <button className="dropbtn">
-              Sort Reviews by
-              <ArrowDropDownIcon />
-            </button>
-            <div className="dropdown-content">
-              <a href="#" onClick={() => handleSortReviews("date")}>
-                Date
-              </a>
-              <a href="#" onClick={() => handleSortReviews("highestRating")}>
-                Highest Rating
-              </a>
-              <a href="#" onClick={() => handleSortReviews("lowestRating")}>
-                Lowest Rating
-              </a>
-            </div>
+            <InputText
+              type="text"
+              setValue={setSortCriterion}
+              value={sortCriterion}
+              maxLength={10}
+              selectData={sortOptions}
+              label="Sort Reviews by"
+              noLabel={true}
+              defaultValue={0}
+              dropDownAction={handleSortReviews}
+            />
           </div>
-          {sharedProps.isLoggedIn === true && (
-            <Button
-              variant="contained"
-              className="button addPalengkeButton pinkButton"
-              style={{ textTransform: "none", marginTop: "60px" }}
-              onClick={() => {
-                setAddEditReviewClicked(true);
-              }}
-            >
-              Add Review
-              <AddIcon className="muiAddIcon" />
-            </Button>
-          )}
-        </div>
+          <div className="addReviewCont">
+            {sharedProps.isLoggedIn === true && (
+              <Button
+                variant="contained"
+                className="button pinkButton"
+                style={{ textTransform: "none" }}
+                onClick={() => {
+                  setAddEditReviewClicked(true);
+                }}
+              >
+                Add Review
+                <AddIcon className="muiAddIcon" />
+              </Button>
+            )}
+          </div>
+        </Box>
         <div className="Overview">
           <div>
             <p>Palengke Reviews</p>

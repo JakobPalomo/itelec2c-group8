@@ -37,19 +37,19 @@ export default function Profile({
     ) {
       let address = "";
       if (sharedProps.currUser.district) {
-        if (address != "") {
+        if (address !== "") {
           address.concat(", ");
         }
         address.concat(sharedProps.currUser.district);
       }
       if (sharedProps.currUser.city) {
-        if (address != "") {
+        if (address !== "") {
           address.concat(", ");
         }
         address.concat(sharedProps.currUser.city);
       }
       if (sharedProps.currUser.region) {
-        if (address != "") {
+        if (address !== "") {
           address.concat(", ");
         }
         address.concat(sharedProps.currUser.region);

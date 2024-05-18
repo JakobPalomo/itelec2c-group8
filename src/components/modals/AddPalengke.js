@@ -291,7 +291,7 @@ function AddPalengke({
             required={true}
             setValue={setBusinessStatus}
             value={business_status}
-            maxLength={1000}
+            maxLength={10}
             selectData={business_statuses}
             defaultValue={0}
             hasError={getHasError("business_status", errors)}

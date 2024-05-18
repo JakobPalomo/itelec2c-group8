@@ -729,7 +729,7 @@ function EditProfile({
             </Typography>
           </div>
           <p className="subtextLogin">Didn’t receive the OTP code?</p>
-          {timeLeft != 0 ? (
+          {timeLeft !== 0 ? (
             <p className="subtextLogin">
               Resend Code in{" "}
               <span className="emailSpan">{formatTime(timeLeft)}</span>

@@ -39,6 +39,7 @@ function InputText({
   iconOn,
   iconOff,
   noLabel = false,
+  dropDownAction,
   children,
 }) {
   let paddingRight = "20px";
@@ -179,6 +180,11 @@ function InputText({
                   <MenuItem
                     key={option.value}
                     value={option.value}
+                    onClick={
+                      dropDownAction
+                        ? () => dropDownAction(option.value)
+                        : () => {}
+                    }
                     sx={{
                       fontSize: "14px !important",
                       "& .MuiMenuList-root": {
