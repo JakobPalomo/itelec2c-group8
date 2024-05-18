@@ -8,6 +8,7 @@ import HorizontalBars from "./BarChart";
 import Modal from "../modals/MyModal";
 import AddEditReview from "../modals/AddEditReview";
 import ConfirmModal from "../modals/ConfirmModal";
+import ReportModal from "../modals/ReportModal";
 import Carousel from "../ui/Carousel";
 import InputText from "../modals/InputText";
 import palengkeImage from "./palengke.jpg";
@@ -31,6 +32,7 @@ function Palengke({ ...sharedProps }) {
   const { palengkeId } = useParams();
 
   const [addEditReviewClicked, setAddEditReviewClicked] = useState(false);
+  const [reportReviewClicked, setReportReviewClicked] = useState(false);
   const [deleteClicked, setDeleteClicked] = useState(false);
   const [username, setUsername] = useState("");
   const [reviewUserProfilePic, setReviewUserProfilePic] = useState("");
@@ -46,6 +48,7 @@ function Palengke({ ...sharedProps }) {
   const [ratingColor, setRatingColor] = useState("");
   const [rating, setRating] = useState("");
   const [sortCriterion, setSortCriterion] = useState(0);
+  const [numOfReviewsToShow, setNumOfReviewsToShow] = useState(3);
   const sortOptions = [
     { value: 0, name: "Sort Reviews by Date" },
     { value: 1, name: "Sort Reviews by Highest Rating" },
@@ -91,25 +94,32 @@ function Palengke({ ...sharedProps }) {
         (review) => review.palengke_id === palengkeId
       );
       setPalengkeReviews(filteredReviews);
-      getPalengkeAndMyReviews(filteredReviews);
+      console.log("setNumOfReviewsToShow", filteredReviews.length);
+      if (filteredReviews.length < 3) {
+        setNumOfReviewsToShow(filteredReviews.length);
+      }
     }
     getRatingColor();
   }, [sharedProps.reviewList, palengkeId]);
 
-  const getPalengkeAndMyReviews = useCallback(
-    (palengkeReviews) => {
-      const currUserId = sharedProps.currUser?.user_id;
-      if (Array.isArray(palengkeReviews) && currUserId) {
-        const filteredReviews = palengkeReviews.filter(
-          (review) => review.user_id === currUserId
-        );
-        setPalengkeAndMyReviews(filteredReviews);
-      }
-    },
-    [sharedProps.currUser]
-  );
+  const getPalengkeAndMyReviews = useCallback(() => {
+    const currUserId = sharedProps.currUser?.id;
+
+    if (Array.isArray(palengkeReviews) && currUserId) {
+      const filteredReviews = palengkeReviews.filter(
+        (review) => review.user_id === currUserId
+      );
+      setPalengkeAndMyReviews(filteredReviews);
+      console.log("palengkeAndMyReviews1", filteredReviews);
+    }
+  }, [sharedProps.currUser, palengkeReviews]);
 
   const isCurrUserReview = (review_id) => {
+    console.log("palengkeAndMyReviews2", palengkeAndMyReviews);
+    console.log(
+      "palengkeAndMyReviews is curr user",
+      palengkeAndMyReviews.some((review) => review.id === review_id)
+    );
     return palengkeAndMyReviews.some((review) => review.id === review_id);
   };
 
@@ -158,7 +168,7 @@ function Palengke({ ...sharedProps }) {
         );
         if (statusObject) {
           setStatus(statusObject.name);
-          setStatusColor(statusObject.color);
+          setStatusColor(statusObject.color2);
         } else {
           console.error("Status object not found");
         }
@@ -193,12 +203,12 @@ function Palengke({ ...sharedProps }) {
   useEffect(() => {
     getPalengke(palengkeId);
     getPalengkeReviews();
-
     getMedia(palengkeId);
     getStatus(palengkeId);
   }, [palengkeId, getPalengke, getPalengkeReviews, getMedia, getStatus]);
 
   useEffect(() => {
+    getPalengkeAndMyReviews();
     setRating(getAverageRating());
   }, [palengkeReviews]);
 
@@ -301,17 +311,6 @@ function Palengke({ ...sharedProps }) {
     setPalengkeReviews(sortedReviews);
   };
 
-  // useEffect(() => {
-  //   console.log("sortCriterion: ", sortCriterion);
-  //   if (sortCriterion === 0) {
-  //     handleSortReviews("date");
-  //   } else if (sortCriterion === 1) {
-  //     handleSortReviews("highestRating");
-  //   } else if (sortCriterion === 2) {
-  //     handleSortReviews("lowestRating");
-  //   }
-  // }, [sortCriterion]);
-
   return (
     <>
       {addEditReviewClicked && (
@@ -344,6 +343,20 @@ function Palengke({ ...sharedProps }) {
           <div>Are you sure you want to delete this review?</div>
         </ConfirmModal>
       )}
+      {reportReviewClicked && (
+        <Modal
+          open={reportReviewClicked}
+          setOpen={setReportReviewClicked}
+          title="Report Review"
+        >
+          <ReportModal
+            setOpen={setReportReviewClicked}
+            IdToReport={defaultValues.id}
+            reportCategory="review"
+            userId={sharedProps.currUser.id}
+          />
+        </Modal>
+      )}
       <div className="holder">
         <Box className="palengekeTopButtons">
           <IconButton
@@ -356,7 +369,11 @@ function Palengke({ ...sharedProps }) {
           >
             <ArrowBackIcon style={{ color: " #ff6262" }} />
           </IconButton>
-          <Report style={{ marginLeft: "500px" }} />
+          <Report
+            style={{ marginLeft: "500px" }}
+            palengkeId={palengkeId}
+            {...sharedProps}
+          />
         </Box>
 
         <Box
@@ -372,7 +389,9 @@ function Palengke({ ...sharedProps }) {
               <Box sx={{ flexGrow: 1, padding: 0 }} className="namerate">
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={10} className="titleGrid">
-                    <p className="welcomeLogin">{palengke?.name}</p>
+                    <p className="welcomeLogin overflow-wrap">
+                      {palengke?.name}
+                    </p>
                   </Grid>
                   <Grid item sx={{ flexGrow: 1 }} className="ratingSpacing">
                     <div
@@ -413,29 +432,40 @@ function Palengke({ ...sharedProps }) {
                 </div>
                 <div className="address">
                   <FmdGoodRoundedIcon className="muiLocationIcon addressIconMargin" />
-                  <span>{palengke?.address}</span>
+                  <span className=" overflow-wrap">{palengke?.address}</span>
                 </div>
               </Box>
-              <Box sx={{ flexGrow: 1, padding: 0 }} className="desc">
-                <p>{palengke?.description}</p>
+              <Box
+                sx={{ flexGrow: 1, padding: 0, width: "100%" }}
+                className="desc"
+              >
+                <p className="overflow-wrap">{palengke?.description}</p>
               </Box>
             </Grid>
           </Grid>
         </Box>
-        <Box className="details actionDropdownCont">
-          <div className="dropdown">
-            <InputText
-              type="text"
-              setValue={setSortCriterion}
-              value={sortCriterion}
-              maxLength={10}
-              selectData={sortOptions}
-              label="Sort Reviews by"
-              noLabel={true}
-              defaultValue={0}
-              dropDownAction={handleSortReviews}
-            />
-          </div>
+        <Box
+          className="details actionDropdownCont"
+          style={{
+            justifyContent:
+              palengkeReviews.length === 0 ? "center" : "space-between",
+          }}
+        >
+          {palengkeReviews.length !== 0 && (
+            <div className="dropdown">
+              <InputText
+                type="text"
+                setValue={setSortCriterion}
+                value={sortCriterion}
+                maxLength={10}
+                selectData={sortOptions}
+                label="Sort Reviews by"
+                noLabel={true}
+                defaultValue={0}
+                dropDownAction={handleSortReviews}
+              />
+            </div>
+          )}
           <div className="addReviewCont">
             {sharedProps.isLoggedIn === true && (
               <Button
@@ -452,27 +482,29 @@ function Palengke({ ...sharedProps }) {
             )}
           </div>
         </Box>
-        <div className="Overview">
-          <div>
-            <p>Palengke Reviews</p>
-            <p className="welcome">{getAverageRating()}</p>
+        {palengkeReviews.length !== 0 && (
+          <div className="Overview">
             <div>
-              <HalfRating
-                name="read-only"
-                defaultValue={getAverageRatingInt()}
-                disabled={true}
-              />
+              <p>Palengke Reviews</p>
+              <p className="welcome">{getAverageRating()}</p>
+              <div>
+                <HalfRating
+                  name="read-only"
+                  defaultValue={getAverageRatingInt()}
+                  disabled={true}
+                />
+              </div>
+              <p>({palengkeReviews.length} Reviews)</p>
+              <p>{getFormattedDate()}</p>
             </div>
-            <p>({palengkeReviews.length} Reviews)</p>
-            <p>{getFormattedDate()}</p>
+            <div className="rev">
+              <HorizontalBars data={palengkeReviews} />
+            </div>
           </div>
-          <div className="rev">
-            <HorizontalBars data={palengkeReviews} />
-          </div>
-        </div>
+        )}
 
         <div className="reviewList">
-          {palengkeReviews.map((review) => {
+          {palengkeReviews.slice(0, numOfReviewsToShow).map((review) => {
             return (
               <Review
                 key={review.id}
@@ -480,9 +512,11 @@ function Palengke({ ...sharedProps }) {
                 editable={isCurrUserReview(review.id)}
                 setOpen={setAddEditReviewClicked}
                 setDeleteClicked={setDeleteClicked}
+                setReportReviewClicked={setReportReviewClicked}
                 review={review}
                 setIsEditing={setIsEditing}
                 setDefaultValues={setDefaultValues}
+                myReviews={palengkeAndMyReviews}
                 {...sharedProps}
               />
             );
@@ -490,11 +524,19 @@ function Palengke({ ...sharedProps }) {
         </div>
 
         <center>
-          <p className="more">
-            <a href="#" className="more">
-              Show more reviews ...
-            </a>
-          </p>
+          {palengkeReviews.length > numOfReviewsToShow &&
+            palengkeReviews.length !== 0 && (
+              <p className="more">
+                <div>
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setNumOfReviewsToShow((prev) => (prev += 5))}
+                  >
+                    Show more reviews ...
+                  </span>
+                </div>
+              </p>
+            )}
           <MorePalengke {...sharedProps} />
         </center>
       </div>

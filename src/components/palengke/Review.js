@@ -15,7 +15,24 @@ import { Button, Typography, IconButton, Menu, MenuItem } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import EditIcon from "@mui/icons-material/Edit";
+import ReportIcon from "@mui/icons-material/Report";
 import { stringAvatar, stringToColor } from "../../functions/utils.js";
+import { styled } from "@mui/system";
+
+const CustomMenuItem = styled(MenuItem)(({ theme }) => ({
+  "&:hover": {
+    backgroundColor: "#FFE6E0",
+    "& .pinkLinkp": {
+      fontWeight: "700 !important",
+    },
+  },
+  "&.Mui-selected": {
+    backgroundColor: "#FFE6E0",
+  },
+
+  padding: "10px 15px 10px 15px",
+  width: "120px",
+}));
 
 function Review({
   key,
@@ -23,6 +40,7 @@ function Review({
   editable,
   setOpen,
   setDeleteClicked,
+  setReportReviewClicked,
   setIsEditing,
   setDefaultValues,
   review,
@@ -65,6 +83,10 @@ function Review({
     }
   };
 
+  useEffect(() => {
+    console.log(`editable ${review.review}`, editable);
+  }, [editable]);
+
   return (
     <div className="Reviews">
       <p>{review.date}</p>
@@ -93,59 +115,47 @@ function Review({
               transform: "translate(50px, 0)",
             }}
           >
-            <MenuItem
+            {editable === true && (
+              <>
+                <CustomMenuItem
+                  onClick={() => {
+                    handleClose();
+                    setIsEditing(true);
+                    setOpen(true);
+                    setDefaultValues(review);
+                  }}
+                >
+                  <EditIcon className="muiIconReview" />
+                  <Typography textAlign="center" className="pinkLinkp">
+                    Edit
+                  </Typography>
+                </CustomMenuItem>
+                <CustomMenuItem
+                  onClick={() => {
+                    handleClose();
+                    setDeleteClicked(true);
+                    setDefaultValues(review);
+                  }}
+                >
+                  <DeleteIcon className="muiIconReview" />
+                  <Typography textAlign="center" className="pinkLinkp">
+                    Delete
+                  </Typography>
+                </CustomMenuItem>
+              </>
+            )}
+            <CustomMenuItem
               onClick={() => {
                 handleClose();
-                setIsEditing(true);
-                setOpen(true);
+                setReportReviewClicked(true);
                 setDefaultValues(review);
               }}
-              sx={{
-                "&:hover": {
-                  backgroundColor: "#FFE6E0",
-                  "& .pinkLinkp": {
-                    fontWeight: "700 !important",
-                  },
-                },
-                "&.Mui-selected": {
-                  backgroundColor: "#FFE6E0",
-                },
-
-                padding: "10px 15px 10px 15px",
-                width: "120px",
-              }}
             >
-              <EditIcon className="muiIconReview" />
+              <ReportIcon className="muiIconReview" />
               <Typography textAlign="center" className="pinkLinkp">
-                Edit
+                Report
               </Typography>
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                setDeleteClicked(true);
-                setDefaultValues(review);
-              }}
-              sx={{
-                "&:hover": {
-                  backgroundColor: "#FFE6E0",
-                  "& .pinkLinkp": {
-                    fontWeight: "700 !important",
-                  },
-                },
-                "&.Mui-selected": {
-                  backgroundColor: "#FFE6E0",
-                },
-
-                padding: "10px 15px 10px 15px",
-                width: "120px",
-              }}
-            >
-              <DeleteIcon className="muiIconReview" />
-              <Typography textAlign="center" className="pinkLinkp">
-                Delete
-              </Typography>
-            </MenuItem>
+            </CustomMenuItem>
           </Menu>
         </div>
       </div>

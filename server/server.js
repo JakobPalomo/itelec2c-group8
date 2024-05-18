@@ -425,6 +425,94 @@ app.delete("/review/delete/:reviewId", async (req, res) => {
   }
 });
 
+// REPORT PALENGKE
+app.post("/palengke/report", upload.none(), async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    console.log("req.body");
+    console.log(JSON.parse(JSON.stringify(req.body)));
+    let { user_id, palengke_id, date, reportReason, otherReason } = JSON.parse(
+      JSON.stringify(req.body)
+    );
+
+    const reportRef = await addDoc(collection(db, "report_palengke"), {
+      user_id,
+      palengke_id,
+      date,
+      reportReason,
+      otherReason,
+    });
+
+    const myreport = reportRef.id;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const userReport = userSnap.data().report_palengkes || [];
+    const updatedReport = [...userReport, myreport];
+
+    try {
+      await updateDoc(userRef, { report_palengkes: updatedReport });
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw Error;
+    }
+
+    console.error("Successfully reported");
+    res.status(200).json("Successfully reported");
+  } catch (error) {
+    console.error("Error reporting:", error);
+    res.status(500).send("Error reporting");
+  }
+});
+
+// REPORT REVIEW
+app.post("/review/report", upload.none(), async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    console.log("req.body");
+    console.log(JSON.parse(JSON.stringify(req.body)));
+    let { user_id, review_id, date, reportReason, otherReason } = JSON.parse(
+      JSON.stringify(req.body)
+    );
+
+    const reportRef = await addDoc(collection(db, "report_review"), {
+      user_id,
+      review_id,
+      date,
+      reportReason,
+      otherReason,
+    });
+
+    const myreport = reportRef.id;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const userReport = userSnap.data().report_reviews || [];
+    const updatedReport = [...userReport, myreport];
+
+    try {
+      await updateDoc(userRef, { report_reviews: updatedReport });
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw Error;
+    }
+
+    console.error("Successfully reported");
+    res.status(200).json("Successfully reported");
+  } catch (error) {
+    console.error("Error reporting:", error);
+    res.status(500).send("Error reporting");
+  }
+});
+
 // SEARCH ADDRESSES (add/edit palengke)
 app.get("/search-places", async (req, res) => {
   const { input, types } = req.query;

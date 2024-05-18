@@ -11,14 +11,14 @@ const business_status = [
     value: 1,
     name: "Temporarily Closed",
     color: "#EE556A",
-    color2: "#EE556A",
+    color2: "#cf4040",
   },
   {
     business_status_id: 2,
     value: 2,
     name: "Permanently Closed",
     color: "#EE556A",
-    color2: "#EE556A",
+    color2: "#cf4040",
   },
 ];
 export default business_status;
