@@ -1,14 +1,16 @@
 .recent {
   display: flex;
   justify-content: center;
-  margin-top: 100px;
+  margin-top: 50px;
   flex-direction: column;
 }
 
-.title {
+.titleAccount {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  margin-left: 20%;
+  margin-right: 20%;
 }
 
 .links {
@@ -16,15 +18,46 @@
   text-decoration: none;
   font-size: 15px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 .links:hover {
   color: #e74f4f;
 }
 
+.links svg {
+  margin-left: 5px;
+}
+
 .profilereview {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  margin-bottom: 100px;
+}
+@media screen and (max-width: 700px) {
+  .titleAccount {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .titleAccount h1 {
+    font-size: 23px;
+  }
+  .palengkeCard {
+    min-width: 80% !important;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .titleAccount {
+    display: flex;
+    flex-direction: column;
+  }
+  .titleAccount h1 {
+    font-size: 22px;
+    margin-bottom: 0;
+  }
+  .titleAccount a {
+    margin-bottom: 10px;
+  }
 }

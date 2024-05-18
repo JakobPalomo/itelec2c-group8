@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
-
+const { admin } = require("./admin");
 const { db } = require("./firebase");
 const {
   collection,
@@ -119,6 +119,7 @@ app.get("/user/:userId", async (req, res) => {
   }
 });
 
+// GET USER'S PROFILE
 app.get("/user-profile", async (req, res) => {
   try {
     const userId = req.query.userid;
@@ -152,7 +153,16 @@ app.get("/user-profile", async (req, res) => {
 app.get("/user-arrays", async (req, res) => {
   try {
     const userId = req.query.userid;
-    const collectionName = req.query.collection;
+    const collectionParam = req.query.collection;
+    let collectionName = collectionParam;
+    let userField = collectionName.concat("s");
+
+    if (userField === "palengkes") {
+      userField = "contributions";
+    } else if (userField === "saves") {
+      collectionName = "palengke";
+    }
+
     const userRef = doc(db, "user", userId);
     const userSnap = await getDoc(userRef);
 
@@ -161,21 +171,36 @@ app.get("/user-arrays", async (req, res) => {
     }
 
     const user = userSnap.data();
-    const documentIds = user[collectionName] || [];
+    const documentIds = user[userField] || [];
+
+    console.log(
+      `User ${userId} ${userField} Ids:`,
+      documentIds,
+      collectionName
+    );
 
     if (documentIds.length === 0) {
       return res.status(200).json([]);
     }
 
-    const collectionRef = collection(db, collectionName);
-    const q = query(collectionRef, where("__name__", "in", documentIds));
-    const querySnapshot = await getDocs(q);
+    // Split documentIds into chunks of 10 (Firestore's limit for 'in' queries)
+    const chunkSize = 10;
+    const chunks = [];
+    for (let i = 0; i < documentIds.length; i += chunkSize) {
+      chunks.push(documentIds.slice(i, i + chunkSize));
+    }
 
-    const data = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const data = [];
+    for (const chunk of chunks) {
+      const collectionRef = collection(db, collectionName);
+      const q = query(collectionRef, where("__name__", "in", chunk));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.docs.forEach((doc) => {
+        data.push({ id: doc.id, ...doc.data() });
+      });
+    }
 
+    console.log(`Data for ${userField}:`, data, collectionName);
     res.status(200).json(data);
   } catch (error) {
     console.error("Error getting documents:", error);
@@ -183,8 +208,77 @@ app.get("/user-arrays", async (req, res) => {
   }
 });
 
+// CHANGE PASS (OTP)
+app.post("/user/change-pass", upload.none(), async (req, res) => {
+  const { email, new_password } = req.body;
+
+  try {
+    console.log("email", email);
+    const userRecord = await admin.auth().getUserByEmail(email);
+
+    // Update the user's password
+    await admin.auth().updateUser(userRecord.uid, {
+      password: new_password,
+    });
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).json({ error: "Failed to update password" });
+  }
+});
+
+// DELETE USER
+app.put("/user/delete/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Get the user document reference
+    const userDocRef = admin.firestore().collection("user").doc(userId);
+    console.log("Attempting to fetch userId:", userId);
+
+    // Fetch the user document
+    const userDocSnapshot = await userDocRef.get();
+
+    // Check if the user document exists
+    if (!userDocSnapshot.exists) {
+      console.log(`User with ID ${userId} not found.`);
+      return res.status(404).send("User not found");
+    }
+
+    // Get the user data
+    const userData = userDocSnapshot.data();
+    console.log("userData", userData);
+
+    const mediaId = userData.profile;
+    console.log("mediaId: ", mediaId);
+
+    // If mediaId exists, delete the related media document
+    if (mediaId) {
+      const mediaDocRef = admin.firestore().collection("media").doc(mediaId);
+      await mediaDocRef.delete();
+    }
+
+    // Update the user document
+    await userDocRef.update({
+      username: "Deleted User",
+      profile: "",
+    });
+
+    // Delete the user from authentication
+    await admin.auth().deleteUser(userId);
+
+    res.status(200).send("User updated successfully");
+  } catch (error) {
+    console.log("Error during user deletion process:", error);
+    res.status(500).send("Error updating user: " + error.message);
+  }
+});
+
 // ADD PALENGKE WITH MEDIA (10 files only)
 app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
+  const { userId } = req.query;
+
   try {
     const mediaFilenames = JSON.parse(req.body.mediaFilenames);
     const mediaTypes = JSON.parse(req.body.mediaTypes);
@@ -208,18 +302,13 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
       const link = "";
 
       const docRef = collection(db, "media");
-      try {
-        const addedDocRef = await addDoc(docRef, {
-          type,
-          filename,
-          path,
-          link,
-        });
-        documentIds.push(addedDocRef.id);
-      } catch (error) {
-        console.error("Error adding document:", error);
-        throw error; // Throw the error to exit Promise.all() if any error occurs
-      }
+      const addedDocRef = await addDoc(docRef, {
+        type,
+        filename,
+        path,
+        link,
+      });
+      documentIds.push(addedDocRef.id);
     });
 
     await Promise.all(promises);
@@ -235,7 +324,8 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
     // const reviews_count = 0;
     const reviews = [];
 
-    await setDoc(doc(collection(db, "palengke")), {
+    // Update user contributions array only if the palengke is successfully added
+    const palengkeRef = await addDoc(collection(db, "palengke"), {
       name,
       address,
       location,
@@ -248,34 +338,73 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
       // reviews_count,
       reviews,
     });
-    console.error("Successfully added document");
+
+    // Get the ID of the added palengke document
+    const contribution = palengkeRef.id;
+
+    // Check if the user document exists before updating contributions
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    // Update user contributions array
+    const user = { id: userSnap.id, ...userSnap.data() };
+    const contributions = [...user.contributions, contribution];
+    await updateDoc(userRef, { contributions });
+
+    console.log("Successfully added palengke");
     res.status(200).json("Successfully added palengke");
   } catch (error) {
-    console.error("Error adding document:", error);
-    res.status(500).send("Error adding document");
+    console.error("Error adding palengke:", error);
+    res.status(500).send("Error adding palengke");
   }
 });
 
 // ADD REVIEW
 app.post("/review/add", upload.none(), async (req, res) => {
+  const { userId } = req.query;
+
   try {
     console.log("req.body");
-    console.log(req.body);
-    let { user_id, palengke_id, date, review, rating, upvote_count } = req.body;
+    console.log(JSON.parse(JSON.stringify(req.body)));
+    let { user_id, palengke_id, date, review, rating, upvote_count } =
+      JSON.parse(JSON.stringify(req.body));
+    const edited_date = "";
 
-    await setDoc(doc(collection(db, "review")), {
+    const reviewRef = await addDoc(collection(db, "review"), {
       user_id,
       palengke_id,
       date,
       review,
       rating,
       upvote_count,
+      edited_date,
     });
-    console.error("Successfully added document");
-    res.status(200).json("Successfully added palengke");
+
+    const myreview = reviewRef.id;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const userReviews = userSnap.data().reviews || [];
+    const updatedReviews = [...userReviews, myreview];
+
+    try {
+      await updateDoc(userRef, { reviews: updatedReviews });
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw Error;
+    }
+
+    console.error("Successfully added review");
+    res.status(200).json("Successfully added review");
   } catch (error) {
-    console.error("Error adding document:", error);
-    res.status(500).send("Error adding document");
+    console.error("Error adding review:", error);
+    res.status(500).send("Error adding review");
   }
 });
 
@@ -283,12 +412,13 @@ app.post("/review/add", upload.none(), async (req, res) => {
 app.put("/review/edit/:reviewId", upload.none(), async (req, res) => {
   try {
     const { reviewId } = req.params;
-    const { review, rating } = req.body; // Updated review data
+    const { review, rating, edited_date } = req.body; // Updated review data
 
     // Update the review document in the database
     await updateDoc(doc(db, "review", reviewId), {
       review,
       rating,
+      edited_date,
     });
 
     res.status(200).json("Successfully updated review");
@@ -310,6 +440,159 @@ app.delete("/review/delete/:reviewId", async (req, res) => {
   } catch (error) {
     console.error("Error deleting review:", error);
     res.status(500).send("Error deleting review");
+  }
+});
+
+// REPORT PALENGKE
+app.post("/palengke/report", upload.none(), async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    console.log("req.body");
+    console.log(JSON.parse(JSON.stringify(req.body)));
+    let { user_id, palengke_id, date, reportReason, otherReason } = JSON.parse(
+      JSON.stringify(req.body)
+    );
+
+    const reportRef = await addDoc(collection(db, "report_palengke"), {
+      user_id,
+      palengke_id,
+      date,
+      reportReason,
+      otherReason,
+    });
+
+    const myreport = reportRef.id;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const userReport = userSnap.data().report_palengkes || [];
+    const updatedReport = [...userReport, myreport];
+
+    try {
+      await updateDoc(userRef, { report_palengkes: updatedReport });
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw Error;
+    }
+
+    console.error("Successfully reported");
+    res.status(200).json("Successfully reported");
+  } catch (error) {
+    console.error("Error reporting:", error);
+    res.status(500).send("Error reporting");
+  }
+});
+
+// REPORT REVIEW
+app.post("/review/report", upload.none(), async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    console.log("req.body");
+    console.log(JSON.parse(JSON.stringify(req.body)));
+    let { user_id, review_id, date, reportReason, otherReason } = JSON.parse(
+      JSON.stringify(req.body)
+    );
+
+    const reportRef = await addDoc(collection(db, "report_review"), {
+      user_id,
+      review_id,
+      date,
+      reportReason,
+      otherReason,
+    });
+
+    const myreport = reportRef.id;
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const userReport = userSnap.data().report_reviews || [];
+    const updatedReport = [...userReport, myreport];
+
+    try {
+      await updateDoc(userRef, { report_reviews: updatedReport });
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw Error;
+    }
+
+    console.error("Successfully reported");
+    res.status(200).json("Successfully reported");
+  } catch (error) {
+    console.error("Error reporting:", error);
+    res.status(500).send("Error reporting");
+  }
+});
+
+// SAVE PALENGKE
+app.post("/palengke/add_save", upload.none(), async (req, res) => {
+  try {
+    console.log("req.body", req.body);
+    const { user_id, palengke_id } = req.body;
+
+    const userRef = doc(db, "user", user_id);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const userSaves = userSnap.data().saves || [];
+    // Check for duplicates
+    if (!userSaves.includes(palengke_id)) {
+      const updatedSaves = [...userSaves, palengke_id];
+
+      try {
+        await updateDoc(userRef, { saves: updatedSaves });
+        console.log("Successfully saved");
+        res.status(200).json("Successfully saved");
+      } catch (error) {
+        console.error("Error updating user: ", error);
+        throw new Error("Error updating user");
+      }
+    } else {
+      console.log("Palengke is already saved");
+      res.status(200).json("Palengke is already saved");
+    }
+  } catch (error) {
+    console.error("Error saving:", error);
+    res.status(500).send("Error saving");
+  }
+});
+
+// UNSAVE PALENGKE
+app.put("/palengke/remove_save", upload.none(), async (req, res) => {
+  try {
+    console.log("req.body", req.body);
+    const { user_id, palengke_id } = req.body;
+
+    const userRef = doc(db, "user", user_id);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const userSaves = userSnap.data().saves || [];
+    const updatedSaves = userSaves.filter((save) => save !== palengke_id);
+
+    try {
+      await updateDoc(userRef, { saves: updatedSaves });
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw Error;
+    }
+
+    console.log("Successfully removed save");
+    res.status(200).json("Successfully removed save");
+  } catch (error) {
+    console.error("Error removing save:", error);
+    res.status(500).send("Error removing save");
   }
 });
 

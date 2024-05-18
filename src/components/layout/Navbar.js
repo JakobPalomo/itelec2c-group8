@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 import "../../styles/globalStyles.css";
 import "../../styles/Navbar.css";
+import { stringAvatar, stringToColor } from "../../functions/utils.js";
 const logoPath = "/assets/palengkerist-logo-white.png";
 const logoTextPath = "/assets/palengkerist-text-white.png";
 const profilePath = "/assets/sample-profile.jpg";
@@ -27,48 +28,6 @@ const accountNavs = [
   { page: "Account", path: "/account" },
   { page: "Logout", path: "" },
 ];
-
-function stringToColor(string) {
-  let hash = 0;
-  let i;
-
-  /* eslint-disable no-bitwise */
-  for (i = 0; i < string.length; i += 1) {
-    hash = string.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  let color = "#";
-
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += `00${value.toString(16)}`.slice(-2);
-  }
-  /* eslint-enable no-bitwise */
-
-  return color;
-}
-
-function stringAvatar(passedname) {
-  let name = "";
-  if (passedname == "undefined" || passedname == "null") {
-    name = "P";
-  } else {
-    name = passedname;
-  }
-
-  const nameParts = name.split(" ");
-  const initials =
-    nameParts.length > 1
-      ? `${nameParts[0][0]}${nameParts[1][0]}`
-      : `${nameParts[0][0]}`;
-
-  return {
-    sx: {
-      bgcolor: stringToColor(name),
-    },
-    children: initials,
-  };
-}
 
 function Navbar({
   isLoggedIn,
@@ -180,7 +139,6 @@ function Navbar({
                 >
                   <Avatar
                     {...(currUser.username && stringAvatar(currUser.username))}
-                    sx={{ bgcolor: "#B92F37" }}
                     className="poppins"
                     src={userProfilePic ? userProfilePic.path : ""}
                   />

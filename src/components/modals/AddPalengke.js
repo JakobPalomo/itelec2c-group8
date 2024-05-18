@@ -11,7 +11,11 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
-import PalengkeItem from "../homepage/PalengkeItem.js";
+import {
+  handleSetError,
+  getHasError,
+  getErrMessage,
+} from "../../functions/utils.js";
 const { REACT_APP_GMAPS_API_KEY } = process.env;
 
 function AddPalengke({
@@ -27,6 +31,7 @@ function AddPalengke({
   setPalengkeList,
   mediaList,
   setMediaList,
+  currUser,
 }) {
   const initialErrorData = [
     { field: "palengkeName", hasError: false, errMessage: "" },
@@ -48,41 +53,6 @@ function AddPalengke({
 
   const [errors, setErrors] = useState(initialErrorData);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
-
-  // Handling errors
-  const handleSetError = (variable, message) => {
-    console.log(`setting error: ${variable}; ${message}`);
-    const index = errors.findIndex((field) => {
-      console.log(`field.field: ${field.field} = ${variable.toString()}`);
-      console.log(field.field === variable.toString());
-      return field.field === variable.toString();
-    });
-    if (index !== -1) {
-      const updatedFields = [...errors];
-      updatedFields[index] = {
-        ...updatedFields[index],
-        hasError: true,
-        errMessage: message,
-      };
-      setErrors(updatedFields);
-    }
-  };
-  const getHasError = (variable) => {
-    const index = errors.findIndex(
-      (field) => field.field === variable.toString()
-    );
-    if (index !== -1) {
-      return errors[index].hasError;
-    }
-  };
-  const getErrMessage = (variable) => {
-    const index = errors.findIndex(
-      (field) => field.field === variable.toString()
-    );
-    if (index !== -1) {
-      return errors[index].errMessage;
-    }
-  };
 
   // Validation function
   const validatePalengkeDetails = () => {
@@ -151,7 +121,7 @@ function AddPalengke({
       console.log(formData);
 
       // Upload the FormData to the server
-      const response = fetch("/palengke/add", {
+      const response = fetch(`/palengke/add?userId=${currUser.id}`, {
         method: "POST",
         body: formData,
       })
@@ -300,8 +270,8 @@ function AddPalengke({
             value={name}
             maxLength={100}
             placeholder="Name of the palengke"
-            hasError={getHasError("palengkeName")}
-            errMessage={getErrMessage("palengkeName")}
+            hasError={getHasError("palengkeName", errors)}
+            errMessage={getErrMessage("palengkeName", errors)}
           />
           <LocationSearch
             address={address}
@@ -310,6 +280,7 @@ function AddPalengke({
             setLocation={setLocation}
             getHasError={getHasError}
             getErrMessage={getErrMessage}
+            errors={errors}
             openMap={openMap}
             setOpenMap={setOpenMap}
             prevModalHeight={prevModalHeight}
@@ -320,11 +291,11 @@ function AddPalengke({
             required={true}
             setValue={setBusinessStatus}
             value={business_status}
-            maxLength={1000}
+            maxLength={10}
             selectData={business_statuses}
             defaultValue={0}
-            hasError={getHasError("business_status")}
-            errMessage={getErrMessage("business_status")}
+            hasError={getHasError("business_status", errors)}
+            errMessage={getErrMessage("business_status", errors)}
           />
           <InputText
             type="text"
@@ -333,8 +304,8 @@ function AddPalengke({
             value={description}
             maxLength={1000}
             placeholder="Provide a short description"
-            hasError={getHasError("description")}
-            errMessage={getErrMessage("description")}
+            hasError={getHasError("description", errors)}
+            errMessage={getErrMessage("description", errors)}
           />
           <InputText
             type="text"
@@ -344,16 +315,16 @@ function AddPalengke({
             arrayValue={other_names}
             maxLength={100}
             placeholder="Other names referred to"
-            hasError={getHasError("other_names")}
-            errMessage={getErrMessage("other_names")}
+            hasError={getHasError("other_names", errors)}
+            errMessage={getErrMessage("other_names", errors)}
           />
           <UploadMedia
             setOpenModal={setOpenMediaModal}
             setSelectedFiles={setSelectedFiles}
             selectedFiles={selectedFiles}
             setIndexToEdit={setIndexToEdit}
-            hasError={getHasError("media")}
-            errMessage={getErrMessage("media")}
+            hasError={getHasError("media", errors)}
+            errMessage={getErrMessage("media", errors)}
           />
         </div>
         <div className="addPalengkeModalButtons">

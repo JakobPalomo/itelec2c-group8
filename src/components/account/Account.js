@@ -1,11 +1,11 @@
 import Profile from "./Profile";
 import "../../styles/Account.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import PalengkeItem from "../homepage/PalengkeItem";
 import palengkeData from "../../data/palengkeData";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Review from "../palengke/Review.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "../modals/MyModal.js";
 
 export default function Account({
@@ -15,6 +15,13 @@ export default function Account({
   setProfile,
   ...sharedProps
 }) {
+  const location = useLocation();
+  useEffect(() => {
+    if (isEditProfileOpen === true) {
+      setIsEditProfileOpen(false);
+    }
+  }, [location.pathname]);
+
   return (
     <>
       <Profile
@@ -25,59 +32,87 @@ export default function Account({
         {...sharedProps}
       />
       <div className="recent">
-        <div className="title">
+        <div className="titleAccount">
           <h1>My Recent Contribution</h1>
           <Link className="links" to="/account/contributions">
-            See All <ArrowForwardIosIcon sx={{ fontSize: "13px" }} />
+            See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
           </Link>
         </div>
         <center>
-          {palengkeData.slice(0, 1).map((palengke) => (
+          {sharedProps.userContributions.slice(0, 1).map((palengke) => (
             <Link
-              to={`/palengke/${palengke.palengke_id}`}
-              key={palengke.palengke_id}
+              to={`/palengke/${palengke.id}`}
+              key={palengke.id}
               style={{ textDecoration: "none", color: "black" }}
             >
               <PalengkeItem
                 palengke={palengke}
                 type={"45%"}
-                min={"900px"}
+                min={"60%"}
                 marg={"0"}
                 showIcons={false}
                 mediaList={sharedProps.mediaList}
+                {...sharedProps}
               />
             </Link>
           ))}
         </center>
-        <div className="title">
-          <h1>My Recent Reviews</h1>
+        <div className="titleAccount">
+          <h1>My Recent Review</h1>
           <Link className="links" to="/account/reviews">
-            See All <ArrowForwardIosIcon sx={{ fontSize: "13px" }} />
+            See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
           </Link>
         </div>
         <div className="profilereview">
           <center>
-            {palengkeData.slice(0, 1).map((palengke) => (
+            {sharedProps.userReviews.slice(0, 1).map((review) => (
               <Link
-                to={`/palengke/${palengke.palengke_id}`}
-                key={palengke.palengke_id}
+                to={`/palengke/${review.palengke_id}`}
+                key={review.id}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <PalengkeItem
-                  palengke={palengke}
+                  palengke={review}
                   type={"45%"}
-                  min={"900px"}
+                  min={"60%"}
                   marg={"0"}
                   prev={true}
                   showIcons={false}
-                  mediaList={sharedProps.mediaList}
+                  preview={true}
+                  {...sharedProps}
                 />
               </Link>
             ))}
           </center>
           {/* <Review /> */}
         </div>
+        <div className="titleAccount">
+          <h1>My Recent Save</h1>
+          <Link className="links" to="/account/saves">
+            See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
+          </Link>
+        </div>
+        <center>
+          {sharedProps.userSaves.slice(0, 1).map((palengke) => (
+            <Link
+              to={`/palengke/${palengke.id}`}
+              key={palengke.id}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <PalengkeItem
+                palengke={palengke}
+                type={"45%"}
+                min={"60%"}
+                marg={"0"}
+                showIcons={false}
+                mediaList={sharedProps.mediaList}
+                {...sharedProps}
+              />
+            </Link>
+          ))}
+        </center>
       </div>
+      <div style={{ height: "50px" }}></div>
     </>
   );
 }

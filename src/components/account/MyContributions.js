@@ -22,15 +22,29 @@ function MyContributions({ contributions }) {
   }
 
   return (
-    <div className="myContributions">
-      <h1>My Contributions</h1>
-      <div className="contributionsList">
-        {contributions.map((palengke) => (
-          <div key={palengke.id} className="contributionItem">
-            <h2>{palengke.name}</h2>
-            <p>{palengke.address}</p>
-            <button onClick={() => openEditModal(palengke)}>Edit</button>
-          </div>
+    <div className="contributions">
+      <h1 sx={{ margin: "10px" }}>My Contributions</h1>
+      <div>
+        {sharedProps.userContributions.map((palengke) => (
+          <Link
+            to={`/palengke/${palengke.id}`}
+            key={palengke.id}
+            style={{
+              textDecoration: "none",
+              color: "black",
+              pointerEvents: "auto",
+            }}
+          >
+            <PalengkeItem
+              palengke={palengke}
+              showIcons={true}
+              type={"45%"}
+              min={"900px"}
+              marg={"0"}
+              mediaList={sharedProps.mediaList}
+              {...sharedProps}
+            />
+          </Link>
         ))}
       </div>
 

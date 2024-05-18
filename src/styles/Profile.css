@@ -136,11 +136,17 @@
     justify-content: center;
     margin-top: 10px;
   }
+  .cover {
+    height: 450px;
+  }
 }
 @media screen and (max-width: 584px) {
   .profbutton {
     right: 34%;
     transition: right 0.3s ease !important;
+  }
+  .cover {
+    height: 350px;
   }
 }
 @media screen and (max-width: 527px) {
@@ -151,6 +157,9 @@
 @media screen and (max-width: 400px) {
   .profbutton {
     right: 25%;
+  }
+  .cover {
+    height: 250px;
   }
 }
 @media screen and (max-width: 265px) {

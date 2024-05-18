@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
 import EditProfile from "./EditProfile";
 import { styled } from "@mui/material/styles";
+import { stringAvatar, stringToColor } from "../../functions/utils.js";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -28,49 +29,6 @@ export default function Profile({
 }) {
   const fileUploadRef = useRef(null);
 
-  function stringToColor(string) {
-    let hash = 0;
-    let i;
-
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = "#";
-
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-    /* eslint-enable no-bitwise */
-    console.log("color");
-    console.log(color);
-    return color;
-  }
-
-  function stringAvatar(passedname) {
-    let name = "";
-    if (passedname == "undefined" || passedname == "null") {
-      name = "P";
-    } else {
-      name = passedname;
-    }
-
-    const nameParts = name.split(" ");
-    const initials =
-      nameParts.length > 1
-        ? `${nameParts[0][0]}${nameParts[1][0]}`
-        : `${nameParts[0][0]}`;
-
-    return {
-      sx: {
-        backgroundColor: `${stringToColor(name)} !important`,
-      },
-      children: initials,
-    };
-  }
-
   const getAddress = () => {
     if (
       sharedProps.currUser.district ||
@@ -79,19 +37,19 @@ export default function Profile({
     ) {
       let address = "";
       if (sharedProps.currUser.district) {
-        if (address != "") {
+        if (address !== "") {
           address.concat(", ");
         }
         address.concat(sharedProps.currUser.district);
       }
       if (sharedProps.currUser.city) {
-        if (address != "") {
+        if (address !== "") {
           address.concat(", ");
         }
         address.concat(sharedProps.currUser.city);
       }
       if (sharedProps.currUser.region) {
-        if (address != "") {
+        if (address !== "") {
           address.concat(", ");
         }
         address.concat(sharedProps.currUser.region);
@@ -117,7 +75,7 @@ export default function Profile({
   }, [isEditProfileOpen]);
 
   const getProfileSrc = () => {
-    if (sharedProps.userProfilePic.path && profile) {
+    if (profile) {
       return `${URL.createObjectURL(profile)}`;
     } else if (sharedProps.userProfilePic.path) {
       return sharedProps.userProfilePic.path;
@@ -135,7 +93,6 @@ export default function Profile({
             <Avatar
               {...(sharedProps.currUser.username &&
                 stringAvatar(sharedProps.currUser.username))}
-              sx={{ bgcolor: "#B92F37" }}
               className="avatar"
               alt="Aliah"
               src={getProfileSrc()} ///assets/pfp.jpg

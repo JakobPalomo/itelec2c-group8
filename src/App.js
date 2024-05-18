@@ -99,27 +99,6 @@ function App() {
 
   const [newPalengkeList, setNewPalengkeList] = useState([]);
 
-  const sharedProps = {
-    palengkeList: palengkeList,
-    setPalengkeList: setPalengkeList,
-    reviewList: reviewList,
-    setReviewList: setReviewList,
-    upvoteList: upvoteList,
-    setUpvoteList: setUpvoteList,
-    mediaList: mediaList,
-    setMediaList: setMediaList,
-    userList: userList,
-    setUserList: setUserList,
-    currUser: currUser,
-    setCurrUser: setCurrUser,
-    isLoggedIn: isLoggedIn,
-    userProfilePic: userProfilePic,
-    userReviews: userReviews,
-    userSaves: userSaves,
-    userUpvotes: userUpvotes,
-    userContributions: userContributions,
-  };
-
   useEffect(() => {
     // Function to update the main content margin
     function updateMainMargin() {
@@ -169,13 +148,20 @@ function App() {
                 ...doc.data(),
               });
             });
-            console.log(`Updating state for collection: ${collectionName}`);
-            console.log(updatedData);
             stateSetter(updatedData);
             console.log(`State updated for collection: ${collectionName}`);
             console.log(updatedData);
 
-            if (collectionName == "palengke" || collectionName == "review") {
+            if (
+              collectionName === "palengke" ||
+              collectionName === "review" ||
+              collectionName === "user"
+            ) {
+              getUserSaves();
+              getProfilePicPath();
+              getUserContributions();
+              getUserReviews();
+
               // Fetch the media collection
               fetch(`/list/media`)
                 .then((res) => res.json())
@@ -185,6 +171,8 @@ function App() {
                 .catch((error) => {
                   console.error("Error fetching media:", error);
                 });
+            } else if (collectionName === "upvote") {
+              getUserUpvotes();
             }
           } else {
             console.error(
@@ -225,8 +213,7 @@ function App() {
   }, [currUser]);
 
   useEffect(() => {
-    console.log("SHARED PROPS: ");
-    console.log(sharedProps);
+    console.log("SHARED PROPS: ", sharedProps);
   }, [
     palengkeList,
     reviewList,
@@ -269,7 +256,7 @@ function App() {
       }
       const data = await response.json();
       setUserContributions(data);
-      console.log(data);
+      console.log("my contributions", data);
     } catch (error) {
       console.log("Error getting user's contributons.", error);
     }
@@ -284,7 +271,7 @@ function App() {
       }
       const data = await response.json();
       setUserReviews(data);
-      console.log(data);
+      console.log("my reviews", data);
     } catch (error) {
       console.log("Error getting user's reviews.", error);
     }
@@ -299,7 +286,7 @@ function App() {
       }
       const data = await response.json();
       setUserSaves(data);
-      console.log(data);
+      console.log("my saves", data);
     } catch (error) {
       console.log("Error getting user's saves.", error);
     }
@@ -314,10 +301,35 @@ function App() {
       }
       const data = await response.json();
       setUserUpvotes(data);
-      console.log(data);
+      console.log("my upvotes", data);
     } catch (error) {
       console.log("Error getting user's upvotes.", error);
     }
+  };
+
+  const sharedProps = {
+    palengkeList: palengkeList,
+    setPalengkeList: setPalengkeList,
+    reviewList: reviewList,
+    setReviewList: setReviewList,
+    upvoteList: upvoteList,
+    setUpvoteList: setUpvoteList,
+    mediaList: mediaList,
+    setMediaList: setMediaList,
+    userList: userList,
+    setUserList: setUserList,
+    currUser: currUser,
+    setCurrUser: setCurrUser,
+    isLoggedIn: isLoggedIn,
+    userProfilePic: userProfilePic,
+    userReviews: userReviews,
+    userSaves: userSaves,
+    userUpvotes: userUpvotes,
+    userContributions: userContributions,
+    getUserSaves: getUserSaves,
+    getProfilePicPath: getProfilePicPath,
+    getUserContributions: getUserContributions,
+    getUserReviews: getUserReviews,
   };
 
   return (

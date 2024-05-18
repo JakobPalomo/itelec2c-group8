@@ -1,6 +1,7 @@
 import Modal from "../modals/MyModal";
 import Button from "@mui/material/Button";
 import WarningIcon from "@mui/icons-material/Warning";
+import ErrorIcon from "@mui/icons-material/Error";
 
 function ConfirmModal({
   title = "",
@@ -17,6 +18,7 @@ function ConfirmModal({
   parentSize = false,
   prevModalHeight = "unset",
   defaultValues,
+  icon = <WarningIcon className="muiWarningIcon" />,
   children,
 }) {
   return (
@@ -28,7 +30,7 @@ function ConfirmModal({
       modalHeight={prevModalHeight}
     >
       <div className="confirmModalCont">
-        {noIcon === false && <WarningIcon className="muiWarningIcon" />}
+        {noIcon === false && icon}
         {/* {parentSize === true && <div style={{ height: "25px" }}></div>} */}
         {children}
       </div>
@@ -44,26 +46,19 @@ function ConfirmModal({
           className="button pinkButton mediaButtonMargin deleteMediaButton"
           style={{ textTransform: "none" }}
           onClick={() => {
-            if (context === "deleteMedia") {
+            if (context === "deleteMedia" || context === "addPalengke") {
               confirmYes();
               setOpenPrevModal(false);
-            } else if (context === "addMedia") {
+            } else if (
+              context === "addMedia" ||
+              context === "changePassNoEmail"
+            ) {
               setOpen(false);
               confirmYes(true);
-            } else if (context === "addPalengke") {
-              confirmYes();
-              setOpenPrevModal(false);
-            } else if (context === "register") {
-              confirmYes();
-            } else if (context === "selectLocation") {
-              confirmYes();
-            } else if (context === "deleteReview") {
-              confirmYes();
-            } else if (context === "edit profile") {
-              confirmYes();
-            } else if (context === "deleteAccount") {
-              confirmYes();
+            } else if (context === "verifyOTP") {
+              confirmYes(true);
             } else {
+              //register, selectLocation, deleteReview, editProfile, deleteAccount, changePassFromForgotPass
               confirmYes();
             }
           }}
@@ -77,7 +72,10 @@ function ConfirmModal({
           onClick={() => {
             setOpen(false);
             if (context === "deleteMedia") {
-            } else if (context === "addMedia") {
+            } else if (
+              context === "addMedia" ||
+              context === "changePassNoEmail"
+            ) {
               confirmYes(false);
             } else if (context === "addPalengke") {
             } else if (context === "selectLocation") {
