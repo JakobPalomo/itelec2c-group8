@@ -38,12 +38,13 @@ function Review({
   key,
   index,
   editable,
-  setOpen,
+  setOpen = () => {},
   setDeleteClicked,
   setReportReviewClicked,
   setIsEditing,
   setDefaultValues,
   review,
+  accountPage = false,
   ...sharedProps
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -89,76 +90,78 @@ function Review({
 
   return (
     <div className="Reviews">
-      <p>{review.date}</p>
-      <div>
-        <div className="edit">
-          <IconButton className="menuEdit" onClick={handleClick}>
-            <MoreHorizIcon style={{ color: "#fd7335" }} />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            MenuListProps={{
-              style: {
-                padding: 0,
-              },
-            }}
-            transformOrigin={{
-              horizontal: "right",
-            }}
-            sx={{
-              "& .MuiPaper-root": {
-                boxShadow: "unset",
-                border: "1px solid #d6d6d6",
-              },
-              transform: "translate(50px, 0)",
-            }}
-          >
-            {editable === true && (
-              <>
-                <CustomMenuItem
-                  onClick={() => {
-                    handleClose();
-                    setIsEditing(true);
-                    setOpen(true);
-                    setDefaultValues(review);
-                  }}
-                >
-                  <EditIcon className="muiIconReview" />
-                  <Typography textAlign="center" className="pinkLinkp">
-                    Edit
-                  </Typography>
-                </CustomMenuItem>
-                <CustomMenuItem
-                  onClick={() => {
-                    handleClose();
-                    setDeleteClicked(true);
-                    setDefaultValues(review);
-                  }}
-                >
-                  <DeleteIcon className="muiIconReview" />
-                  <Typography textAlign="center" className="pinkLinkp">
-                    Delete
-                  </Typography>
-                </CustomMenuItem>
-              </>
-            )}
-            <CustomMenuItem
-              onClick={() => {
-                handleClose();
-                setReportReviewClicked(true);
-                setDefaultValues(review);
+      <p style={{ textAlign: "left" }}>{review.date}</p>
+      {accountPage === false && (
+        <div>
+          <div className="edit">
+            <IconButton className="menuEdit" onClick={handleClick}>
+              <MoreHorizIcon style={{ color: "#fd7335" }} />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              MenuListProps={{
+                style: {
+                  padding: 0,
+                },
+              }}
+              transformOrigin={{
+                horizontal: "right",
+              }}
+              sx={{
+                "& .MuiPaper-root": {
+                  boxShadow: "unset",
+                  border: "1px solid #d6d6d6",
+                },
+                transform: "translate(50px, 0)",
               }}
             >
-              <ReportIcon className="muiIconReview" />
-              <Typography textAlign="center" className="pinkLinkp">
-                Report
-              </Typography>
-            </CustomMenuItem>
-          </Menu>
+              {editable === true && (
+                <>
+                  <CustomMenuItem
+                    onClick={() => {
+                      handleClose();
+                      setIsEditing(true);
+                      setOpen(true);
+                      setDefaultValues(review);
+                    }}
+                  >
+                    <EditIcon className="muiIconReview" />
+                    <Typography textAlign="center" className="pinkLinkp">
+                      Edit
+                    </Typography>
+                  </CustomMenuItem>
+                  <CustomMenuItem
+                    onClick={() => {
+                      handleClose();
+                      setDeleteClicked(true);
+                      setDefaultValues(review);
+                    }}
+                  >
+                    <DeleteIcon className="muiIconReview" />
+                    <Typography textAlign="center" className="pinkLinkp">
+                      Delete
+                    </Typography>
+                  </CustomMenuItem>
+                </>
+              )}
+              <CustomMenuItem
+                onClick={() => {
+                  handleClose();
+                  setReportReviewClicked(true);
+                  setDefaultValues(review);
+                }}
+              >
+                <ReportIcon className="muiIconReview" />
+                <Typography textAlign="center" className="pinkLinkp">
+                  Report
+                </Typography>
+              </CustomMenuItem>
+            </Menu>
+          </div>
         </div>
-      </div>
+      )}
       <HalfRating defaultValue={review.rating} disabled={true} />
       {/* Rating display section */}
       <div>{/* Your rating display code goes here */}</div>
@@ -173,7 +176,9 @@ function Review({
           {getUsername(review.user_id)}
         </span>
       </div>
-      <p className="overflow-wrap">{review.review}</p>
+      <p className="overflow-wrap" style={{ textAlign: "left" }}>
+        {review.review}
+      </p>
       {/* Dropdown menu for editing and deleting comments */}
     </div>
   );

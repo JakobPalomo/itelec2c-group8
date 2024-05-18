@@ -24,6 +24,7 @@ function LocationSearch({
   openMap,
   setOpenMap,
   prevModalHeight,
+  defaultLocation,
 }) {
   const [options, setOptions] = useState([]);
   const [openSelectLoc, setOpenSelectLoc] = useState(false);
@@ -91,6 +92,7 @@ function LocationSearch({
           setOpen={setOpenMap}
           onSelectLocation={onSelectLocation}
           prevModalHeight={prevModalHeight}
+          defaultLocation={defaultLocation}
         />
       )}
       <InputText

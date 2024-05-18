@@ -40,6 +40,7 @@ function InputText({
   iconOff,
   noLabel = false,
   dropDownAction,
+  defaultOtherNames,
   children,
 }) {
   let paddingRight = "20px";
@@ -55,6 +56,7 @@ function InputText({
     if (defaultValue !== undefined || defaultValue !== null) {
       setValue(defaultValue);
     }
+    console.log("arrayValue3", arrayValue);
   }, []);
   if (children !== undefined) {
     paddingRight = "40px";
@@ -62,6 +64,12 @@ function InputText({
 
   // Other Name Chip
   const [inputValue, setInputValue] = useState("");
+  const [autocompleteValue, setAutocompleteValue] = useState(arrayValue);
+
+  useEffect(() => {
+    setAutocompleteValue(arrayValue);
+  }, [arrayValue]);
+
   const optionRef = useRef(null);
 
   const handleMultiValKeyPress = (event, newValue) => {
@@ -373,39 +381,27 @@ function InputText({
           <Autocomplete
             multiple
             id="tags-filled"
-            options={[inputValue]}
-            // options={
-            //   selectData.length !== 0
-            //     ? selectData.map((option) => option.name)
-            //     : []
-            // }
-            // defaultValue={selectData.length !== 0 ? [selectData[0].name] : []}
-            readOnly={disabled}
-            freeSolo={false}
-            renderTags={(arrayValue, getTagProps) =>
-              arrayValue.map((option, index) => (
-                <div style={{ position: "relative" }}>
-                  <Chip
-                    variant="outlined"
-                    label={option}
-                    key={option}
-                    {...getTagProps({ index })}
-                    onChange={(e) => {
-                      console.log(e);
-                    }}
-                    onClick={(e) => {
-                      console.log(e);
-                    }}
-                    onDelete={(event) => {
-                      console.log("Delete event:", event);
-                      const onDelete = getTagProps({ index }).onDelete;
-                      if (typeof onDelete === "function") {
-                        onDelete(event);
-                      }
-                      handleChipDelete(index);
-                    }}
-                  />
-                </div>
+            options={[]}
+            value={autocompleteValue}
+            readOnly={false}
+            freeSolo
+            onChange={(event, newValue) => {
+              setAutocompleteValue(newValue);
+              setValue(newValue);
+            }}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip
+                  variant="outlined"
+                  label={option}
+                  key={option}
+                  {...getTagProps({ index })}
+                  onDelete={() => handleChipDelete(index)}
+                />
               ))
             }
             componentsProps={{
@@ -425,14 +421,11 @@ function InputText({
                   ...params.inputProps,
                   maxLength: maxLength,
                 }}
-                value={inputValue}
                 helperText="Press enter to add a name"
-                // multiline
-                // maxRows={4}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#FFBA5A", //#FF6262 pink
+                      borderColor: "#FFBA5A",
                     },
                     "&:hover .MuiOutlinedInput-notchedOutline": {
                       borderColor: "#FFBA5A",
@@ -447,12 +440,11 @@ function InputText({
                     fontSize: "14px !important",
                     p: "10px",
                     paddingLeft: "20px",
-                    paddingRight: paddingRight,
+                    paddingRight: "20px",
                   },
                   display: "flex",
                   borderRadius: "20px",
                 }}
-                onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => handleMultiValKeyPress(e, e.target.value)}
               />
             )}

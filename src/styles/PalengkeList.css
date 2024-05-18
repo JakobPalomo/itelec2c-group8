@@ -217,38 +217,40 @@ p {
 }
 
 .editDeleteIcons {
-  margin-left: 50%;
-  margin-left: 55%;
-  padding-left: 6px;
-  margin-top: -20px;
-  padding: 5px;
+  position: absolute;
+  right: 15px;
+  bottom: 60px;
+  z-index: 2;
+  margin-right: 20%;
+}
+
+.editDeleteReviewIcons {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  z-index: 2;
 }
 
 .editIcon {
-  color: #13481d !important;
-  margin-right: 10px;
-  margin-left: 300px;
-  margin-top: -20px;
-  /* width: fit-content; */
-  font-weight: bold;
-  background-color: #c0ebb7;
-  padding: 5px;
-  margin-right: 8px;
-  border-radius: 12px;
+  color: white !important;
+  background-color: #6ea837 !important;
+  margin-right: 10px !important;
+  padding: 6px !important;
 }
 .editIcon:hover {
-  background-color: #bde6b5 !important;
+  background-color: #598f27 !important;
 }
 
 .deleteIcon {
-  color: #ad0000 !important;
-  /* width: fit-content; */
-  font-weight: bold;
-  background-color: #faa0a0;
-  padding: 5px;
-  border-radius: 12px;
+  color: white !important;
+  background-color: #ff6262 !important;
+  padding: 6px !important;
 }
 
 .deleteIcon:hover {
-  background-color: #ef9a9a;
+  background-color: #e74f4f !important;
+}
+
+.muiEditIcons {
+  font-size: 22px !important;
 }

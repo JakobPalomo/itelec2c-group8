@@ -34,7 +34,29 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
+  margin-left: 20%;
+  margin-right: 20%;
 }
+
+.backButton {
+  position: absolute !important;
+  left: 20%;
+}
+
+.headerTitleAccount {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.headerTitleAccount h1 {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+
 @media screen and (max-width: 700px) {
   .titleAccount {
     margin-left: 10%;
@@ -45,6 +67,18 @@
   }
   .palengkeCard {
     min-width: 80% !important;
+  }
+  .editDeleteIcons {
+    margin-right: 10%;
+  }
+  .myReviewMargin,
+  .profilereview {
+    margin-left: 10% !important;
+    margin-right: 10% !important;
+  }
+  .backButton {
+    margin-left: 0 !important;
+    left: 10%;
   }
 }
 
@@ -59,5 +93,11 @@
   }
   .titleAccount a {
     margin-bottom: 10px;
+  }
+}
+@media screen and (max-width: 400px) {
+  .backButton {
+    left: 7%;
+    top: -30%;
   }
 }

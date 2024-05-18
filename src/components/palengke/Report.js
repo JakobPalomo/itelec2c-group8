@@ -50,7 +50,7 @@ export default function Report({ palengkeId, ...sharedProps }) {
   };
 
   useEffect(() => {
-    setSaved(isPalengkeSaved());
+    // setSaved(isPalengkeSaved());
   }, []);
 
   const handleSave = async () => {
@@ -93,6 +93,7 @@ export default function Report({ palengkeId, ...sharedProps }) {
         console.error("Error removing save:", error);
       }
     }
+    sharedProps.getUserSaves();
   };
 
   return (

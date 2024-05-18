@@ -311,6 +311,11 @@ function Palengke({ ...sharedProps }) {
     setPalengkeReviews(sortedReviews);
   };
 
+  const getFormattedOtherNames = () => {
+    const formattedOtherNames = palengke.other_names.join("; ");
+    return formattedOtherNames;
+  };
+
   return (
     <>
       {addEditReviewClicked && (
@@ -322,13 +327,12 @@ function Palengke({ ...sharedProps }) {
           <AddEditReview
             setOpen={setAddEditReviewClicked}
             palengkeId={palengkeId}
-            onAddReview={handleAddReview}
-            onEditReview={handleEditReview}
             defaultValues={defaultValues}
             setDefaultValues={setDefaultValues}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
             userId={sharedProps.currUser.id}
+            getUserReviews={sharedProps.getUserReviews}
           />
         </Modal>
       )}
@@ -444,6 +448,19 @@ function Palengke({ ...sharedProps }) {
               >
                 <p className="overflow-wrap">{palengke?.description}</p>
               </Box>
+              {palengke.other_names && (
+                <Box
+                  sx={{ flexGrow: 1, padding: 0, width: "100%" }}
+                  className="desc"
+                >
+                  <p className="overflow-wrap">
+                    <span style={{ fontWeight: 600, marginRight: "5px" }}>
+                      Other Names:{" "}
+                    </span>
+                    {getFormattedOtherNames()}
+                  </p>
+                </Box>
+              )}
             </Grid>
           </Grid>
         </Box>

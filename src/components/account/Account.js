@@ -72,7 +72,7 @@ export default function Account({
                 key={review.id}
                 style={{ textDecoration: "none", color: "black" }}
               >
-                <PalengkeItem
+                {/* <PalengkeItem
                   palengke={review}
                   type={"45%"}
                   min={"60%"}
@@ -80,6 +80,14 @@ export default function Account({
                   prev={true}
                   showIcons={false}
                   preview={true}
+                  {...sharedProps}
+                /> */}
+                <Review
+                  key={review.id}
+                  index={review.id}
+                  editable={true}
+                  review={review}
+                  accountPage={true}
                   {...sharedProps}
                 />
               </Link>

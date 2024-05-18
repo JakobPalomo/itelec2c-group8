@@ -3,4 +3,21 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  margin-top: 50px;
+}
+
+.contributions center {
+  width: 100%;
+}
+
+.myContriMargin {
+  margin-bottom: 35px;
+}
+
+.myReviewMargin {
+  margin-bottom: 20px;
+  text-align: left !important;
+  margin-left: 20%;
+  margin-right: 20%;
 }

@@ -11,6 +11,7 @@ const LocationSelectorModal = ({
   setOpen,
   onSelectLocation,
   prevModalHeight,
+  defaultLocation = { lat: 14.599512, lng: 120.984222 },
 }) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -41,10 +42,21 @@ const LocationSelectorModal = ({
     overflow: "hidden",
   };
 
-  const defaultLocation = { lat: 14.599512, lng: 120.984222 };
-  const [center, setCenter] = useState(defaultLocation);
+  const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  };
+
+  useEffect(() => {
+    if (isEmptyObject(defaultLocation) === false) {
+      setCenter(defaultLocation);
+      setMarkerPosition(defaultLocation);
+    }
+  }, []);
+
+  const defaultLoc = { lat: 14.599512, lng: 120.984222 };
+  const [center, setCenter] = useState(defaultLoc);
   const [tempAddress, setTempAddress] = useState("");
-  const [markerPosition, setMarkerPosition] = useState(defaultLocation);
+  const [markerPosition, setMarkerPosition] = useState(defaultLoc);
   const [zoom, setZoom] = useState(12);
   const mapRef = useRef(null);
   const markerRef = useRef(null);

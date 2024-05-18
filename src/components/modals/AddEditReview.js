@@ -18,14 +18,14 @@ function AddEditReview({
   setOpen,
   userId,
   palengkeId,
-  onAddReview,
-  onEditReview,
   defaultValues,
   setDefaultValues,
+  getUserReviews,
 }) {
   const initialErrorData = [
     { field: "rating", hasError: false, errMessage: "" },
     { field: "review", hasError: false, errMessage: "" },
+    { field: "all", hasError: false, errMessage: "" },
   ];
 
   const [rating, setRating] = useState(0);
@@ -67,6 +67,16 @@ function AddEditReview({
     setReview(trimmedReview);
 
     let tempErrors = initialErrorData.map((error) => ({ ...error })); // Create a copy of the initialErrorData array
+
+    if (isEditing === true) {
+      if (rating === defaultValues.rating && review === defaultValues.review) {
+        tempErrors = tempErrors.map((error) =>
+          error.field === "all"
+            ? { ...error, hasError: true, errMessage: "Nothing has changed." }
+            : error
+        );
+      }
+    }
 
     if (trimmedRating <= 0) {
       tempErrors = tempErrors.map((error) =>
@@ -122,6 +132,7 @@ function AddEditReview({
       if (!response.ok) {
         throw new Error("Failed to add review");
       }
+      getUserReviews();
       setOpen(false);
     } catch (error) {
       console.error("Error adding media:", error);
@@ -151,6 +162,9 @@ function AddEditReview({
       // Optionally, handle success behavior (e.g., closing modal)
       setIsEditing(false);
       setOpen(false);
+      getUserReviews();
+      handleCancelAndClearInput();
+      setDefaultValues("");
     } catch (error) {
       console.error("Error editing review:", error);
     }
@@ -201,19 +215,31 @@ function AddEditReview({
           <span>{getErrMessage("rating", errors)}</span>
         </Typography>
       )}
-      <InputText
-        fullWidth
-        type="text"
-        label="Review"
-        required={true}
-        setValue={setReview}
-        value={review}
-        maxLength={100}
-        placeholder="Write a review ..."
-        hasError={getHasError("review", errors)}
-        errMessage={getErrMessage("review", errors)}
-        noLabel={true}
-      />
+      <div style={{ position: "relative" }} className="reviewField">
+        <InputText
+          fullWidth
+          type="text"
+          label="Review"
+          required={true}
+          setValue={setReview}
+          value={review}
+          maxLength={100}
+          placeholder="Write a review ..."
+          hasError={getHasError("review", errors)}
+          errMessage={getErrMessage("review", errors)}
+          noLabel={true}
+        />
+        {getHasError("all", errors) === true && (
+          <Typography
+            id="transition-modal-title"
+            variant="h6"
+            component="h2"
+            className="errorSpanNoLabel allErrMarginBottom"
+          >
+            <span>{getErrMessage("all", errors)}</span>
+          </Typography>
+        )}
+      </div>
       <div className="addPalengkeModalButtons">
         <Button
           variant="contained"
@@ -233,6 +259,8 @@ function AddEditReview({
           onClick={() => {
             handleCancelAndClearInput();
             setOpen(false);
+            isEditing && setIsEditing(false);
+            isEditing && setDefaultValues("");
           }}
         >
           Cancel

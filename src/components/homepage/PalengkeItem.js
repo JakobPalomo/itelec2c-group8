@@ -11,8 +11,6 @@ import HideImageIcon from "@mui/icons-material/HideImage";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CircleIcon from "@mui/icons-material/Circle";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { stringAvatar, stringToColor } from "../../functions/utils.js";
 
 // import image from "../../../server/uploads/1715446520703-Screenshot (4549).png";
@@ -283,12 +281,6 @@ function PalengkeItem({
               <FmdGoodRoundedIcon className="muiLocationIcon" />
               <div>{palengke.address}</div>
             </div>
-            {showIcons && (
-              <div className="editDeleteIcons">
-                <ModeEditIcon className="editIcon" />
-                <DeleteIcon className="deleteIcon" />
-              </div>
-            )}
           </div>
         )}
       </RippleButton>

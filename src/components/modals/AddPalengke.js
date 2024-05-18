@@ -32,6 +32,7 @@ function AddPalengke({
   mediaList,
   setMediaList,
   currUser,
+  defaultValue,
 }) {
   const initialErrorData = [
     { field: "palengkeName", hasError: false, errMessage: "" },
@@ -50,6 +51,9 @@ function AddPalengke({
   const [media, setMedia] = useState([]);
   const [business_status, setBusinessStatus] = useState(0);
   const [other_names, setOtherNames] = useState([]);
+
+  const [defaultLocation, setDefaultLocation] = useState([]);
+  const [palengkeId, setPalengkeId] = useState("");
 
   const [errors, setErrors] = useState(initialErrorData);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
@@ -121,18 +125,38 @@ function AddPalengke({
       console.log(formData);
 
       // Upload the FormData to the server
-      const response = fetch(`/palengke/add?userId=${currUser.id}`, {
-        method: "POST",
-        body: formData,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("responseok");
-          console.log(data.documentIds);
-          setMedia(data.documentIds);
-        });
+      if (defaultValue) {
+        //edit
+        console.log("inside edit");
+        const response = fetch(
+          `/palengke/edit?userId=${currUser.id}&palengkeId=${palengkeId}`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("responseok");
+            console.log(data.documentIds);
+            setMedia(data.documentIds);
+          });
+      } else {
+        //add
+        console.log("inside add");
+        const response = fetch(`/palengke/add?userId=${currUser.id}`, {
+          method: "POST",
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("responseok");
+            console.log(data.documentIds);
+            setMedia(data.documentIds);
+          });
+      }
     } catch (error) {
-      console.error("Error adding media:", error);
+      console.error("Error adding/editing media:", error);
     }
   };
 
@@ -188,7 +212,28 @@ function AddPalengke({
   useEffect(() => {
     console.log("gmaps api key");
     console.log(REACT_APP_GMAPS_API_KEY);
+
+    if (defaultValue) {
+      setPalengkeId(defaultValue.id);
+      setName(defaultValue.name);
+      setAddress(defaultValue.address);
+      setDefaultLocation(
+        defaultValue.location || { lat: 14.599512, lng: 120.984222 }
+      );
+      setDescription(defaultValue.description || "");
+      setMedia();
+      setBusinessStatus(parseInt(defaultValue.business_status));
+      setOtherNames(defaultValue.other_names);
+      console.log(
+        "defaultValueLoc",
+        defaultValue.location || { lat: 14.599512, lng: 120.984222 }
+      );
+    }
   }, []);
+
+  useEffect(() => {
+    console.log("arrayValue2", other_names);
+  }, [other_names]);
 
   return (
     <div>
@@ -284,6 +329,7 @@ function AddPalengke({
             openMap={openMap}
             setOpenMap={setOpenMap}
             prevModalHeight={prevModalHeight}
+            defaultLocation={defaultLocation}
           />
           <InputText
             type="text"
@@ -349,6 +395,9 @@ function AddPalengke({
           >
             Cancel
           </Button>
+          {/* {defaultValue?.other_names.toString()}
+          {defaultValue?.location?.lat.toString()}
+          {defaultValue?.location?.lng.toString()} */}
         </div>
       </div>
     </div>

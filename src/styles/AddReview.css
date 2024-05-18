@@ -32,3 +32,12 @@ textarea {
   margin-top: 10px;
   margin-bottom: 5px !important;
 }
+.allErrMarginBottom {
+  position: absolute;
+  bottom: -11px;
+  transform: translate(65%, 0%);
+}
+
+.reviewField:has(.allErrMarginBottom) {
+  margin-bottom: 20px;
+}

@@ -262,6 +262,10 @@ app.put("/user/delete/:userId", async (req, res) => {
     // Update the user document
     await userDocRef.update({
       username: "Deleted User",
+      email: "",
+      district: "",
+      city: "",
+      region: "",
       profile: "",
     });
 
@@ -359,6 +363,117 @@ app.post("/palengke/add", upload.array("media", 10), async (req, res) => {
   } catch (error) {
     console.error("Error adding palengke:", error);
     res.status(500).send("Error adding palengke");
+  }
+});
+
+// EDIT PALENGKE WITH MEDIA (10 files only)
+app.post("/palengke/edit", upload.array("media", 10), async (req, res) => {
+  try {
+    const { userId, palengkeId } = req.query;
+    console.log("userId", userId);
+    console.log("palengkeId", palengkeId);
+    if (!userId || !palengkeId) {
+      return res.status(400).send("userId and palengkeId are required");
+    }
+
+    const mediaFilenames = JSON.parse(req.body.mediaFilenames);
+    const mediaTypes = JSON.parse(req.body.mediaTypes);
+    console.log("media filenames: ");
+    console.log(mediaFilenames);
+    console.log("media types: ");
+    console.log(mediaTypes);
+    const files = req.files;
+    const documentIds = [];
+
+    const promises = files.map(async (file, index) => {
+      const type =
+        mediaTypes[index] && mediaTypes[index].startsWith("image/")
+          ? 0
+          : mediaTypes[index].startsWith("video/")
+          ? 1
+          : 2;
+      const filename = mediaFilenames[index] || "";
+      const tempPath = file.path || "";
+      const path = tempPath.replace(/^.*?public/, "").replaceAll("\\", "/");
+      const link = "";
+
+      const docRef = collection(db, "media");
+      try {
+        const addedDocRef = await addDoc(docRef, {
+          type,
+          filename,
+          path,
+          link,
+        });
+        documentIds.push(addedDocRef.id);
+      } catch (error) {
+        console.error("Error adding media document:", error);
+        throw error; // Throw the error to exit Promise.all() if any error occurs
+      }
+    });
+
+    await Promise.all(promises);
+
+    console.log(documentIds.toString());
+    const media = documentIds;
+    let { name, address, business_status, description } = req.body;
+    business_status = parseInt(business_status);
+    const location = JSON.parse(req.body.location);
+    const other_names = JSON.parse(req.body.other_names);
+
+    // Update the palengke document
+    console.log("to update palengke");
+    const palengkeRef = doc(db, "palengke", palengkeId);
+    console.log("found palengke", palengkeRef);
+    await updateDoc(palengkeRef, {
+      name,
+      address,
+      location,
+      business_status,
+      description,
+      other_names,
+      media,
+    });
+
+    console.error("Successfully edited palengke");
+    res.status(200).json("Successfully edited palengke");
+  } catch (error) {
+    console.error("Error editing palengke:", error);
+    res.status(500).send("Error editing palengke");
+  }
+});
+
+// DELETE PALENGKE
+app.delete("/palengke/delete", async (req, res) => {
+  try {
+    const { userId, palengkeId } = req.query;
+
+    if (!userId || !palengkeId) {
+      return res.status(400).send("userId and palengkeId are required");
+    }
+
+    // Delete the palengke document from the database
+    const palengkeRef = doc(db, "palengke", palengkeId);
+    await deleteDoc(palengkeRef);
+
+    // Check if the user document exists before updating contributions
+    const userRef = doc(db, "user", userId);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    // Update user contributions array
+    const user = userSnap.data();
+    const updatedContributions = (user.contributions || []).filter(
+      (contri) => contri !== palengkeId
+    );
+    await updateDoc(userRef, { contributions: updatedContributions });
+
+    res.status(200).json("Successfully deleted palengke");
+  } catch (error) {
+    console.error("Error deleting palengke:", error);
+    res.status(500).send("Error deleting palengke");
   }
 });
 
