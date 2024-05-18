@@ -286,7 +286,7 @@ function Palengke({ ...sharedProps }) {
       handleSortReviews("date");
     } else if (sortCriterion === 1) {
       handleSortReviews("highestRating");
-    } else if (sortCriterion === 1) {
+    } else if (sortCriterion === 2) {
       handleSortReviews("lowestRating");
     }
   }, [sortCriterion]);
