@@ -8,7 +8,7 @@ function MyReviews({ ...sharedProps }) {
       <div className="myReviews">My Reviews Page</div>
       <div className="bod">
         <div className="myreviewcontent">
-          {reviewsData.map((review, index) => (
+          {sharedProps.userReviews.map((review, index) => (
             <Review key={index} {...review} />
           ))}
         </div>

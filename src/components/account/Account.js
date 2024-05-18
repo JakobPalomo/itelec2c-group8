@@ -33,10 +33,10 @@ export default function Account({
         {...sharedProps}
       />
       <div className="recent">
-        <div className="title">
+        <div className="titleAccount">
           <h1>My Recent Contribution</h1>
           <Link className="links" to="/account/contributions">
-            See All <ArrowForwardIosIcon sx={{ fontSize: "13px" }} />
+            See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
           </Link>
         </div>
         <center>
@@ -58,10 +58,10 @@ export default function Account({
             </Link>
           ))}
         </center>
-        <div className="title">
-          <h1>My Recent Reviews</h1>
+        <div className="titleAccount">
+          <h1>My Recent Review</h1>
           <Link className="links" to="/account/reviews">
-            See All <ArrowForwardIosIcon sx={{ fontSize: "13px" }} />
+            See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
           </Link>
         </div>
         <div className="profilereview">
@@ -87,7 +87,33 @@ export default function Account({
           </center>
           {/* <Review /> */}
         </div>
+        <div className="titleAccount">
+          <h1>My Recent Save</h1>
+          <Link className="links" to="/account/saves">
+            See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
+          </Link>
+        </div>
+        <center>
+          {sharedProps.userSaves.slice(0, 1).map((palengke) => (
+            <Link
+              to={`/palengke/${palengke.id}`}
+              key={palengke.id}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <PalengkeItem
+                palengke={palengke}
+                type={"45%"}
+                min={"60%"}
+                marg={"0"}
+                showIcons={false}
+                mediaList={sharedProps.mediaList}
+                {...sharedProps}
+              />
+            </Link>
+          ))}
+        </center>
       </div>
+      <div style={{ height: "50px" }}></div>
     </>
   );
 }

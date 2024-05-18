@@ -301,6 +301,7 @@ h1 {
   .palengkeStatusPill {
     margin-top: -33px;
     left: 120px;
+    /* 120 */
     position: absolute;
   }
   .ratingContBig {

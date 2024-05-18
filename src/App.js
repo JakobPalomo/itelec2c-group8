@@ -99,27 +99,6 @@ function App() {
 
   const [newPalengkeList, setNewPalengkeList] = useState([]);
 
-  const sharedProps = {
-    palengkeList: palengkeList,
-    setPalengkeList: setPalengkeList,
-    reviewList: reviewList,
-    setReviewList: setReviewList,
-    upvoteList: upvoteList,
-    setUpvoteList: setUpvoteList,
-    mediaList: mediaList,
-    setMediaList: setMediaList,
-    userList: userList,
-    setUserList: setUserList,
-    currUser: currUser,
-    setCurrUser: setCurrUser,
-    isLoggedIn: isLoggedIn,
-    userProfilePic: userProfilePic,
-    userReviews: userReviews,
-    userSaves: userSaves,
-    userUpvotes: userUpvotes,
-    userContributions: userContributions,
-  };
-
   useEffect(() => {
     // Function to update the main content margin
     function updateMainMargin() {
@@ -234,8 +213,7 @@ function App() {
   }, [currUser]);
 
   useEffect(() => {
-    console.log("SHARED PROPS: ");
-    console.log(sharedProps);
+    console.log("SHARED PROPS: ", sharedProps);
   }, [
     palengkeList,
     reviewList,
@@ -327,6 +305,31 @@ function App() {
     } catch (error) {
       console.log("Error getting user's upvotes.", error);
     }
+  };
+
+  const sharedProps = {
+    palengkeList: palengkeList,
+    setPalengkeList: setPalengkeList,
+    reviewList: reviewList,
+    setReviewList: setReviewList,
+    upvoteList: upvoteList,
+    setUpvoteList: setUpvoteList,
+    mediaList: mediaList,
+    setMediaList: setMediaList,
+    userList: userList,
+    setUserList: setUserList,
+    currUser: currUser,
+    setCurrUser: setCurrUser,
+    isLoggedIn: isLoggedIn,
+    userProfilePic: userProfilePic,
+    userReviews: userReviews,
+    userSaves: userSaves,
+    userUpvotes: userUpvotes,
+    userContributions: userContributions,
+    getUserSaves: getUserSaves,
+    getProfilePicPath: getProfilePicPath,
+    getUserContributions: getUserContributions,
+    getUserReviews: getUserReviews,
   };
 
   return (

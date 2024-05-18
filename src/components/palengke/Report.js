@@ -36,16 +36,62 @@ export default function Report({ palengkeId, ...sharedProps }) {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const handleSave = () => {
-    setSaved(!saved);
+  const isPalengkeSaved = () => {
+    console.log(
+      "isPalengkeSaved",
+      sharedProps.userSaves.find((save) => save.id === palengkeId)
+    );
+    return sharedProps.userSaves.find((save) => save.id === palengkeId);
+  };
+
+  useEffect(() => {
+    setSaved(isPalengkeSaved());
+  }, []);
+
+  const handleSave = async () => {
     if (saved === false) {
-      // add to db saves
-    } else if (saved === false) {
-      // remove from  db saves
+      // Add to DB
+      const formData = new FormData();
+      formData.append("user_id", sharedProps.currUser.id);
+      formData.append("palengke_id", palengkeId);
+
+      try {
+        const response = await fetch(`/palengke/add_save`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to save palengke");
+        }
+        setSaved(true);
+      } catch (error) {
+        console.error("Error saving palengke:", error);
+      }
+    } else {
+      // Remove from DB
+      const formData = new FormData();
+      formData.append("user_id", sharedProps.currUser.id);
+      formData.append("palengke_id", palengkeId);
+
+      try {
+        const response = await fetch(`/palengke/remove_save`, {
+          method: "PUT",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to remove save");
+        }
+        setSaved(false);
+      } catch (error) {
+        console.error("Error removing save:", error);
+      }
     }
   };
 

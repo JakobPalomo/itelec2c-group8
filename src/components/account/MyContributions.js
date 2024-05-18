@@ -8,7 +8,7 @@ function MyContributions({ ...sharedProps }) {
     <div className="contributions">
       <h1 sx={{ margin: "10px" }}>My Contributions</h1>
       <div>
-        {sharedProps.palengkeList.map((palengke) => (
+        {sharedProps.userContributions.map((palengke) => (
           <Link
             to={`/palengke/${palengke.id}`}
             key={palengke.id}

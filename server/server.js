@@ -153,11 +153,16 @@ app.get("/user-profile", async (req, res) => {
 app.get("/user-arrays", async (req, res) => {
   try {
     const userId = req.query.userid;
-    const collectionName = req.query.collection;
+    const collectionParam = req.query.collection;
+    let collectionName = collectionParam;
     let userField = collectionName.concat("s");
+
     if (userField === "palengkes") {
       userField = "contributions";
+    } else if (userField === "saves") {
+      collectionName = "palengke";
     }
+
     const userRef = doc(db, "user", userId);
     const userSnap = await getDoc(userRef);
 
@@ -168,21 +173,34 @@ app.get("/user-arrays", async (req, res) => {
     const user = userSnap.data();
     const documentIds = user[userField] || [];
 
-    console.log(`${userField} Ids:`, documentIds, userField);
+    console.log(
+      `User ${userId} ${userField} Ids:`,
+      documentIds,
+      collectionName
+    );
 
     if (documentIds.length === 0) {
       return res.status(200).json([]);
     }
 
-    const collectionRef = collection(db, collectionName);
-    const q = query(collectionRef, where("__name__", "in", documentIds));
-    const querySnapshot = await getDocs(q);
+    // Split documentIds into chunks of 10 (Firestore's limit for 'in' queries)
+    const chunkSize = 10;
+    const chunks = [];
+    for (let i = 0; i < documentIds.length; i += chunkSize) {
+      chunks.push(documentIds.slice(i, i + chunkSize));
+    }
 
-    const data = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    console.log(data);
+    const data = [];
+    for (const chunk of chunks) {
+      const collectionRef = collection(db, collectionName);
+      const q = query(collectionRef, where("__name__", "in", chunk));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.docs.forEach((doc) => {
+        data.push({ id: doc.id, ...doc.data() });
+      });
+    }
+
+    console.log(`Data for ${userField}:`, data, collectionName);
     res.status(200).json(data);
   } catch (error) {
     console.error("Error getting documents:", error);
@@ -510,6 +528,71 @@ app.post("/review/report", upload.none(), async (req, res) => {
   } catch (error) {
     console.error("Error reporting:", error);
     res.status(500).send("Error reporting");
+  }
+});
+
+// SAVE PALENGKE
+app.post("/palengke/add_save", upload.none(), async (req, res) => {
+  try {
+    console.log("req.body", req.body);
+    const { user_id, palengke_id } = req.body;
+
+    const userRef = doc(db, "user", user_id);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const userSaves = userSnap.data().saves || [];
+    // Check for duplicates
+    if (!userSaves.includes(palengke_id)) {
+      const updatedSaves = [...userSaves, palengke_id];
+
+      try {
+        await updateDoc(userRef, { saves: updatedSaves });
+        console.log("Successfully saved");
+        res.status(200).json("Successfully saved");
+      } catch (error) {
+        console.error("Error updating user: ", error);
+        throw new Error("Error updating user");
+      }
+    } else {
+      console.log("Palengke is already saved");
+      res.status(200).json("Palengke is already saved");
+    }
+  } catch (error) {
+    console.error("Error saving:", error);
+    res.status(500).send("Error saving");
+  }
+});
+
+// UNSAVE PALENGKE
+app.put("/palengke/remove_save", upload.none(), async (req, res) => {
+  try {
+    console.log("req.body", req.body);
+    const { user_id, palengke_id } = req.body;
+
+    const userRef = doc(db, "user", user_id);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      return res.status(404).send("User not found");
+    }
+
+    const userSaves = userSnap.data().saves || [];
+    const updatedSaves = userSaves.filter((save) => save !== palengke_id);
+
+    try {
+      await updateDoc(userRef, { saves: updatedSaves });
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw Error;
+    }
+
+    console.log("Successfully removed save");
+    res.status(200).json("Successfully removed save");
+  } catch (error) {
+    console.error("Error removing save:", error);
+    res.status(500).send("Error removing save");
   }
 });
 

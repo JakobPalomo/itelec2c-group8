@@ -426,7 +426,10 @@ function Palengke({ ...sharedProps }) {
               >
                 <div
                   className="palengkeStatusPill"
-                  style={{ backgroundColor: statusColor }}
+                  style={{
+                    backgroundColor: statusColor,
+                    left: rating === 0 ? "200px" : "120px",
+                  }}
                 >
                   {status}
                 </div>
