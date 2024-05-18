@@ -96,7 +96,7 @@ function PalengkeItem({
 
   const getAverageRating = () => {
     let totalRating = 0;
-    if (palengkeReviews.length != 0) {
+    if (palengkeReviews.length !== 0) {
       palengkeReviews.forEach((review) => {
         totalRating += parseInt(review?.rating);
       });

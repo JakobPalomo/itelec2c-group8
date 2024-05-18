@@ -1,10 +1,27 @@
 .holder {
   margin: 6%;
+  margin-top: 50px;
+  padding-top: 30px;
+  position: relative;
+}
+.palengekeTopButtons {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 .details {
   display: flex;
+  position: relative;
   flex-direction: row;
-  padding: 12px;
+  padding-bottom: 12px;
+  justify-content: space-between;
+}
+.actionDropdownCont {
+  margin-top: 35px;
+  justify-content: space-between;
 }
 .Marketimg {
   border-radius: 12px;
@@ -15,12 +32,16 @@
   font-size: 48px;
   font-weight: bold;
 }
-
+.palengkeNameTitle {
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  margin-right: 15px;
+}
 .ratingContBig {
   font-size: 24px;
   padding-left: 6px;
   padding-right: 8px;
-  margin-right: 10px;
+  margin-top: 8px;
   border-radius: 6px;
   font-weight: bold;
   color: rgb(252, 252, 252);
@@ -29,12 +50,13 @@
   justify-content: center;
   align-items: center;
   height: fit-content;
+  width: fit-content;
 }
 
 .namerate {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: space-between !important;
   height: fit-content;
 }
 
@@ -71,6 +93,27 @@ h1 {
   width: 100%;
 }
 
+.palengkeStatusPill {
+  display: block;
+  width: fit-content;
+  color: white;
+  font-size: 15px;
+  padding: 3px 15px 3px 15px;
+  border-radius: 20px;
+  margin-right: auto;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+
+.address {
+  display: inline-block;
+  width: 100%;
+}
+
+.addressIconMargin {
+  margin-right: 10px;
+}
+
 .locationBig {
   font-size: 18px;
   display: flex;
@@ -83,6 +126,7 @@ h1 {
 }
 .content {
   margin-left: 36px;
+  position: relative;
 }
 
 .desc {
@@ -98,6 +142,9 @@ h1 {
   font-weight: bold;
 }
 /* Style the dropdown button */
+.dropdown {
+  width: 270px !important;
+}
 .dropbtn {
   background-color: #ffffff;
   color: rgb(14, 14, 14);
@@ -141,6 +188,18 @@ h1 {
 }
 .rev {
   margin-left: 25%;
+  display: flex;
+  width: 100%;
+  transform: translate(0%, -7%);
+}
+.barChartContainer {
+  width: 100%;
+  height: 100%;
+  max-width: 100%; /* Ensure it doesn't exceed parent width */
+  max-height: 400px; /* Adjust this as needed */
+}
+.barChart {
+  display: flex !important;
 }
 .menuEdit {
   position: absolute !important;
@@ -154,7 +213,6 @@ h1 {
 .Reviews {
   margin-bottom: 10px;
   background-color: #ffffff;
-  width: 100%;
   padding: 15px;
   padding-left: 24px;
   padding-right: 24px;
@@ -164,8 +222,8 @@ h1 {
 .Overview {
   margin-top: 4px;
   background-color: #ffffff;
-  width: 100%;
   padding: 24px;
+  padding-bottom: 0px;
   display: flex;
   flex-direction: row;
   margin-bottom: 24px;
@@ -222,14 +280,80 @@ h1 {
   justify-content: flex-end;
 }
 
-@media screen and (max-width: 720px) {
-  .details {
-    flex-direction: column;
+.ratingSpacing {
+  right: 0;
+  position: absolute;
+}
+
+@media screen and (max-width: 1146px) {
+  .address {
+    font-size: 16px;
   }
+}
+@media screen and (max-width: 900px) {
+  .ratingSpacing {
+    right: unset;
+    position: relative;
+    margin-top: -10px !important;
+    padding-top: 0 !important;
+  }
+  .palengkeStatusPill {
+    margin-top: -33px;
+    left: 120px;
+    position: absolute;
+  }
+  .ratingContBig {
+    font-size: 22px;
+    margin-top: 0px;
+  }
+  .desc {
+    font-size: 15px;
+  }
+  .address {
+    margin-top: 10px;
+  }
+  .palengkeNameTitle {
+    width: 100%;
+  }
+  .titleGrid {
+    padding-top: 10px !important;
+  }
+}
+
+@media screen and (max-width: 720px) {
   .Marketimg {
     width: 100%;
   }
   .rev {
     margin-left: 5%;
+  }
+  .actionDropdownCont {
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .dropdown,
+  .addReviewCont {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .address {
+    font-size: 15px;
+  }
+  .palengkeStatusPill {
+    font-size: 13px;
+  }
+  .details {
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 25px;
+  }
+  .Overview {
+    flex-direction: column;
+  }
+  .Overview .rev {
+    margin: 0;
   }
 }
