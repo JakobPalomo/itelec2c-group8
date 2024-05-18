@@ -1,6 +1,5 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -17,7 +16,7 @@ export default function Report() {
 
   return (
     <div>
-      <IconButton
+      <Button
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
@@ -26,7 +25,7 @@ export default function Report() {
         style={{ color: "#FF6262", fontSize: "46px" }}
       >
         <MoreHorizIcon />
-      </IconButton>
+      </Button>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

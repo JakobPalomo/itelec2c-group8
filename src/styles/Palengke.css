@@ -1,24 +1,8 @@
 .holder {
   margin: 6%;
-  margin-top: 50px;
-  padding-top: 30px;
-  position: relative;
-}
-.palengkeTopButtons {
-  position: absolute;
-  display: flex;
-  justify-content: flex-end;
-  top: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: "10px";
-  /* background-color: rgba(255, 255, 255, 0.8); */
 }
 .details {
   display: flex;
-  position: relative;
   flex-direction: row;
   padding: 12px;
 }
@@ -31,32 +15,26 @@
   font-size: 48px;
   font-weight: bold;
 }
-.palengkeNameTitle {
-  line-height: 1.3;
-  overflow-wrap: anywhere;
-  margin-right: 15px;
-}
 
 .ratingContBig {
   font-size: 24px;
   padding-left: 6px;
   padding-right: 8px;
+  margin-right: 10px;
   border-radius: 6px;
   font-weight: bold;
   color: rgb(252, 252, 252);
   background-color: #636363;
+  display: flex;
   justify-content: center;
   align-items: center;
-  display: flex;
   height: fit-content;
-  width: fit-content;
-  margin-top: 8px;
 }
 
 .namerate {
   display: flex;
   flex-direction: row;
-  justify-content: space-between !important;
+  justify-content: start;
   height: fit-content;
 }
 
@@ -93,27 +71,6 @@ h1 {
   width: 100%;
 }
 
-.palengkeStatusPill {
-  display: block;
-  width: fit-content;
-  color: white;
-  font-size: 15px;
-  padding: 3px 15px 3px 15px;
-  border-radius: 20px;
-  margin-right: auto;
-  margin-top: -10px;
-  margin-bottom: 15px;
-}
-
-.address {
-  display: inline-block;
-  width: 100%;
-}
-
-.addressIconMargin {
-  margin-right: 10px;
-}
-
 .locationBig {
   font-size: 18px;
   display: flex;
@@ -126,7 +83,6 @@ h1 {
 }
 .content {
   margin-left: 36px;
-  position: relative;
 }
 
 .desc {
@@ -266,45 +222,6 @@ h1 {
   justify-content: flex-end;
 }
 
-.ratingSpacing {
-  right: 0;
-  position: absolute;
-}
-
-@media screen and (max-width: 1146px) {
-  .address {
-    font-size: 16px;
-  }
-}
-@media screen and (max-width: 900px) {
-  .ratingSpacing {
-    right: unset;
-    position: relative;
-    margin-top: -10px !important;
-    padding-top: 0 !important;
-  }
-  .palengkeStatusPill {
-    margin-top: -33px;
-    left: 120px;
-    position: absolute;
-  }
-  .ratingContBig {
-    font-size: 22px;
-    margin-top: 0px;
-  }
-  .desc {
-    font-size: 15px;
-  }
-  .address {
-    margin-top: 10px;
-  }
-  .palengkeNameTitle {
-    width: 100%;
-  }
-  .titleGrid {
-    padding-top: 10px !important;
-  }
-}
 @media screen and (max-width: 720px) {
   .details {
     flex-direction: column;
@@ -314,14 +231,5 @@ h1 {
   }
   .rev {
     margin-left: 5%;
-  }
-  /* p=image breakpoint */
-}
-@media screen and (max-width: 600px) {
-  .address {
-    font-size: 15px;
-  }
-  .palengkeStatusPill {
-    font-size: 13px;
   }
 }
