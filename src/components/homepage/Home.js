@@ -284,19 +284,21 @@ function Home({ ...sharedProps }) {
                   </Link>
                 ))}
         </div>
-        {filteredPalengkeList.length > numOfPalengkeToShow &&
-          filteredPalengkeList.length !== 0 && (
-            <div style={{ textAlign: "center" }}>
-              <div className="homePalengkeMore">
-                <span
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setNumOfPalengkeToShow((prev) => (prev += 10))}
-                >
-                  Show More ...
-                </span>
-              </div>
+        {((filteredPalengkeList.length > numOfPalengkeToShow &&
+          filteredPalengkeList.length !== 0) ||
+          (sharedProps.palengkeList.length > numOfPalengkeToShow &&
+            sharedProps.palengkeList.length !== 0)) && (
+          <div style={{ textAlign: "center" }}>
+            <div className="homePalengkeMore">
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() => setNumOfPalengkeToShow((prev) => (prev += 10))}
+              >
+                Show More ...
+              </span>
             </div>
-          )}
+          </div>
+        )}
       </PalengkeList>
     </>
   );

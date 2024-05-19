@@ -413,7 +413,10 @@ function EditProfile({
           emailDelete,
           passwordDelete
         );
+        // comment this out if testing (no otp)
         setOpenOTPModal(true);
+        // for testing
+        // handleDeleteAccount();
       } catch (error) {
         console.error("Error signing in:", error);
         console.log(error.code);
