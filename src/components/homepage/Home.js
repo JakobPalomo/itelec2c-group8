@@ -5,6 +5,7 @@ import Modal from "../modals/MyModal";
 import AddPalengke from "../modals/AddPalengke";
 import EditMedia from "../modals/EditMedia";
 import SelectOnMap from "../modals/SelectOnMap";
+import FilterSearch from "../gmaps/FilterSearch";
 import PalengkeList from "./PalengkeList";
 import PalengkeItem from "./PalengkeItem";
 import HomeHeader from "./HomeHeader";
@@ -18,6 +19,10 @@ function Home({ ...sharedProps }) {
   const [prevModalHeight, setPrevModalHeight] = useState("unset");
   const [searchTerm, setSearchTerm] = useState("");
   const [numOfPalengkeToShow, setNumOfPalengkeToShow] = useState(10);
+  const [filteredPalengkeList, setFilteredPalengkeList] = useState(
+    sharedProps.palengkeList
+  );
+  const [filterSearchModal, setFilterSearchModal] = useState(false);
 
   useEffect(() => {
     console.log(
@@ -47,13 +52,13 @@ function Home({ ...sharedProps }) {
   }, [selectedFiles]);
 
   // Filter the palengke list based on the search term
-  const filteredPalengkeList = sharedProps.palengkeList.filter((palengke) => {
-    const searchText = Object.values(palengke)
-      .map((value) => value.toString().toLowerCase())
-      .join(" "); // Concatenate all field values into a single string
+  // const filteredPalengkeList = sharedProps.palengkeList.filter((palengke) => {
+  //   const searchText = Object.values(palengke)
+  //     .map((value) => value.toString().toLowerCase())
+  //     .join(" "); // Concatenate all field values into a single string
 
-    return searchText.includes(searchTerm.toLowerCase());
-  });
+  //   return searchText.includes(searchTerm.toLowerCase());
+  // });
 
   const getAverageRating = (palengke) => {
     let totalRating = 0;
@@ -117,8 +122,26 @@ function Home({ ...sharedProps }) {
           />
         </Modal>
       )}
+      {filterSearchModal && (
+        <Modal
+          title="Filter Search Location"
+          open={filterSearchModal}
+          setOpen={setFilterSearchModal}
+        >
+          <FilterSearch
+            searchTerm={searchTerm}
+            setFilteredPalengkeList={setFilteredPalengkeList}
+            setOpen={setFilterSearchModal}
+            {...sharedProps}
+          />
+        </Modal>
+      )}
       <div className="dark">
-        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <Search
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          setFilterSearchModal={setFilterSearchModal}
+        />
       </div>
 
       <PalengkeList>

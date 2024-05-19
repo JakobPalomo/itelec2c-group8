@@ -9,7 +9,7 @@ import img2 from "./img2.jpg";
 import img3 from "./img3.jpg";
 import img4 from "./img4.png";
 
-function Search({ searchTerm, setSearchTerm }) {
+function Search({ searchTerm, setSearchTerm, setFilterSearchModal }) {
   const images = [img1, img2, img3, img4];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -62,7 +62,11 @@ function Search({ searchTerm, setSearchTerm }) {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <IconButton size="small" className="muiFilterIconButton">
+              <IconButton
+                size="small"
+                className="muiFilterIconButton"
+                onClick={() => setFilterSearchModal(true)}
+              >
                 <DelayedTooltip
                   title="Filter Search"
                   delay={1000}
