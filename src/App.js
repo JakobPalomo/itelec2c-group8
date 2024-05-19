@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   Outlet,
+  useNavigate,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./App.css";
@@ -40,6 +41,7 @@ function loadGoogleMapsScript() {
 }
 
 function App() {
+  const navigate = useNavigate();
   const initialUsers = [
     {
       user_id: "DBUSERIDHERE",
@@ -196,6 +198,10 @@ function App() {
       getUserReviews();
       getUserSaves();
       getUserUpvotes();
+    } else {
+      if (window.location.pathname.startsWith("/account")) {
+        navigate("/login");
+      }
     }
   }, [currUser]);
 
@@ -344,123 +350,122 @@ function App() {
     getUserReviews: getUserReviews,
   };
 
+  const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  };
+
   return (
     <div className="App">
-      <Router>
-        <Routes>
+      <Routes>
+        <Route
+          element={
+            <Layout>
+              <Navbar
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+                currUser={currUser}
+                setCurrUser={setCurrUser}
+                userProfilePic={userProfilePic}
+                setUserProfilePic={setUserProfilePic}
+                setUserReviews={setUserReviews}
+                setUserSaves={setUserSaves}
+                setUserUpvotes={setUserUpvotes}
+                setUserContributions={setUserContributions}
+              />
+              <div style={{ height: "98px" }} className="navTopMargin"></div>
+              <Main mainMargin={mainMargin}>
+                <Outlet />
+              </Main>
+              <Footer className="footer" />
+            </Layout>
+          }
+        >
+          {/* Home Route */}
           <Route
+            path="/"
             element={
-              <Layout>
-                <Navbar
-                  isLoggedIn={isLoggedIn}
-                  setIsLoggedIn={setIsLoggedIn}
-                  currUser={currUser}
-                  setCurrUser={setCurrUser}
-                  userProfilePic={userProfilePic}
-                  setUserProfilePic={setUserProfilePic}
-                  setUserReviews={setUserReviews}
-                  setUserSaves={setUserSaves}
-                  setUserUpvotes={setUserUpvotes}
-                  setUserContributions={setUserContributions}
-                />
-                <div style={{ height: "98px" }} className="navTopMargin"></div>
-                <Main mainMargin={mainMargin}>
-                  <Outlet />
-                </Main>
-                <Footer className="footer" />
-              </Layout>
+              isLoggedIn ? (
+                <Home {...sharedProps} />
+              ) : (
+                <Home {...sharedProps} />
+                // <Login
+                //   setIsLoggedIn={setIsLoggedIn}
+                //   {...sharedProps}
+                //   isLoggedIn={true}
+                // />
+              )
             }
-          >
-            {/* Home Route */}
-            <Route
-              path="/"
-              element={
-                isLoggedIn ? (
-                  <Home {...sharedProps} />
-                ) : (
-                  <Home {...sharedProps} />
-                  // <Login
-                  //   setIsLoggedIn={setIsLoggedIn}
-                  //   {...sharedProps}
-                  //   isLoggedIn={true}
-                  // />
-                )
-              }
-            />
-            {/* Public Route */}
-            <Route
-              path="/login"
-              element={
-                <Login
-                  setIsLoggedIn={setIsLoggedIn}
-                  setCurrUser={setCurrUser}
-                  {...sharedProps}
-                />
-              }
-            />
-            <Route
-              path="/forgot-password"
-              element={<ForgotPassword {...sharedProps} />}
-            />
-            <Route
-              path="/change-password"
-              element={<ChangePassword {...sharedProps} />}
-            />
-            <Route path="/register" element={<Register {...sharedProps} />} />
-            <Route path="/home" element={<Home {...sharedProps} />} />
-            <Route
-              path="/palengke/:palengkeId"
-              element={<Palengke {...sharedProps} />}
-            />
-            <Route
-              path="/palengke/reviews/:palengkeId"
-              element={<PalengkeReviews {...sharedProps} />}
-            />
-            {/* Private Route (with account) */}
-            <Route
-              path="/account"
-              element={
-                <Account
-                  isEditProfileOpen={isEditProfileOpen}
-                  setIsEditProfileOpen={setIsEditProfileOpen}
-                  profile={editProfilePic}
-                  setProfile={setEditProfilePic}
-                  {...sharedProps}
-                />
-              }
-            />
-            <Route
-              path="/account/edit-profile"
-              element={
-                <EditProfile
-                  isEditProfileOpen={isEditProfileOpen}
-                  setIsEditProfileOpen={setIsEditProfileOpen}
-                  profile={editProfilePic}
-                  setProfile={setEditProfilePic}
-                  setIsLoggedIn={setIsLoggedIn}
-                  {...sharedProps}
-                />
-              }
-            />
-            <Route
-              path="/account/contributions"
-              element={<MyContributions {...sharedProps} />}
-            />
-            <Route
-              path="/account/reviews"
-              element={<MyReviews {...sharedProps} />}
-            />
-            <Route
-              path="/account/settings"
-              element={<Settings {...sharedProps} />}
-            />
-            <Route
-              path="/account/saves"
-              element={<MySaves {...sharedProps} />}
-            />
-          </Route>
-        </Routes>
-      </Router>
+          />
+          {/* Public Route */}
+          <Route
+            path="/login"
+            element={
+              <Login
+                setIsLoggedIn={setIsLoggedIn}
+                setCurrUser={setCurrUser}
+                {...sharedProps}
+              />
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={<ForgotPassword {...sharedProps} />}
+          />
+          <Route
+            path="/change-password"
+            element={<ChangePassword {...sharedProps} />}
+          />
+          <Route path="/register" element={<Register {...sharedProps} />} />
+          <Route path="/home" element={<Home {...sharedProps} />} />
+          <Route
+            path="/palengke/:palengkeId"
+            element={<Palengke {...sharedProps} />}
+          />
+          <Route
+            path="/palengke/reviews/:palengkeId"
+            element={<PalengkeReviews {...sharedProps} />}
+          />
+          {/* Private Route (with account) */}
+          <Route
+            path="/account"
+            element={
+              <Account
+                isEditProfileOpen={isEditProfileOpen}
+                setIsEditProfileOpen={setIsEditProfileOpen}
+                profile={editProfilePic}
+                setProfile={setEditProfilePic}
+                {...sharedProps}
+              />
+            }
+          />
+          <Route
+            path="/account/edit-profile"
+            element={
+              <EditProfile
+                isEditProfileOpen={isEditProfileOpen}
+                setIsEditProfileOpen={setIsEditProfileOpen}
+                profile={editProfilePic}
+                setProfile={setEditProfilePic}
+                setIsLoggedIn={setIsLoggedIn}
+                {...sharedProps}
+              />
+            }
+          />
+          <Route
+            path="/account/contributions"
+            element={<MyContributions {...sharedProps} />}
+          />
+          <Route
+            path="/account/reviews"
+            element={<MyReviews {...sharedProps} />}
+          />
+          <Route
+            path="/account/settings"
+            element={<Settings {...sharedProps} />}
+          />
+          <Route path="/account/saves" element={<MySaves {...sharedProps} />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
