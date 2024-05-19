@@ -120,6 +120,7 @@ function App() {
       setCurrUser(JSON.parse(storedUser));
       setIsLoggedIn(true);
     }
+    // getAPIPalengke();
   }, []);
 
   useEffect(() => {
@@ -301,6 +302,20 @@ function App() {
       }
       const data = await response.json();
       setUserUpvotes(data);
+      console.log("my upvotes", data);
+    } catch (error) {
+      console.log("Error getting user's upvotes.", error);
+    }
+  };
+
+  const getAPIPalengke = async () => {
+    try {
+      const response = await fetch(`/search-wet-markets`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const data = await response.json();
+      console.log("searched palengkes", data);
       console.log("my upvotes", data);
     } catch (error) {
       console.log("Error getting user's upvotes.", error);

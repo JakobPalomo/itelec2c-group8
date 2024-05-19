@@ -57,6 +57,23 @@
   justify-content: center;
 }
 
+.emptyBox {
+  height: 220px;
+  object-fit: contain;
+  margin-top: -15px;
+}
+
+.emptyCont {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  color: #bcb297;
+  font-weight: 600;
+  font-size: 15px;
+}
+
 @media screen and (max-width: 700px) {
   .titleAccount {
     margin-left: 10%;
@@ -66,7 +83,7 @@
     font-size: 23px;
   }
   .palengkeCard {
-    min-width: 80% !important;
+    width: 80% !important;
   }
   .editDeleteIcons {
     margin-right: 10%;

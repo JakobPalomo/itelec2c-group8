@@ -24,6 +24,7 @@ export default function HalfRating({
           <Rating
             name={name}
             defaultValue={defaultValue}
+            value={defaultValue}
             size="large"
             readOnly={disabled}
           />

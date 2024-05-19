@@ -52,7 +52,15 @@
   height: fit-content;
   width: fit-content;
 }
-
+.noRatingContPalengke {
+  font-size: 15px;
+  height: 30px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 6px;
+  justify-content: center;
+  align-items: center;
+}
 .namerate {
   display: flex;
   flex-direction: row;
@@ -284,6 +292,19 @@ h1 {
 .ratingSpacing {
   right: 0;
   position: absolute;
+}
+.titleGridMargin2 {
+  margin-right: 130px !important;
+}
+.titleGridMargin1 {
+  margin-right: 110px !important;
+}
+
+.palengekeNameReview {
+  font-weight: 600;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  text-align: left !important;
 }
 
 @media screen and (max-width: 1146px) {

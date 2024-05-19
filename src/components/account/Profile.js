@@ -4,6 +4,7 @@ import "../../styles/Profile.css";
 import { Avatar, IconButton, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
+import EmailIcon from "@mui/icons-material/Email";
 import EditProfile from "./EditProfile";
 import { styled } from "@mui/material/styles";
 import { stringAvatar, stringToColor } from "../../functions/utils.js";
@@ -124,6 +125,10 @@ export default function Profile({
                 <h2>{getAddress()}</h2>
               </div>
             )}
+            <div className="emailDetail">
+              <EmailIcon sx={{ fontSize: "25px" }} />
+              <h2>{sharedProps.currUser?.email}</h2>
+            </div>
           </div>
         </div>
         {/* setIsEditProfileOpen(false); */}

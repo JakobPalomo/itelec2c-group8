@@ -68,7 +68,7 @@
 .pfpinfo svg {
   font-size: 25px;
   margin-top: -12px;
-  margin-right: 5px;
+  margin-right: 8px;
 }
 .pfpinfo h2 {
   font-size: 18px;
@@ -76,6 +76,16 @@
   margin-top: 0;
   overflow-wrap: anywhere;
   text-align: left;
+}
+.emailDetail {
+  overflow-wrap: anywhere;
+  text-align: left;
+  transform: translate(0%, -30%);
+}
+.emailDetail svg {
+  font-size: 22px;
+  margin-left: 1px;
+  margin-right: 10px;
 }
 
 .editbutton {
@@ -160,6 +170,9 @@
   }
   .cover {
     height: 250px;
+  }
+  .pfpinfo h2 {
+    font-size: 16px;
   }
 }
 @media screen and (max-width: 265px) {

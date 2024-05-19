@@ -8,6 +8,7 @@ import Review from "../palengke/Review.js";
 import { useState, useEffect } from "react";
 import Modal from "../modals/MyModal.js";
 import EditProfile from "./EditProfile.js";
+import emptyBox from "../../../public/assets/empty-box.png";
 
 export default function Account({
   isEditProfileOpen,
@@ -34,45 +35,57 @@ export default function Account({
       />
       <div className="recent">
         <div className="titleAccount">
-          <h1>My Recent Contribution</h1>
-          <Link className="links" to="/account/contributions">
-            See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
-          </Link>
-        </div>
-        <center>
-          {sharedProps.userContributions.slice(0, 1).map((palengke) => (
-            <Link
-              to={`/palengke/${palengke.id}`}
-              key={palengke.id}
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              <PalengkeItem
-                palengke={palengke}
-                type={"45%"}
-                min={"60%"}
-                marg={"0"}
-                showIcons={false}
-                mediaList={sharedProps.mediaList}
-                {...sharedProps}
-              />
+          <h1>My Contributions</h1>
+          {sharedProps.userContributions.length > 0 && (
+            <Link className="links" to="/account/contributions">
+              See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
             </Link>
-          ))}
-        </center>
-        <div className="titleAccount">
-          <h1>My Recent Review</h1>
-          <Link className="links" to="/account/reviews">
-            See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
-          </Link>
+          )}
         </div>
-        <div className="profilereview">
+        {sharedProps.userContributions.length > 0 ? (
           <center>
-            {sharedProps.userReviews.slice(0, 1).map((review) => (
+            {sharedProps.userContributions.slice(0, 1).map((palengke) => (
               <Link
-                to={`/palengke/${review.palengke_id}`}
-                key={review.id}
+                to={`/palengke/${palengke.id}`}
+                key={palengke.id}
                 style={{ textDecoration: "none", color: "black" }}
               >
-                {/* <PalengkeItem
+                <PalengkeItem
+                  palengke={palengke}
+                  type={"45%"}
+                  min={"60%"}
+                  marg={"0"}
+                  showIcons={false}
+                  mediaList={sharedProps.mediaList}
+                  {...sharedProps}
+                />
+              </Link>
+            ))}
+          </center>
+        ) : (
+          <div className="emptyCont">
+            <img src={emptyBox} alt="Empty" className="emptyBox" />
+            You have no contributions yet
+          </div>
+        )}
+        <div className="titleAccount">
+          <h1>My Reviews</h1>
+          {sharedProps.userReviews.length > 0 && (
+            <Link className="links" to="/account/reviews">
+              See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
+            </Link>
+          )}
+        </div>
+        <div className="profilereview">
+          {sharedProps.userReviews.length > 0 ? (
+            <center>
+              {sharedProps.userReviews.slice(0, 1).map((review) => (
+                <Link
+                  to={`/palengke/${review.palengke_id}`}
+                  key={review.id}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  {/* <PalengkeItem
                   palengke={review}
                   type={"45%"}
                   min={"60%"}
@@ -82,44 +95,58 @@ export default function Account({
                   preview={true}
                   {...sharedProps}
                 /> */}
-                <Review
-                  key={review.id}
-                  index={review.id}
-                  editable={true}
-                  review={review}
-                  accountPage={true}
+                  <Review
+                    key={review.id}
+                    index={review.id}
+                    editable={true}
+                    review={review}
+                    accountPage={true}
+                    {...sharedProps}
+                  />
+                </Link>
+              ))}
+            </center>
+          ) : (
+            <div className="emptyCont">
+              <img src={emptyBox} alt="Empty" className="emptyBox" />
+              You have no reviews yet
+            </div>
+          )}
+        </div>
+        <div className="titleAccount">
+          <h1>My Saves</h1>
+          {sharedProps.userSaves.length > 0 && (
+            <Link className="links" to="/account/saves">
+              See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
+            </Link>
+          )}
+        </div>
+        {sharedProps.userSaves.length > 0 ? (
+          <center>
+            {sharedProps.userSaves.slice(0, 1).map((palengke) => (
+              <Link
+                to={`/palengke/${palengke.id}`}
+                key={palengke.id}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <PalengkeItem
+                  palengke={palengke}
+                  type={"45%"}
+                  min={"60%"}
+                  marg={"0"}
+                  showIcons={false}
+                  mediaList={sharedProps.mediaList}
                   {...sharedProps}
                 />
               </Link>
             ))}
           </center>
-          {/* <Review /> */}
-        </div>
-        <div className="titleAccount">
-          <h1>My Recent Save</h1>
-          <Link className="links" to="/account/saves">
-            See All <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
-          </Link>
-        </div>
-        <center>
-          {sharedProps.userSaves.slice(0, 1).map((palengke) => (
-            <Link
-              to={`/palengke/${palengke.id}`}
-              key={palengke.id}
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              <PalengkeItem
-                palengke={palengke}
-                type={"45%"}
-                min={"60%"}
-                marg={"0"}
-                showIcons={false}
-                mediaList={sharedProps.mediaList}
-                {...sharedProps}
-              />
-            </Link>
-          ))}
-        </center>
+        ) : (
+          <div className="emptyCont">
+            <img src={emptyBox} alt="Empty" className="emptyBox" />
+            You have no saved palengke yet
+          </div>
+        )}
       </div>
       <div style={{ height: "50px" }}></div>
     </>

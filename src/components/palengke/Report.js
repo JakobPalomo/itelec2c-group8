@@ -44,14 +44,18 @@ export default function Report({ palengkeId, ...sharedProps }) {
   const isPalengkeSaved = () => {
     console.log(
       "isPalengkeSaved",
-      sharedProps.userSaves.find((save) => save.id === palengkeId)
+      !!sharedProps.userSaves.find((save) => save.id === palengkeId)
     );
-    return sharedProps.userSaves.find((save) => save.id === palengkeId);
+    return !!sharedProps.userSaves.find((save) => save.id === palengkeId);
   };
 
   useEffect(() => {
-    // setSaved(isPalengkeSaved());
+    setSaved(isPalengkeSaved());
   }, []);
+
+  useEffect(() => {
+    console.log("saved", saved);
+  }, [saved]);
 
   const handleSave = async () => {
     if (saved === false) {

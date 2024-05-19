@@ -30,7 +30,7 @@ import { autoPlay } from "react-swipeable-views-utils";
 
 function Palengke({ ...sharedProps }) {
   const { palengkeId } = useParams();
-
+  // const [loading, setLoading] = useState(true);
   const [addEditReviewClicked, setAddEditReviewClicked] = useState(false);
   const [reportReviewClicked, setReportReviewClicked] = useState(false);
   const [deleteClicked, setDeleteClicked] = useState(false);
@@ -201,10 +201,16 @@ function Palengke({ ...sharedProps }) {
   }, [rating]);
 
   useEffect(() => {
-    getPalengke(palengkeId);
-    getPalengkeReviews();
-    getMedia(palengkeId);
-    getStatus(palengkeId);
+    console.log("palengkeId", palengkeId);
+  }, []);
+
+  useEffect(() => {
+    if (sharedProps.palengkeList.length > 0) {
+      getPalengke(palengkeId);
+      getPalengkeReviews();
+      getMedia(palengkeId);
+      getStatus(palengkeId);
+    }
   }, [palengkeId, getPalengke, getPalengkeReviews, getMedia, getStatus]);
 
   useEffect(() => {
@@ -316,6 +322,18 @@ function Palengke({ ...sharedProps }) {
     return formattedOtherNames;
   };
 
+  const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  };
+
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // if (!palengke) {
+  //   return <div>Palengke not found</div>;
+  // }
+
   return (
     <>
       {addEditReviewClicked && (
@@ -373,11 +391,13 @@ function Palengke({ ...sharedProps }) {
           >
             <ArrowBackIcon style={{ color: " #ff6262" }} />
           </IconButton>
-          <Report
-            style={{ marginLeft: "500px" }}
-            palengkeId={palengkeId}
-            {...sharedProps}
-          />
+          {isEmptyObject(sharedProps.currUser) === false && (
+            <Report
+              style={{ marginLeft: "500px" }}
+              palengkeId={palengkeId}
+              {...sharedProps}
+            />
+          )}
         </Box>
 
         <Box
@@ -392,7 +412,16 @@ function Palengke({ ...sharedProps }) {
             <Grid item xs={12} md={6} className="content">
               <Box sx={{ flexGrow: 1, padding: 0 }} className="namerate">
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={10} className="titleGrid">
+                  <Grid
+                    item
+                    xs={12}
+                    md={10}
+                    className={
+                      rating !== 0
+                        ? "titleGrid titleGridMargin1"
+                        : "titleGrid titleGridMargin2"
+                    }
+                  >
                     <p className="welcomeLogin overflow-wrap">
                       {palengke?.name}
                     </p>
@@ -408,15 +437,7 @@ function Palengke({ ...sharedProps }) {
                           {rating}
                         </>
                       ) : (
-                        <div
-                          style={{
-                            fontSize: "20px",
-                            height: "36px",
-                            marginTop: "5px",
-                            marginLeft: "5px",
-                            marginRight: "5px",
-                          }}
-                        >
+                        <div className="noRatingContPalengke">
                           No rating yet
                         </div>
                       )}

@@ -36,7 +36,32 @@ const {
   updateDoc,
   query,
   where,
+  arrayUnion,
 } = require("firebase/firestore");
+const { FieldValue } = require("firebase-admin/firestore");
+const business_statuses = [
+  {
+    business_status_id: 0,
+    value: 0,
+    name: "Operational",
+    color: "#73D11A",
+    color2: "#6ea837",
+  },
+  {
+    business_status_id: 1,
+    value: 1,
+    name: "Temporarily Closed",
+    color: "#EE556A",
+    color2: "#cf4040",
+  },
+  {
+    business_status_id: 2,
+    value: 2,
+    name: "Permanently Closed",
+    color: "#EE556A",
+    color2: "#cf4040",
+  },
+];
 
 function generateRandomString(length) {
   const characters =
@@ -764,6 +789,176 @@ app.get("/location-to-address", async (req, res) => {
     console.error("Error fetching place details:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+// SEARCH WET MARKETS
+function toSentenceCase(str) {
+  return str.toLowerCase().replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
+}
+
+// Function to fetch and return the place data from Google Places API
+async function fetchPlaces(url) {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching places:", error);
+    return null;
+  }
+}
+
+// Get Business Status Name
+const getBusinessStatusId = (businessStatus) => {
+  const statusObject = business_statuses.find(
+    (status) => status.name === businessStatus
+  );
+  if (statusObject) {
+    return statusObject.business_status_id;
+  }
+  return 3;
+};
+
+// Check if palengke already exists
+const isEqualPalengke = (palengkeData, existingPalengkes) => {
+  return existingPalengkes.find(
+    (existing) =>
+      existing.name === palengkeData.name &&
+      existing.address === palengkeData.address &&
+      existing.location.lat === palengkeData.location.lat &&
+      existing.location.lng === palengkeData.location.lng
+  );
+};
+
+const addOrUpdatePalengkes = async (results) => {
+  const palengkeCollectionRef = collection(db, "palengke");
+  const existingPalengkes = (await getDocs(palengkeCollectionRef)).docs.map(
+    (doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })
+  );
+
+  const processedResults = results.map(async (result) => {
+    const palengkeData = {
+      name: result.name,
+      address: result.formatted_address,
+      location: result.geometry.location,
+      business_status: getBusinessStatusId(
+        toSentenceCase(result.business_status || "")
+      ),
+      description: result.description || "",
+      other_names: result.other_names || [],
+      media: [],
+    };
+
+    const existingPalengke = isEqualPalengke(palengkeData, existingPalengkes);
+
+    if (existingPalengke) {
+      // Check and update business status if it has changed
+      if (existingPalengke.business_status !== palengkeData.business_status) {
+        await updateDoc(doc(db, "palengke", existingPalengke.id), {
+          business_status: palengkeData.business_status,
+        });
+      }
+    }
+
+    const mediaPromises = (result.photos || []).map(async (photo) => {
+      const photoReference = photo.photo_reference;
+      const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1600&photoreference=${photoReference}&key=${GMAPS_API_KEY}`;
+
+      let mediaDocId = null;
+
+      if (existingPalengke) {
+        // Check if the media link already exists in the existing palengke
+        const existingMedia = await Promise.all(
+          existingPalengke.media.map(async (mediaId) => {
+            const mediaDoc = await getDoc(doc(db, "media", mediaId));
+            return mediaDoc.data().link.includes(photoReference)
+              ? mediaDoc.id
+              : null;
+          })
+        );
+
+        mediaDocId = existingMedia.find((id) => id !== null);
+
+        if (!mediaDocId) {
+          // Add new media document if it does not exist
+          const mediaDocRef = await addDoc(collection(db, "media"), {
+            type: 2, // 2 for link
+            filename: "",
+            path: "",
+            link: url,
+          });
+          mediaDocId = mediaDocRef.id;
+
+          // Update existing palengke with new media ID
+          await updateDoc(doc(db, "palengke", existingPalengke.id), {
+            media: FieldValue.arrayUnion(mediaDocId),
+          });
+        }
+      } else {
+        // Add new media document
+        const mediaDocRef = await addDoc(collection(db, "media"), {
+          type: 2, // 2 for link
+          filename: "",
+          path: "",
+          link: url,
+        });
+        mediaDocId = mediaDocRef.id;
+      }
+
+      return mediaDocId;
+    });
+
+    palengkeData.media = await Promise.all(mediaPromises);
+
+    if (existingPalengke) {
+      // Update existing palengke with new data
+      await updateDoc(doc(db, "palengke", existingPalengke.id), palengkeData);
+    } else {
+      // Add new palengke document
+      const palengkeDocRef = await addDoc(
+        collection(db, "palengke"),
+        palengkeData
+      );
+      return {
+        ...palengkeData,
+        id: palengkeDocRef.id,
+      };
+    }
+  });
+
+  return await Promise.all(processedResults);
+};
+
+app.get("/search-wet-markets", async (req, res) => {
+  const searchQuery = "wet market OR palengke";
+  const country = "PH";
+  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
+    searchQuery
+  )}&components=country:${country}&key=${GMAPS_API_KEY}`;
+
+  let allResults = [];
+  let nextPageToken = null;
+
+  do {
+    const data = await fetchPlaces(url);
+    if (data && data.results) {
+      allResults = [...allResults, ...data.results];
+      nextPageToken = data.next_page_token;
+      if (nextPageToken) {
+        // Wait for 2 seconds before making the next request to allow the token to become valid
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        url = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${nextPageToken}&key=${GMAPS_API_KEY}`;
+      }
+    } else {
+      nextPageToken = null;
+    }
+  } while (nextPageToken);
+
+  const processedPalengkes = await addOrUpdatePalengkes(allResults);
+  res.json(processedPalengkes);
 });
 
 // ADD USER WITH MEDIA (1 file only)
