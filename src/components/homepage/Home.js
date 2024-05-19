@@ -19,9 +19,7 @@ function Home({ ...sharedProps }) {
   const [prevModalHeight, setPrevModalHeight] = useState("unset");
   const [searchTerm, setSearchTerm] = useState("");
   const [numOfPalengkeToShow, setNumOfPalengkeToShow] = useState(10);
-  const [filteredPalengkeList, setFilteredPalengkeList] = useState(
-    sharedProps.palengkeList
-  );
+  const [filteredPalengkeList, setFilteredPalengkeList] = useState([]);
   const [filterSearchModal, setFilterSearchModal] = useState(false);
 
   useEffect(() => {
@@ -76,6 +74,10 @@ function Home({ ...sharedProps }) {
   const getAverageRatingInt = () => {
     return Math.round(parseFloat(getAverageRating()));
   };
+
+  useEffect(() => {
+    setFilteredPalengkeList(sharedProps.palengkeList);
+  }, []);
 
   return (
     <>
@@ -155,25 +157,45 @@ function Home({ ...sharedProps }) {
         )}
 
         <div className="palengkeItemsContainer">
-          {filteredPalengkeList
-            .slice(0, numOfPalengkeToShow)
-            .map((palengke) => (
-              <Link
-                to={`/palengke/${palengke.id}`}
-                key={palengke.id}
-                style={{
-                  textDecoration: "none",
-                  color: "black",
-                  pointerEvents: "auto",
-                }}
-              >
-                <PalengkeItem
-                  palengke={palengke}
-                  mediaList={sharedProps.mediaList}
-                  {...sharedProps}
-                />
-              </Link>
-            ))}
+          {filteredPalengkeList.length !== 0
+            ? filteredPalengkeList
+                .slice(0, numOfPalengkeToShow)
+                .map((palengke) => (
+                  <Link
+                    to={`/palengke/${palengke.id}`}
+                    key={palengke.id}
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                      pointerEvents: "auto",
+                    }}
+                  >
+                    <PalengkeItem
+                      palengke={palengke}
+                      mediaList={sharedProps.mediaList}
+                      {...sharedProps}
+                    />
+                  </Link>
+                ))
+            : sharedProps.palengkeList
+                .slice(0, numOfPalengkeToShow)
+                .map((palengke) => (
+                  <Link
+                    to={`/palengke/${palengke.id}`}
+                    key={palengke.id}
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                      pointerEvents: "auto",
+                    }}
+                  >
+                    <PalengkeItem
+                      palengke={palengke}
+                      mediaList={sharedProps.mediaList}
+                      {...sharedProps}
+                    />
+                  </Link>
+                ))}
         </div>
         {filteredPalengkeList.length > numOfPalengkeToShow &&
           filteredPalengkeList.length !== 0 && (

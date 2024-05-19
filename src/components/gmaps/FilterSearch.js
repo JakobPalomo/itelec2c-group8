@@ -9,6 +9,7 @@ import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { setLocationType } from "react-geocode";
+import { getDistance } from "geolib";
 import "../../styles/openMapModal.css";
 
 const { REACT_APP_GMAPS_API_KEY } = process.env;
@@ -65,40 +66,53 @@ function FilterSearch({
     fetchPlaces();
   }, [address]);
 
-  //   const filterPalengkeList = () => {
-  //     const searchText = searchTerm.toLowerCase();
+  const filterPalengkeList = () => {
+    const searchText = searchTerm.toLowerCase();
 
-  //     // Filter based on search term in all fields
-  //     const searchFiltered = sharedProps.palengkeList.filter((palengke) => {
-  //       const combinedText = Object.values(palengke)
-  //         .map((value) => value.toString().toLowerCase())
-  //         .join(" ");
-  //       return combinedText.includes(searchText);
-  //     });
+    // Filter based on search term in all fields
+    let searchFiltered = [];
+    if (searchTerm !== "") {
+      searchFiltered = sharedProps.palengkeList.filter((palengke) => {
+        const combinedText = Object.values(palengke)
+          .map((value) => value.toString().toLowerCase())
+          .join(" ");
+        return combinedText.includes(searchText);
+      });
+    }
 
-  //     // Filter based on location proximity if address is provided
-  //     const locationFiltered = location
-  //       ? sharedProps.palengkeList.filter((palengke) => {
-  //           return options.some((option) => {
-  //             const distance = getDistance(
-  //               {
-  //                 latitude: palengke.location.lat,
-  //                 longitude: palengke.location.lng,
-  //               },
-  //               { latitude: option.location.lat, longitude: option.location.lng }
-  //             );
-  //             return distance < 5000; // Consider within 5km as a match
-  //           });
-  //         })
-  //       : [];
+    // Filter based on location proximity if address is provided
+    let locationFiltered = [];
+    if (location) {
+      locationFiltered = location
+        ? sharedProps.palengkeList.filter((palengke) => {
+            return (
+              isEmptyObject(palengke.location) === false &&
+              options.some((option) => {
+                const distance = getDistance(
+                  {
+                    latitude: palengke.location.lat,
+                    longitude: palengke.location.lng,
+                  },
+                  {
+                    latitude: option.location.lat,
+                    longitude: option.location.lng,
+                  }
+                );
+                return distance < 5000; // Consider within 5km as a match
+              })
+            );
+          })
+        : [];
+    }
 
-  //     // Combine both filters
-  //     const combinedFiltered = [
-  //       ...new Set([...searchFiltered, ...locationFiltered]),
-  //     ];
+    // Combine both filters
+    const combinedFiltered = [
+      ...new Set([...searchFiltered, ...locationFiltered]),
+    ];
 
-  //     setFilteredPalengkeList(combinedFiltered);
-  //   };
+    console.log("combinedFiltered", combinedFiltered);
+    setFilteredPalengkeList(combinedFiltered);
+  };
 
   const handleCancelAndClearInput = () => {
     setOptions([]);
@@ -106,6 +120,17 @@ function FilterSearch({
     setLocation({});
     setOpen(false);
   };
+
+  const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  };
+
+  useEffect(() => {
+    console.log("location", location);
+    if (isEmptyObject(location) === false) {
+      filterPalengkeList();
+    }
+  }, [location]);
 
   return (
     <>
@@ -129,6 +154,8 @@ function FilterSearch({
           style={{ textTransform: "none" }}
           onClick={(e) => {
             e.preventDefault();
+            // filterPalengkeList();
+            setOpen(false);
           }}
         >
           Set Filter
