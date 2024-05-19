@@ -4,6 +4,7 @@ import InputText from "../modals/InputText";
 import ConfirmModal from "../modals/ConfirmModal";
 import HeaderAndDetail from "../modals/HeaderAndDetail";
 import RippleButton from "../ui/RippleButton";
+import RegionSearch from "../gmaps/RegionSearch";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -61,6 +62,8 @@ function Register({ ...sharedProps }) {
   const [region, setRegion] = useState("");
   const [city, setCity] = useState("");
   const [profilePic, setProfilePic] = useState();
+  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState({});
   const [errors, setErrors] = useState(initialErrorData);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -82,6 +85,20 @@ function Register({ ...sharedProps }) {
   const handleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
+
+  const handleAddress = () => {
+    if (address) {
+      // setDistrict(address);
+      // setCity(address);
+      // setRegion(address);
+    }
+  };
+
+  useEffect(() => {
+    console.log("address", address);
+    console.log("location", location);
+    handleAddress();
+  }, [address, location]);
 
   const validateDetails = () => {
     // Trim strings
@@ -165,6 +182,8 @@ function Register({ ...sharedProps }) {
       const formData = new FormData();
       formData.append("username", username);
       formData.append("email", email);
+      formData.append("address", address);
+      formData.append("location", JSON.stringify(location));
       formData.append("district", district);
       formData.append("city", city);
       formData.append("region", region);
@@ -261,6 +280,13 @@ function Register({ ...sharedProps }) {
               <HeaderAndDetail
                 header="City"
                 detail={city}
+                margin="0px 0px 20px 0px"
+              />
+            )}
+            {address !== "" && (
+              <HeaderAndDetail
+                header="Address"
+                detail={address}
                 margin="0px 0px 20px 0px"
               />
             )}
@@ -398,7 +424,7 @@ function Register({ ...sharedProps }) {
                   hasError={getHasError("email", errors)}
                   errMessage={getErrMessage("email", errors)}
                 />
-                <InputText
+                {/* <InputText
                   type="text"
                   label="District"
                   setValue={setDistrict}
@@ -410,16 +436,6 @@ function Register({ ...sharedProps }) {
                 />
                 <InputText
                   type="text"
-                  label="Region"
-                  setValue={setRegion}
-                  value={region}
-                  maxLength={100}
-                  placeholder="Your region"
-                  hasError={getHasError("region", errors)}
-                  errMessage={getErrMessage("region", errors)}
-                />
-                <InputText
-                  type="text"
                   label="City / Province"
                   setValue={setCity}
                   value={city}
@@ -427,6 +443,22 @@ function Register({ ...sharedProps }) {
                   placeholder="Your city or province"
                   hasError={getHasError("city", errors)}
                   errMessage={getErrMessage("city", errors)}
+                />
+                <InputText
+                  type="text"
+                  label="Region"
+                  setValue={setRegion}
+                  value={region}
+                  maxLength={100}
+                  placeholder="Your region"
+                  hasError={getHasError("region", errors)}
+                  errMessage={getErrMessage("region", errors)}
+                /> */}
+                <RegionSearch
+                  address={address}
+                  setAddress={setAddress}
+                  setLocation={setLocation}
+                  field="address"
                 />
                 <Box
                   sx={{

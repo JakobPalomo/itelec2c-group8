@@ -12,6 +12,7 @@ import InputText from "../modals/InputText.js";
 import Profile from "./Profile";
 import ConfirmModal from "../modals/ConfirmModal";
 import HeaderAndDetail from "../modals/HeaderAndDetail";
+import RegionSearch from "../gmaps/RegionSearch";
 import { TextField, Grid, Avatar, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -38,7 +39,7 @@ function EditProfile({
   ...sharedProps
 }) {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
   const initialEditProfileErrorData = [
     { field: "username", hasError: false, errMessage: "" },
     { field: "district", hasError: false, errMessage: "" },
@@ -65,6 +66,8 @@ function EditProfile({
   const [username, setUsername] = useState("");
   const [district, setDistrict] = useState("");
   const [city, setCity] = useState("");
+  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState({});
   const [region, setRegion] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [coverPhoto, setCoverPhoto] = useState(); // State for cover photo
@@ -133,6 +136,7 @@ function EditProfile({
     setRegion(sharedProps.currUser.region);
     setCity(sharedProps.currUser.city);
     setProfile("");
+    setAddress(sharedProps.currUser.address);
   };
 
   // EDIT USER DETAILS
@@ -185,6 +189,8 @@ function EditProfile({
       formData.append("district", district);
       formData.append("city", city);
       formData.append("region", region);
+      formData.append("address", address);
+      formData.append("location", JSON.stringify(location));
 
       if (profile) {
         // Check if a file is provided
@@ -771,7 +777,7 @@ function EditProfile({
               hasError={getHasError("username", editProfileErrors)}
               errMessage={getErrMessage("username", editProfileErrors)}
             />
-            <InputText
+            {/* <InputText
               type="text"
               label="District"
               setValue={setDistrict}
@@ -800,6 +806,12 @@ function EditProfile({
               placeholder="Your city or province"
               hasError={getHasError("city", editProfileErrors)}
               errMessage={getErrMessage("city", editProfileErrors)}
+            /> */}
+            <RegionSearch
+              address={address}
+              setAddress={setAddress}
+              setLocation={setLocation}
+              field="address"
             />
             {getHasError("all", editProfileErrors) && (
               <span className="centerText errorSpanProfile">

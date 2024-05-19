@@ -30,6 +30,7 @@ function InputText({
   placeholder = "",
   multipleValues = false,
   freeSoloInput = false,
+  regionSearch = false,
   hasError = false,
   errMessage = "",
   options = [],
@@ -356,7 +357,10 @@ function InputText({
                       },
                       borderRadius: "20px",
                       paddingLeft: "10px",
-                      paddingRight: "70px !important",
+                      paddingRight:
+                        regionSearch === false
+                          ? "70px !important"
+                          : "35px !important",
                     },
                     "& .MuiOutlinedInput-input": {
                       fontSize: "14px !important",
@@ -365,7 +369,10 @@ function InputText({
                       paddingRight: paddingRight,
                     },
                     "& .MuiAutocomplete-endAdornment": {
-                      right: "40px !important",
+                      right:
+                        regionSearch === false
+                          ? "40px !important"
+                          : "10px !important",
                     },
                     display: "flex",
                     backgroundColor: "white",

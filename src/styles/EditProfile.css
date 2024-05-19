@@ -18,7 +18,8 @@
 }
 
 .fields {
-  width: 600px;
+  width: 50%;
+  /* 600px */
 }
 
 .errorSpanProfile {
@@ -59,4 +60,14 @@
 }
 .otpFieldModalMargin .Mui-focused:hover {
   outline: 2px solid rgb(255, 96, 96) !important;
+}
+@media screen and (max-width: 900px) {
+  .fields {
+    width: 80%;
+  }
+}
+@media screen and (max-width: 475px) {
+  .fields {
+    width: 90%;
+  }
 }

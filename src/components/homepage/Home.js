@@ -47,9 +47,13 @@ function Home({ ...sharedProps }) {
   }, [selectedFiles]);
 
   // Filter the palengke list based on the search term
-  const filteredPalengkeList = sharedProps.palengkeList.filter((palengke) =>
-    palengke.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPalengkeList = sharedProps.palengkeList.filter((palengke) => {
+    const searchText = Object.values(palengke)
+      .map((value) => value.toString().toLowerCase())
+      .join(" "); // Concatenate all field values into a single string
+
+    return searchText.includes(searchTerm.toLowerCase());
+  });
 
   const getAverageRating = (palengke) => {
     let totalRating = 0;

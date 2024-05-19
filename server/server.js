@@ -739,6 +739,14 @@ app.put("/palengke/remove_save", upload.none(), async (req, res) => {
 // SEARCH ADDRESSES (add/edit palengke)
 app.get("/search-places", async (req, res) => {
   const { input, types } = req.query;
+  console.log(input, types);
+  // Validate input
+  if (!input || !types) {
+    return res
+      .status(400)
+      .json({ error: "Missing required parameters 'input' or 'types'" });
+  }
+
   const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&types=${types}&components=country:PH&key=${GMAPS_API_KEY}`;
 
   try {
@@ -838,8 +846,8 @@ const addOrUpdatePalengkes = async (results) => {
       ...doc.data(),
     })
   );
-
   const processedResults = results.map(async (result) => {
+    const placeId = result.place_id; // Get the Place ID
     const palengkeData = {
       name: result.name,
       address: result.formatted_address,
@@ -852,7 +860,10 @@ const addOrUpdatePalengkes = async (results) => {
       media: [],
     };
 
-    const existingPalengke = isEqualPalengke(palengkeData, existingPalengkes);
+    // Find existing palengke by Place ID (using document ID)
+    const existingPalengke = existingPalengkes.find(
+      (palengke) => palengke.id === placeId
+    );
 
     if (existingPalengke) {
       // Check and update business status if it has changed
@@ -893,8 +904,12 @@ const addOrUpdatePalengkes = async (results) => {
           mediaDocId = mediaDocRef.id;
 
           // Update existing palengke with new media ID
+          const existingPalengkeDoc = await getDoc(
+            doc(db, "palengke", existingPalengke.id)
+          );
+          const existingMediaArray = existingPalengkeDoc.data().media || [];
           await updateDoc(doc(db, "palengke", existingPalengke.id), {
-            media: FieldValue.arrayUnion(mediaDocId),
+            media: [...existingMediaArray, mediaDocId],
           });
         }
       } else {
@@ -917,14 +932,11 @@ const addOrUpdatePalengkes = async (results) => {
       // Update existing palengke with new data
       await updateDoc(doc(db, "palengke", existingPalengke.id), palengkeData);
     } else {
-      // Add new palengke document
-      const palengkeDocRef = await addDoc(
-        collection(db, "palengke"),
-        palengkeData
-      );
+      // Add new palengke document using Place ID as document ID
+      await setDoc(doc(db, "palengke", placeId), palengkeData);
       return {
         ...palengkeData,
-        id: palengkeDocRef.id,
+        id: placeId,
       };
     }
   });
@@ -1001,7 +1013,8 @@ app.post("/user/add/:userId", upload.single("media"), async (req, res) => {
 
     const profile = documentId; // Will be null if no file was uploaded
     const userId = req.params.userId;
-    const { username, email, district, city, region } = req.body;
+    const { username, email, district, city, region, address } = req.body;
+    const location = JSON.parse(req.body.location);
     const reviews = [];
     const contributions = [];
     const saves = [];
@@ -1014,6 +1027,8 @@ app.post("/user/add/:userId", upload.single("media"), async (req, res) => {
       district,
       city,
       region,
+      address,
+      location,
       profile,
       reviews,
       contributions,
@@ -1036,8 +1051,16 @@ app.post(
   async (req, res) => {
     try {
       const userId = req.params.userId;
-      const { username, district, city, region, mediaFilename, mediaType } =
-        req.body;
+      const {
+        username,
+        address,
+        district,
+        city,
+        region,
+        mediaFilename,
+        mediaType,
+      } = req.body;
+      const location = JSON.parse(req.body.location);
       let profile = "";
 
       // Check if a file is provided
@@ -1069,7 +1092,14 @@ app.post(
       }
 
       // Update the user document
-      const updateData = { username, district, city, region };
+      const updateData = {
+        username,
+        district,
+        city,
+        region,
+        address,
+        location,
+      };
       if (profile) {
         updateData.profile = profile;
       }

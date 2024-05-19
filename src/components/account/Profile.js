@@ -31,33 +31,31 @@ export default function Profile({
   const fileUploadRef = useRef(null);
 
   const getAddress = () => {
-    if (
-      sharedProps.currUser.district ||
-      sharedProps.currUser.city ||
-      sharedProps.currUser.region
-    ) {
-      let address = "";
-      if (sharedProps.currUser.district) {
-        if (address !== "") {
-          address.concat(", ");
-        }
-        address.concat(sharedProps.currUser.district);
-      }
-      if (sharedProps.currUser.city) {
-        if (address !== "") {
-          address.concat(", ");
-        }
-        address.concat(sharedProps.currUser.city);
-      }
-      if (sharedProps.currUser.region) {
-        if (address !== "") {
-          address.concat(", ");
-        }
-        address.concat(sharedProps.currUser.region);
-      }
-      return `${sharedProps.currUser.district}, ${sharedProps.currUser.city}, ${sharedProps.currUser.region}`;
+    if (sharedProps.currUser.address) {
+      return sharedProps.currUser.address;
     }
-    return "";
+
+    let address = "";
+
+    if (sharedProps.currUser.district) {
+      address = sharedProps.currUser.district;
+    }
+
+    if (sharedProps.currUser.city) {
+      if (address !== "") {
+        address = address.concat(", ");
+      }
+      address = address.concat(sharedProps.currUser.city);
+    }
+
+    if (sharedProps.currUser.region) {
+      if (address !== "") {
+        address = address.concat(", ");
+      }
+      address = address.concat(sharedProps.currUser.region);
+    }
+
+    return address;
   };
 
   const handleFileUploadClick = () => {
@@ -119,7 +117,8 @@ export default function Profile({
             <h1>{sharedProps.currUser?.username}</h1>
             {(sharedProps.currUser.district ||
               sharedProps.currUser.city ||
-              sharedProps.currUser.region) && (
+              sharedProps.currUser.region ||
+              sharedProps.currUser.address) && (
               <div>
                 <PlaceIcon sx={{ fontSize: "30px" }} />
                 <h2>{getAddress()}</h2>
