@@ -9,8 +9,12 @@ import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { setLocationType } from "react-geocode";
-import { getDistance } from "geolib";
 import "../../styles/openMapModal.css";
+import {
+  handleSetError,
+  getHasError,
+  getErrMessage,
+} from "../../functions/utils";
 
 const { REACT_APP_GMAPS_API_KEY } = process.env;
 
@@ -18,12 +22,21 @@ function FilterSearch({
   searchTerm,
   setFilteredPalengkeList,
   setOpen,
+  options,
+  setOptions,
+  location,
+  setLocation,
+  distanceToSearch,
+  setDistanceToSearch,
+  filterPalengkeList,
+  isEmptyObject,
+  address,
+  setAddress,
+  errors,
+  setErrors,
+  initialErrorData,
   ...sharedProps
 }) {
-  const [options, setOptions] = useState([]);
-  const [address, setAddress] = useState("");
-  const [location, setLocation] = useState({});
-
   useEffect(() => {
     const fetchPlaces = async () => {
       // don't fetch if empty
@@ -66,52 +79,22 @@ function FilterSearch({
     fetchPlaces();
   }, [address]);
 
-  const filterPalengkeList = () => {
-    const searchText = searchTerm.toLowerCase();
+  const validateDetails = () => {
+    const tempErrors = initialErrorData;
 
-    // Filter based on search term in all fields
-    let searchFiltered = [];
-    if (searchTerm !== "") {
-      searchFiltered = sharedProps.palengkeList.filter((palengke) => {
-        const combinedText = Object.values(palengke)
-          .map((value) => value.toString().toLowerCase())
-          .join(" ");
-        return combinedText.includes(searchText);
-      });
+    if (distanceToSearch === "" || parseInt(distanceToSearch) < 0) {
+      tempErrors.find((field) => field.field === "distance").hasError = true;
+      tempErrors.find((field) => field.field === "distance").errMessage =
+        "Distance must be greater than 0";
     }
 
-    // Filter based on location proximity if address is provided
-    let locationFiltered = [];
-    if (location) {
-      locationFiltered = location
-        ? sharedProps.palengkeList.filter((palengke) => {
-            return (
-              isEmptyObject(palengke.location) === false &&
-              options.some((option) => {
-                const distance = getDistance(
-                  {
-                    latitude: palengke.location.lat,
-                    longitude: palengke.location.lng,
-                  },
-                  {
-                    latitude: option.location.lat,
-                    longitude: option.location.lng,
-                  }
-                );
-                return distance < 5000; // Consider within 5km as a match
-              })
-            );
-          })
-        : [];
+    setErrors(tempErrors);
+
+    const hasError = tempErrors.some((field) => field.hasError);
+    if (!hasError) {
+      filterPalengkeList();
+      handleCancelAndClearInput();
     }
-
-    // Combine both filters
-    const combinedFiltered = [
-      ...new Set([...searchFiltered, ...locationFiltered]),
-    ];
-
-    console.log("combinedFiltered", combinedFiltered);
-    setFilteredPalengkeList(combinedFiltered);
   };
 
   const handleCancelAndClearInput = () => {
@@ -120,17 +103,6 @@ function FilterSearch({
     setLocation({});
     setOpen(false);
   };
-
-  const isEmptyObject = (obj) => {
-    return Object.keys(obj).length === 0 && obj.constructor === Object;
-  };
-
-  useEffect(() => {
-    console.log("location", location);
-    if (isEmptyObject(location) === false) {
-      filterPalengkeList();
-    }
-  }, [location]);
 
   return (
     <>
@@ -147,6 +119,19 @@ function FilterSearch({
         options={options}
         setOptions={setOptions}
       />
+      {address && (
+        <InputText
+          type="number"
+          label="Distance in meters"
+          setValue={setDistanceToSearch}
+          value={distanceToSearch}
+          maxLength={15}
+          placeholder="Distance to search"
+          defaultValue={distanceToSearch}
+          hasError={getHasError("distance", errors)}
+          errMessage={getErrMessage("distance", errors)}
+        />
+      )}
       <div className="addPalengkeModalButtons">
         <Button
           variant="contained"
@@ -154,8 +139,8 @@ function FilterSearch({
           style={{ textTransform: "none" }}
           onClick={(e) => {
             e.preventDefault();
-            // filterPalengkeList();
-            setOpen(false);
+            validateDetails();
+            // setOpen(false);
           }}
         >
           Set Filter

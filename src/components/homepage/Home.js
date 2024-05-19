@@ -9,6 +9,7 @@ import FilterSearch from "../gmaps/FilterSearch";
 import PalengkeList from "./PalengkeList";
 import PalengkeItem from "./PalengkeItem";
 import HomeHeader from "./HomeHeader";
+import { getDistance } from "geolib";
 
 function Home({ ...sharedProps }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -21,6 +22,11 @@ function Home({ ...sharedProps }) {
   const [numOfPalengkeToShow, setNumOfPalengkeToShow] = useState(10);
   const [filteredPalengkeList, setFilteredPalengkeList] = useState([]);
   const [filterSearchModal, setFilterSearchModal] = useState(false);
+  const initialErrorData = [
+    { field: "distance", hasError: false, errMessage: "" },
+  ];
+  const [address, setAddress] = useState("");
+  const [errors, setErrors] = useState(initialErrorData);
 
   useEffect(() => {
     console.log(
@@ -79,6 +85,73 @@ function Home({ ...sharedProps }) {
     setFilteredPalengkeList(sharedProps.palengkeList);
   }, []);
 
+  const [options, setOptions] = useState([]);
+  const [location, setLocation] = useState({});
+  const [distanceToSearch, setDistanceToSearch] = useState(5000);
+
+  const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  };
+
+  const filterPalengkeList = () => {
+    const searchText = searchTerm.toLowerCase();
+    let combinedFiltered = [];
+
+    // Filter based on search term in all fields
+    let searchFiltered = [];
+    if (searchTerm !== "") {
+      searchFiltered = sharedProps.palengkeList.filter((palengke) => {
+        const combinedText = Object.values(palengke)
+          .map((value) => value.toString().toLowerCase())
+          .join(" ");
+        return combinedText.includes(searchText);
+      });
+    }
+
+    // Filter based on location proximity if address is provided
+    let locationFiltered = [];
+    if (location) {
+      locationFiltered = location
+        ? sharedProps.palengkeList.filter((palengke) => {
+            return (
+              isEmptyObject(palengke.location) === false &&
+              options.some((option) => {
+                const distance = getDistance(
+                  {
+                    latitude: palengke.location.lat,
+                    longitude: palengke.location.lng,
+                  },
+                  {
+                    latitude: option.location.lat,
+                    longitude: option.location.lng,
+                  }
+                );
+                return distance < parseInt(distanceToSearch); // Consider within 5km as a match
+              })
+            );
+          })
+        : [];
+    }
+
+    // Combine both filters
+    combinedFiltered = [...new Set([...searchFiltered, ...locationFiltered])];
+
+    console.log("combinedFiltered", combinedFiltered);
+    setFilteredPalengkeList(combinedFiltered);
+  };
+
+  useEffect(() => {
+    console.log("searchTerm", searchTerm, "location", location);
+    filterPalengkeList();
+  }, [searchTerm, distanceToSearch]);
+
+  useEffect(() => {
+    console.log("location", location);
+    if (isEmptyObject(location) === false) {
+      filterPalengkeList();
+    }
+  }, [location]);
+
   return (
     <>
       {addPalengkeClicked === true && (
@@ -134,6 +207,19 @@ function Home({ ...sharedProps }) {
             searchTerm={searchTerm}
             setFilteredPalengkeList={setFilteredPalengkeList}
             setOpen={setFilterSearchModal}
+            options={options}
+            setOptions={setOptions}
+            location={location}
+            setLocation={setLocation}
+            distanceToSearch={distanceToSearch}
+            setDistanceToSearch={setDistanceToSearch}
+            filterPalengkeList={filterPalengkeList}
+            isEmptyObject={isEmptyObject}
+            address={address}
+            setAddress={setAddress}
+            errors={errors}
+            setErrors={setErrors}
+            initialErrorData={initialErrorData}
             {...sharedProps}
           />
         </Modal>
@@ -143,6 +229,7 @@ function Home({ ...sharedProps }) {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           setFilterSearchModal={setFilterSearchModal}
+          filterPalengkeList={filterPalengkeList}
         />
       </div>
 
