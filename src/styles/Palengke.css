@@ -77,6 +77,20 @@
   text-wrap: nowrap;
 }
 
+.homePalengkeMore {
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #ff6262;
+  font-weight: bold;
+  font-size: 18px;
+  text-decoration: none;
+  text-wrap: nowrap;
+}
+
+.homePalengkeMore:hover {
+  color: #e74f4f;
+}
+
 .more:hover {
   margin-top: 24px;
   color: #e74f4f;

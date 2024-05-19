@@ -177,10 +177,32 @@ function PalengkeItem({
                   <source src={media.path} className="palengkeImage" />
                   Your browser does not support the video tag.
                 </video>
+              ) : mediaType === "link" ? (
+                <>
+                  <Box
+                    component="img"
+                    sx={{
+                      display: imageError ? "none" : "block",
+                      objectFit: "cover",
+                      overflow: "hidden",
+                      width: "100%",
+                    }}
+                    src={media.link}
+                    alt={media.filename}
+                    onError={() => setImageError(true)}
+                    className="palengkeImage"
+                  />
+                  {imageError && (
+                    <div className="noImageContainer">
+                      <HideImageIcon className="muiNoImageIcon" />
+                      Broken or Unsupported Media
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="noImageContainer">
-                  <NoPhotographyIcon className="muiNoImageIcon" />
-                  No Media Available
+                  <HideImageIcon className="muiNoImageIcon" />
+                  Broken or Unsupported Media
                 </div>
               )
             ) : (

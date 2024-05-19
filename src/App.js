@@ -164,14 +164,7 @@ function App() {
               getUserReviews();
 
               // Fetch the media collection
-              fetch(`/list/media`)
-                .then((res) => res.json())
-                .then((data) => {
-                  setMediaList(data);
-                })
-                .catch((error) => {
-                  console.error("Error fetching media:", error);
-                });
+              getMediaList();
             } else if (collectionName === "upvote") {
               getUserUpvotes();
             }
@@ -183,14 +176,7 @@ function App() {
         }
       );
 
-      fetch(`/list/media`)
-        .then((res) => res.json())
-        .then((data) => {
-          setMediaList(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching media:", error);
-        });
+      getMediaList();
       unsubscribeCallbacks.push(unsubscribe);
     });
 
@@ -232,6 +218,17 @@ function App() {
     console.log(userSaves);
     console.log(userUpvotes);
   }, [userProfilePic, userContributions, userReviews, userSaves, userUpvotes]);
+
+  const getMediaList = () => {
+    fetch(`/list/media`)
+      .then((res) => res.json())
+      .then((data) => {
+        setMediaList(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching media:", error);
+      });
+  };
 
   const getProfilePicPath = async () => {
     try {

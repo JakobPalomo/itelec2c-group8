@@ -17,6 +17,7 @@ function Home({ ...sharedProps }) {
   const [openMediaModal, setOpenMediaModal] = useState(false);
   const [prevModalHeight, setPrevModalHeight] = useState("unset");
   const [searchTerm, setSearchTerm] = useState("");
+  const [numOfPalengkeToShow, setNumOfPalengkeToShow] = useState(10);
 
   useEffect(() => {
     console.log(
@@ -127,24 +128,39 @@ function Home({ ...sharedProps }) {
         )}
 
         <div className="palengkeItemsContainer">
-          {filteredPalengkeList.map((palengke) => (
-            <Link
-              to={`/palengke/${palengke.id}`}
-              key={palengke.id}
-              style={{
-                textDecoration: "none",
-                color: "black",
-                pointerEvents: "auto",
-              }}
-            >
-              <PalengkeItem
-                palengke={palengke}
-                mediaList={sharedProps.mediaList}
-                {...sharedProps}
-              />
-            </Link>
-          ))}
+          {filteredPalengkeList
+            .slice(0, numOfPalengkeToShow)
+            .map((palengke) => (
+              <Link
+                to={`/palengke/${palengke.id}`}
+                key={palengke.id}
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                  pointerEvents: "auto",
+                }}
+              >
+                <PalengkeItem
+                  palengke={palengke}
+                  mediaList={sharedProps.mediaList}
+                  {...sharedProps}
+                />
+              </Link>
+            ))}
         </div>
+        {filteredPalengkeList.length > numOfPalengkeToShow &&
+          filteredPalengkeList.length !== 0 && (
+            <div style={{ textAlign: "center" }}>
+              <div className="homePalengkeMore">
+                <span
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setNumOfPalengkeToShow((prev) => (prev += 10))}
+                >
+                  Show More ...
+                </span>
+              </div>
+            </div>
+          )}
       </PalengkeList>
     </>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import media_types from "../../data/media_types.js";
+import PalengkeMediaDisplay from "./PalengkeMediaDisplay.js";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MobileStepper from "@mui/material/MobileStepper";
@@ -98,37 +99,7 @@ function Carousel({ media = images }) {
         </div>
       ) : media.length === 1 ? (
         <>
-          {getMediaType(media[0]) === "image" ? (
-            <Box
-              component="img"
-              sx={{
-                height: 400,
-                display: imageError ? "none" : "block",
-                objectFit: "cover",
-                overflow: "hidden",
-                width: "100%",
-              }}
-              src={media[0].path}
-              alt={media[0].filename}
-              onError={() => setImageError(true)}
-              className="palengkeImage"
-            />
-          ) : (
-            <video
-              className="palengkeImage"
-              autoPlay
-              style={{
-                height: 400,
-                display: "block",
-                overflow: "hidden",
-                width: "100%",
-              }}
-              controls
-            >
-              <source src={media[0].path} className="palengkeImage" />
-              Your browser does not support the video tag.
-            </video>
-          )}
+          <PalengkeMediaDisplay media={media} />
           {imageError && (
             <div className="noImageContainer">
               <HideImageIcon className="muiNoImageIcon" />

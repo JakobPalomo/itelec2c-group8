@@ -82,6 +82,7 @@ function Palengke({ ...sharedProps }) {
       const palengke = sharedProps.palengkeList.find(
         (palengke) => palengke.id === palengkeId
       );
+      console.log("palengke page", palengke);
       setPalengke(palengke);
     },
     [sharedProps.palengkeList]
@@ -469,7 +470,7 @@ function Palengke({ ...sharedProps }) {
               >
                 <p className="overflow-wrap">{palengke?.description}</p>
               </Box>
-              {palengke.other_names && (
+              {palengke.other_names && palengke.other_names.length !== 0 && (
                 <Box
                   sx={{ flexGrow: 1, padding: 0, width: "100%" }}
                   className="desc"
