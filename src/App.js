@@ -90,16 +90,9 @@ function App() {
   const [upvoteList, setUpvoteList] = useState([]);
   const [mediaList, setMediaList] = useState([]);
   const [userList, setUserList] = useState([]);
-  let palengkeList2 = [];
-  let reviewList2 = [];
-  let upvoteList2 = [];
-  let mediaList2 = [];
-  let userList2 = [];
 
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [editProfilePic, setEditProfilePic] = useState("");
-
-  const [newPalengkeList, setNewPalengkeList] = useState([]);
 
   useEffect(() => {
     // Function to update the main content margin
@@ -207,14 +200,7 @@ function App() {
 
   useEffect(() => {
     console.log("SHARED PROPS: ", sharedProps);
-  }, [
-    palengkeList,
-    reviewList,
-    upvoteList,
-    mediaList,
-    userList,
-    newPalengkeList,
-  ]);
+  }, [palengkeList, reviewList, upvoteList, mediaList, userList]);
 
   useEffect(() => {
     console.log("USER PIC & ARRAYS: ");
@@ -252,6 +238,7 @@ function App() {
 
   const getUserContributions = async () => {
     try {
+      getMediaList();
       const response = await fetch(
         `/user-arrays?collection=palengke&userid=${currUser?.id}`
       );
@@ -348,6 +335,7 @@ function App() {
     getProfilePicPath: getProfilePicPath,
     getUserContributions: getUserContributions,
     getUserReviews: getUserReviews,
+    getMediaList: getMediaList,
   };
 
   const isEmptyObject = (obj) => {
