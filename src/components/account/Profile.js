@@ -73,6 +73,12 @@ export default function Profile({
     console.log(isEditProfileOpen);
   }, [isEditProfileOpen]);
 
+  useEffect(() => {
+    if (window.location.pathname === "/account/edit-profile") {
+      setIsEditProfileOpen(true);
+    }
+  }, []);
+
   const getProfileSrc = () => {
     if (profile) {
       return `${URL.createObjectURL(profile)}`;

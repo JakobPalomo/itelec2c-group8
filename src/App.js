@@ -185,7 +185,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (currUser?.id) {
+    const storedUser = localStorage.getItem("currUser");
+    if (storedUser) {
       getProfilePicPath();
       getUserContributions();
       getUserReviews();
